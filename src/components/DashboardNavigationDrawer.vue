@@ -26,7 +26,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-divider/>
+            <v-divider dark/>
 
             <v-list-item
                     v-for="item in items"

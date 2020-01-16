@@ -1,0 +1,101 @@
+<template>
+    <v-form v-model="isValid">
+        <v-container>
+            <v-row justify="center" dense no-gutters>
+                <v-col cols="12" md="7">
+                    <v-text-field v-model="user.name" label="Name" outlined
+                                  :rules="[this.requiredRule('name')]" prepend-icon="mdi-account-card-details"/>
+                </v-col>
+                <v-col cols="12" md="7">
+                    <v-text-field v-model="user.username" label="Username" outlined
+                                  :rules="[this.requiredRule('username')]" prepend-icon="mdi-account"/>
+                </v-col>
+                <v-col cols="12" md="7">
+                    <v-text-field v-model="user.password" label="Password" outlined
+                                  :rules="[this.requiredRule('password')]" type="password" prepend-icon="lock"/>
+                </v-col>
+                <v-col cols="12" md="7">
+                    <v-text-field v-model="user.address" label="Address" outlined
+                                  :rules="[this.requiredRule('address')]" prepend-icon="place"/>
+                </v-col>
+
+            </v-row>
+
+
+            <v-row justify="center" dense no-gutters>
+                <v-col>
+                    <v-btn
+                            text
+                            class="ma-2"
+                            color="primary"
+                            @click="signup"
+                            to="/login"
+                    >
+                        Sign in instead
+                    </v-btn>
+                </v-col>
+
+                <v-col>
+                    <v-btn
+                            class="ma-2"
+                            color="primary"
+                            @click="signup"
+                            :disabled="!isValid"
+                            :loading="loading"
+                    >
+                        Sign Up
+                    </v-btn>
+                </v-col>
+            </v-row>
+
+
+        </v-container>
+
+    </v-form>
+</template>
+
+<script>
+    import axios from "axios"
+
+    export default {
+        data() {
+            return {
+                isValid: false,
+                loading: false,
+                user: {
+                    username: "",
+                    password: "",
+                    name: "",
+                    address: ""
+                }
+            }
+        }
+        , methods: {
+            requiredRule(msg) {
+                return v => !!v || msg + " is required!";
+            },
+            signup() {
+                let apiUrl = this.$store.state.api;
+                // eslint-disable-next-line no-console
+                console.log(apiUrl);
+                let header = {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }
+                axios.post(apiUrl + '\\users\\sign-up', this.user, {
+                    headers: header
+                }).then(() => {
+                        this.loading = false;
+                        this.$router.push("/");
+                    }
+                ).catch(() => {
+                    this.loading = false;
+                });
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

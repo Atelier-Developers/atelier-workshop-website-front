@@ -3,15 +3,16 @@
             flat
             style="background: #eee;"
     >
-
-        <div class="v-toolbar-title">
-            <v-toolbar-title>
-                <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')"/>
-                {{title}}
-            </v-toolbar-title>
-        </div>
+        <v-toolbar-title>
+            <v-app-bar-nav-icon v-if="responsive" @click.stop="$emit('toggle-drawer')"/>
+            {{title}}
+        </v-toolbar-title>
 
         <v-spacer/>
+
+        <v-btn icon to="/login">
+            <v-icon>mdi-account</v-icon>
+        </v-btn>
     </v-app-bar>
 </template>
 
@@ -30,7 +31,7 @@
             },
         },
         mounted() {
-            this.onResponsiveInverted()
+            this.onResponsiveInverted();
             window.addEventListener('resize', this.onResponsiveInverted)
         },
         beforeDestroy() {
@@ -42,6 +43,7 @@
                 console.log(this.$store.state.drawer);
                 this.$store.commit("toggleDrawer")
             },
+
             onResponsiveInverted() {
                 if (window.innerWidth < 991) {
                     this.responsive = true
