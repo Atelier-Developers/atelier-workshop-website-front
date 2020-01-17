@@ -9,7 +9,7 @@
     import WorkshopList from "../components/WorkshopList";
 
     export default {
-        name: "Dashboard",
+        name: "Home",
         components: {WorkshopList},
         data() {
             return {

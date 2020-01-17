@@ -3,8 +3,8 @@
         <DashboardNavigationDrawer ref="drawer"/>
         <v-content d-flex align-space-around justify-center column class="items">
             <DashboardAppbar @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer"/>
-            <vue-page-transition name="fade">
-                <router-view/>
+            <vue-page-transition name="fade" >
+                <router-view />
             </vue-page-transition>
         </v-content>
     </v-app>

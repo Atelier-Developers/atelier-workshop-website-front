@@ -43,7 +43,31 @@
                     {{ item.title }}
                 </v-list-item-content>
             </v-list-item>
+
+            <v-list-group
+                    prepend-icon="account_circle"
+                    no-action
+            >
+                <template v-slot:activator>
+                    <v-list-item-content>
+                        <v-list-item-title>Workshops</v-list-item-title>
+
+                    </v-list-item-content>
+                </template>
+
+                <v-list-item
+                        v-for="(role, i) in userRole"
+                        :key="i"
+                        link
+                >
+                    <v-list-item-content>
+                        <v-list-item-title v-text="role.title"/>
+                    </v-list-item-content>
+
+                </v-list-item>
+            </v-list-group>
         </v-list>
+
     </v-navigation-drawer>
 </template>
 
@@ -56,8 +80,12 @@
                 drawer: this.$store.state.drawer,
                 bg: 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg',
                 items: [
-                    {title: 'Dashboard', icon: 'mdi-view-dashboard', to: "/"},
-                    {title: 'Photos', icon: 'mdi-image', to: "/photo"},
+                    {title: 'Home', icon: 'mdi-home', to: "/"},
+                    {title: 'User', icon: 'mdi-account-box', to: "/user"},
+                ],
+                userRole: [
+                    {title: "Attendee", icon: "fa-user-graduate", to: ""},
+                    {title: "Workshop Manager", icon: "mdi-teach", to: ""}
                 ]
             }
         }
@@ -68,7 +96,8 @@
     .image_overlay {
         background: rgba(27, 27, 27, .74) !important;
     }
-    .navbar{
+
+    .navbar {
         top: 0;
         position: fixed;
     }

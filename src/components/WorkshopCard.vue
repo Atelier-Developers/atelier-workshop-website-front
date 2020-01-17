@@ -45,12 +45,9 @@
         props: ["workshop"],
         computed: {
             startTime: function () {
-
                 return moment(this.workshop.startTime).format("lll");
             },
             endTime: function () {
-                // let d = new Date(this.workshop.endTime);
-                // return d.toLocaleString("%a %R");
                 return moment(this.workshop.endTime).format("lll")
             }
         }
