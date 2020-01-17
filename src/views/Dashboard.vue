@@ -1,22 +1,7 @@
 <template>
     <v-container>
        <v-row>
-           <v-col cols="4">
-               <WorkshopCard/>
-           </v-col>
-           <v-col cols="4">
-               <WorkshopCard/>
-           </v-col>
-           <v-col cols="4">
-               <WorkshopCard/>
-           </v-col>
-           <v-col cols="4">
-               <WorkshopCard/>
-           </v-col>
-           <v-col cols="4">
-               <WorkshopCard/>
-           </v-col>
-           <v-col cols="4">
+           <v-col v-for="i in 20" cols="12" md="6" lg="4" v-bind:key="i">
                <WorkshopCard/>
            </v-col>
        </v-row>

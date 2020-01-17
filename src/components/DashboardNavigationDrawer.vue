@@ -4,9 +4,9 @@
             :src="image"
             absolute
             dark
-            fixed
             app
             width="260"
+            class="navbar"
     >
         <v-list
                 dense
@@ -67,5 +67,9 @@
 <style scoped>
     .image_overlay {
         background: rgba(27, 27, 27, .74) !important;
+    }
+    .navbar{
+        top: 0;
+        position: fixed;
     }
 </style>
