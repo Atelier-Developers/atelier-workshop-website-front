@@ -1,54 +1,59 @@
 <template>
-    <v-hover v-slot:default="{ hover }">
-        <v-card
-                class="mx-auto"
-                color="grey lighten-4"
-                max-width="600"
+    <v-card
+            class="mx-auto"
+            color="grey lighten-4"
+            max-width="500"
+            hover
+            style="position: relative"
+    >
+        <v-img
+                :aspect-ratio="16/9"
+                src="https://i.udemycdn.com/course/240x135/625204_436a_2.jpg"
+        />
+        <v-card-text
+                class="pt-6"
         >
-            <v-img
-                    :aspect-ratio="16/9"
-                    src="https://cdn.vuetifyjs.com/images/cards/kitchen.png"
-            >
-                <v-expand-transition>
-                    <div
-                            v-if="hover"
-                            class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                            style="height: 100%;"
-                    >
-                        $14.99
-                    </div>
-                </v-expand-transition>
-            </v-img>
-            <v-card-text
-                    class="pt-6"
-                    style="position: relative;"
-            >
-                <v-btn
-                        absolute
-                        color="orange"
-                        class="white--text"
-                        fab
-                        large
-                        right
-                        top
-                >
-                    <v-icon>mdi-cart</v-icon>
-                </v-btn>
-                <div class="font-weight-light grey--text title mb-2">For the perfect meal</div>
-                <h3 class="display-1 font-weight-light orange--text mb-2">QW cooking utensils</h3>
-                <div class="font-weight-light title mb-2">
-                    Our Vintage kitchen utensils delight any chef.<br>
-                    Made of bamboo by hand
-                </div>
-            </v-card-text>
-        </v-card>
-    </v-hover>
+            <div class="font-weight-light grey--text body-1 mb-2">{{workshop.workshop.name}}</div>
+            <h3 class="headline font-weight-regular blue--text mb-2">{{workshop.name}}</h3>
+            <div class="font-weight-light title mb-2">
+                <!--                   {{workshop.workshopManger.name}}-->
+            </div>
+            <div class="font-weight-regular body-1 mb-2">
+                {{workshop.description}}
+            </div>
+            <div class="font-weight-light subtitle-2 mb-2">
+                <v-icon>mdi-clock-in</v-icon>
+                {{startTime}}
+            </div>
+            <div class="font-weight-light subtitle-2 mb-7">
+                <v-icon>mdi-clock-out</v-icon>
+                {{endTime}}
+            </div>
+
+            <div class="font-weight-bold title mb-2" style="position: absolute; bottom: 5px; right: 10px">
+                ${{workshop.price}}
+            </div>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>
+    import moment from "moment"
+
     export default {
         name: "WorkshopCard",
-        props: ["workshop"]
+        props: ["workshop"],
+        computed: {
+            startTime: function () {
+
+                return moment(this.workshop.startTime).format("lll");
+            },
+            endTime: function () {
+                // let d = new Date(this.workshop.endTime);
+                // return d.toLocaleString("%a %R");
+                return moment(this.workshop.endTime).format("lll")
+            }
+        }
     }
 </script>
 

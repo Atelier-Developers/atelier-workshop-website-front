@@ -1,18 +1,28 @@
 <template>
     <v-container>
-       <v-row>
-           <v-col v-for="i in 20" cols="12" md="6" lg="4" v-bind:key="i">
-               <WorkshopCard/>
-           </v-col>
-       </v-row>
+        <workshop-list :workshops="workshops" title="Offered Workshops"/>
     </v-container>
 </template>
 
 <script>
-    import WorkshopCard from "../components/WorkshopCard";
+    import axios from "axios"
+    import WorkshopList from "../components/WorkshopList";
+
     export default {
         name: "Dashboard",
-        components: {WorkshopCard}
+        components: {WorkshopList},
+        data() {
+            return {
+                workshops: []
+            }
+        },
+        mounted() {
+            axios.get(this.$store.state.api + "/workshop/offeringWorkshop").then((res) => {
+                // eslint-disable-next-line no-console
+                console.log(res.data);
+                this.workshops = res.data;
+            })
+        }
     }
 </script>
 
