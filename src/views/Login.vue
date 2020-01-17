@@ -1,46 +1,45 @@
 <template>
+    <v-container>
+        <v-card max-width="550" class="my-auto mx-auto py-2" raised shaped>
+            <v-form v-model="isValid">
+                <v-container>
+                    <v-row justify="center" dense>
+                        <v-col cols="11">
+                            <v-text-field v-model="user.username" label="username" outlined
+                                          :rules="[this.requiredRule('username')]" prepend-icon="mdi-account"/>
+                        </v-col>
+                        <v-col cols="11">
+                            <v-text-field v-model="user.password" label="password" outlined
+                                          type="password"
+                                          :rules="[this.requiredRule('password')]" prepend-icon="lock"/>
+                        </v-col>
+                    </v-row>
 
-    <v-form v-model="isValid">
-        <v-container>
-            <v-row justify="center" dense>
-                <v-col cols="12" md="7">
-                    <v-text-field v-model="user.username" label="username" outlined
-                                  :rules="[this.requiredRule('username')]"  prepend-icon="mdi-account"/>
-                </v-col>
-                <v-col cols="12" md="7">
-                    <v-text-field v-model="user.password" label="password" outlined
-                                  type="password"
-                                  :rules="[this.requiredRule('password')]" prepend-icon="lock"/>
-                </v-col>
-            </v-row>
+                    <v-row justify="center" align="center" align-content="center" dense no-gutters>
+                        <v-btn
+                                text
+                                class="ma-2"
+                                color="primary"
+                                to="/signup"
+                        >
+                            Create Account
+                        </v-btn>
 
-            <v-row justify="center" align="center"  align-content="center" dense no-gutters>
-                <v-col>
-                    <v-btn
-                            text
-                            class="ma-2"
-                            color="primary"
-                            to="/signup"
-                    >
-                        Create Account
-                    </v-btn>
-                </v-col>
+                        <v-btn
+                                class="ma-2"
+                                color="primary"
+                                @click="login"
+                                :disabled="!isValid"
+                                :loading="loading"
+                        >
+                            Login
+                        </v-btn>
+                    </v-row>
+                </v-container>
 
-                <v-col>
-                    <v-btn
-                            class="ma-2"
-                            color="primary"
-                            @click="login"
-                            :disabled="!isValid"
-                            :loading="loading"
-                    >
-                        Login
-                    </v-btn>
-                </v-col>
-            </v-row>
-        </v-container>
-
-    </v-form>
+            </v-form>
+        </v-card>
+    </v-container>
 </template>
 
 <script>
@@ -84,5 +83,7 @@
 </script>
 
 <style scoped>
-
+    .image_background{
+        background: url("../assets/pexels-photo-747964.jpeg");
+    }
 </style>
