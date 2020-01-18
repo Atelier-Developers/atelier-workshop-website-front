@@ -4,6 +4,7 @@ import Home from "../views/Home";
 import Signup from "../views/Signup";
 import Login from "../views/Login";
 import User from "../views/User";
+import WorkshopDetail from "../views/WorkshopDetail";
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,12 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/workshop/:wId',
+    name: 'WorkshopDetail',
+    component: WorkshopDetail,
+    props: true,
   },
 ]
 

@@ -45,13 +45,12 @@
             </v-list-item>
 
             <v-list-group
-                    prepend-icon="account_circle"
+                    prepend-icon="fa-chalkboard"
                     no-action
             >
                 <template v-slot:activator>
                     <v-list-item-content>
                         <v-list-item-title>Workshops</v-list-item-title>
-
                     </v-list-item-content>
                 </template>
 
@@ -84,7 +83,7 @@
                     {title: 'User', icon: 'mdi-account-box', to: "/user"},
                 ],
                 userRole: [
-                    {title: "Attendee", icon: "fa-user-graduate", to: ""},
+                    {title: "Attendee", icon: "fas fa-user-graduate", to: ""},
                     {title: "Workshop Manager", icon: "mdi-teach", to: ""}
                 ]
             }

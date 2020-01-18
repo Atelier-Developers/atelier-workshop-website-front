@@ -4,6 +4,7 @@
             color="grey lighten-4"
             max-width="500"
             hover
+            @click="navigateToWorkshop"
             style="position: relative"
     >
         <v-img
@@ -43,6 +44,11 @@
     export default {
         name: "WorkshopCard",
         props: ["workshop"],
+        methods: {
+            navigateToWorkshop() {
+                return this.$router.push({ path: `/workshop/${this.workshop.id}`});
+            }
+        },
         computed: {
             startTime: function () {
                 return moment(this.workshop.startTime).format("lll");
