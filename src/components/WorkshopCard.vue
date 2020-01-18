@@ -17,7 +17,7 @@
             <div class="font-weight-light grey--text body-1 mb-2">{{workshop.workshop.name}}</div>
             <h3 class="headline font-weight-regular blue--text mb-2">{{workshop.name}}</h3>
             <div class="font-weight-light title mb-2">
-                <!--                   {{workshop.workshopManger.name}}-->
+                {{manager}}
             </div>
             <div class="font-weight-regular body-1 mb-2">
                 {{workshop.description}}
@@ -43,10 +43,10 @@
 
     export default {
         name: "WorkshopCard",
-        props: ["workshop"],
+        props: ["workshop", "manager"],
         methods: {
             navigateToWorkshop() {
-                return this.$router.push({ path: `/workshop/${this.workshop.id}`});
+                return this.$router.push({path: `/workshop/${this.workshop.id}`});
             }
         },
         computed: {
@@ -55,7 +55,8 @@
             },
             endTime: function () {
                 return moment(this.workshop.endTime).format("lll")
-            }
+            },
+
         }
     }
 </script>

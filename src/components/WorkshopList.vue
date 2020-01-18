@@ -2,8 +2,8 @@
     <div>
         <h2 class="display-3 mb-5">{{title}}</h2>
         <v-row>
-            <v-col v-for="i in 20" cols="12" sm="6" md="4" lg="3" xl="2" :key="i">
-                <WorkshopCard :workshop="workshops[0]"/>
+            <v-col v-for="workshop in workshops" cols="12" sm="6" md="4" lg="3" :key="workshop.offeredWorkshop.id">
+                <WorkshopCard :workshop="workshop.offeredWorkshop" :manager="workshop.workshopManagerName"/>
             </v-col>
         </v-row>
     </div>
