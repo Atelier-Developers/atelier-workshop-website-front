@@ -12,9 +12,9 @@
                                 v-text="offeredWorkshop.name"
                         />
                         <div class="font-weight-light title mb-2 text-capitalize">
-                            {{wManager ? "By You": manager}}
+                            {{wManager ? "By You": manager.name}}
                         </div>
-                        <v-card-text class="text-capitalize" v-text="offeredWorkshop.workshop.name"/>
+                        <v-card-text class="text-capitalize">{{offeredWorkshop.workshop.name}}</v-card-text>
                         <div class="font-weight-regular body-1 mb-2">
                             {{offeredWorkshop.description}}
                         </div>
@@ -32,11 +32,11 @@
 
                     <v-col cols="12" sm="5">
                         <v-row justify="center" align="center" class="fill-height">
-                            <v-col cols="6">
+                            <v-col cols="6" v-if="!passed">
                                 <v-card outlined style="border: none">
                                     <div class="text-center">
                                         <v-icon class="mb-4" large>fas fa-user</v-icon>
-                                        <p class="display-1">5 days</p>
+                                        <p class="display-1">{{remainingTime}}</p>
                                         <p class="body-1">Remaining</p>
                                     </div>
                                 </v-card>
@@ -64,7 +64,7 @@
                             style="z-index: 2"
                     >
                         <v-avatar
-                                class="ma-3 elevation-10"
+                                class=" elevation-10"
                                 size="170"
                         >
                             <v-img src="https://i.udemycdn.com/course/240x135/625204_436a_2.jpg"/>
@@ -76,14 +76,17 @@
         </v-card>
 
         <v-card tile>
-            <v-container>
+            <v-container v-if="prerequsite.length > 0">
                 <p class="display-2 my-2">Prerequisites</p>
                 <v-row>
-                    <v-col v-for="p in offeredWorkshop.workshopRelationDetails" cols="3" :key="p.id">
+                    <v-col v-for="p in prerequsite" cols="3" :key="p.id" class="title">
                         <v-icon>fas fa-check</v-icon>
-                        <v-card-text>{{p.name}}</v-card-text>
+                        {{p}}
                     </v-col>
                 </v-row>
+            </v-container>
+            <v-container v-else>
+                <p class="display-2 my-2">No prerequisites needed</p>
             </v-container>
         </v-card>
     </div>
@@ -96,14 +99,25 @@
 
     export default {
         name: "WorkshopDetailInfo",
-        props: ["offeredWorkshop", "count", "wManager", "manager"],
+        props: ["offeredWorkshop", "count", "wManager", "manager", "prerequsite"],
         components: {PriceChip},
         computed: {
             startTime: function () {
                 return moment(this.offeredWorkshop.startTime).format("lll");
             },
             endTime: function () {
-                return moment(this.offeredWorkshop.endTime).format("lll")
+                return moment(this.offeredWorkshop.endTime).format("lll");
+            },
+            passed: function () {
+                let d = new Date(this.offeredWorkshop.startTime);
+                let dnow = new Date();
+                if (d.valueOf() < dnow.valueOf()) {
+                    return true
+                }
+                return false;
+            },
+            remainingTime: function () {
+                return moment(this.offeredWorkshop.startTime).fromNow();
             },
             offeredWorkshopEndingStatus: function () {
                 let start = new Date(this.offeredWorkshop.startTime);

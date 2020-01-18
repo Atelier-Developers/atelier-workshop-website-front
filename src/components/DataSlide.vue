@@ -9,22 +9,15 @@
                     :key="user.id"
                     v-slot:default="{ active, toggle }"
             > <!--TODO check toggle -->
-                <UserCard
-                    :user="user"
-                ></UserCard>
+                <slot></slot>
             </v-slide-item>
         </v-slide-group>
     </v-sheet>
 </template>
 
 <script>
-    import UserCard from "./UserCard";
     export default {
         name: "DataSlide",
-        components: {UserCard},
-        props:[
-            "users",
-        ]
     }
 </script>
 

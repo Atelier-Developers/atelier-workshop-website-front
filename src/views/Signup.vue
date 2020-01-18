@@ -76,8 +76,6 @@
             },
             signup() {
                 let apiUrl = this.$store.state.api;
-                // eslint-disable-next-line no-console
-                console.log(apiUrl);
                 let header = {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'

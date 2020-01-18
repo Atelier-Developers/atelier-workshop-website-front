@@ -2,4 +2,6 @@
 
 export default {
     api: 'http://localhost:5000',
+    status: '',
+    token: localStorage.getItem('token') || '',
 }
