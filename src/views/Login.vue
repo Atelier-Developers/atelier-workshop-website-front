@@ -78,10 +78,8 @@
                 }).then((resp) => {
                         this.loading = false;
                         const token = resp.headers.authorization;
-                        // eslint-disable-next-line no-console
-                        console.log(resp)
                         localStorage.setItem('token', token);
-                        axios.defaults.headers.common['authorization'] = token;
+                        axios.defaults.headers.common['Authorization'] = token;
                         this.$store.commit('auth_success', token);
                         this.$router.push("/");
                     }
