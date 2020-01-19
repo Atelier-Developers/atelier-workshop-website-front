@@ -76,7 +76,7 @@
     export default {
         name: "WorkshopDetail",
         components: {GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
-        props: ["wId", "wManager"],
+        props: ["wId"],
         data() {
             return {
                 offeredWorkshop: {},
@@ -95,14 +95,7 @@
                 return this.groups;
             },
             attendeeGroup: function () {
-                this.groups.forEach((group) => {
-                    group.attenders.forEach((attender) => {
-                        if (attender.id === this.user.id) {
-                            return group;
-                        }
-                    })
-                });
-                return null;
+                return this.groups;
             },
             passed: function () {
                 let end = new Date(this.offeredWorkshop.endTime);
@@ -123,7 +116,7 @@
                 return start.valueOf() > dnow.valueOf();
             },
             isGrader: function () {
-                if(!this.$store.getters.isLoggedIn){
+                if (!this.$store.getters.isLoggedIn) {
                     return false;
                 }
                 let state = false;
@@ -135,7 +128,7 @@
                 return state;
             },
             isAttendee: function () {
-                if(!this.$store.getters.isLoggedIn){
+                if (!this.$store.getters.isLoggedIn) {
                     return false;
                 }
                 let state = false;
@@ -147,7 +140,7 @@
                 return state;
             },
             isManager: function () {
-                if(!this.$store.getters.isLoggedIn){
+                if (!this.$store.getters.isLoggedIn) {
                     return false;
                 }
                 return this.manager.id === this.user.id;
@@ -166,12 +159,11 @@
 
                 if (this.$store.getters.isLoggedIn) {
                     this.getUser().then((res) => {
-                        this.user = res.data
+                        this.user = res.data;
                         if (this.isManager) {
                             this.getManagerGroups().then((res) => {
                                 this.groups = res.data;
                                 this.loading = false;
-
                             });
                         } else if (this.isGrader) {
 
@@ -186,6 +178,8 @@
                                 this.groups = res.data;
                                 this.loading = false;
                             });
+                        } else {
+                            this.loading = false;
                         }
                     })
                 } else {
@@ -211,7 +205,7 @@
                 return axios.get(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.wId + "/groupDetails");
             },
             getAttendeeGroup() {
-                return null;
+                return axios.get(this.$store.state.api + "/attendees/offeringWorkshop/" + this.wId + "/groupDetails");
             }
 
         }
