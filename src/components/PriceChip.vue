@@ -1,11 +1,12 @@
 <template>
     <v-chip
-            class="mb-2"
-            color="teal"
+            class="mb-2 title"
+            color="green accent-4"
             text-color="white"
-
     >
-        $ {{this.price}}
+        <v-avatar>
+            <v-icon left small>fas fa-dollar-sign</v-icon>
+        </v-avatar>{{this.price}}
     </v-chip>
 </template>
 
