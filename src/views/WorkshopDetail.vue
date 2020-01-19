@@ -92,14 +92,15 @@
         },
         computed: {
             graderGroup: function () {
-                this.groups.forEach((group) => {
-                    group.graders.forEach((grader) => {
-                        if (grader.id === this.user.id) {
-                            return group;
-                        }
-                    })
-                });
-                return null;
+                // this.groups.forEach((group) => {
+                //     group.graders.forEach((grader) => {
+                //         if (grader.id === this.user.id) {
+                //             return group;
+                //         }
+                //     })
+                // });
+                // return null;
+                return this.groups;
             },
             attendeeGroup: function () {
                 this.groups.forEach((group) => {
@@ -130,20 +131,22 @@
                 return start.valueOf() > dnow.valueOf();
             },
             isGrader: function () {
+                let state = false;
                 this.gradList.forEach((grader) => {
                     if (grader.id === this.user.id) {
-                        return true;
+                        state = true;
                     }
                 });
-                return false;
+                return state;
             },
             isAttendee: function () {
+                let state = false;
                 this.attList.forEach((att) => {
                     if (att.id === this.user.id) {
-                        return true;
+                        state = true;
                     }
                 });
-                return false;
+                return state;
             },
             isManager: function () {
                 return this.manager.id === this.user.id;
@@ -167,15 +170,17 @@
                         this.groups = res.data;
                     });
                 } else if (this.isGrader) {
+
                     this.getGraderGroup().then((res) => {
                         this.groups = res.data;
                     });
 
-                } else if (this.isAttendee) {
-                    this.getAttendeeGroup().then((res) => {
-                        this.groups = res.data;
-                    });
                 }
+                // else if (this.isAttendee) {
+                //     this.getAttendeeGroup().then((res) => {
+                //         this.groups = res.data;
+                //     });
+                // }
 
                 this.loading = false;
             })
@@ -192,14 +197,14 @@
                 return axios.get(this.$store.state.api + "/users/user");
             },
             getManagerGroups() {
-                return null;
+                return axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/"+ this.wId + "/groupDetails");
             },
             getGraderGroup() {
-                return null;
+                return axios.get(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.wId + "/groupDetails");
             },
-            getAttendeeGroup() {
-                return null;
-            }
+            // getAttendeeGroup() {
+            //     return null;
+            // }
 
         }
 
