@@ -75,7 +75,7 @@
             </v-container>
         </v-card>
 
-        <v-card tile>
+        <v-card tile outlined style="border: none;">
             <v-container v-if="prerequsite.length > 0">
                 <p class="display-2 my-2">Prerequisites</p>
                 <v-row>
@@ -86,7 +86,7 @@
                 </v-row>
             </v-container>
             <v-container v-else>
-                <p class="display-2 my-2">No prerequisites needed</p>
+                <p class="display-3 my-2 text-capitalize">No prerequisites needed!</p>
             </v-container>
         </v-card>
     </div>

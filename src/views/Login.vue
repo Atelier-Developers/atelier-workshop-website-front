@@ -1,5 +1,5 @@
 <template>
-    <v-container class="fill-height" fluid>
+    <v-container  style="min-height: 100%" fluid>
         <v-row justify="center" align="center">
             <v-col cols="12" sm="8" md="4">
                 <v-card max-width="550" class="my-auto mx-auto py-2" raised shaped>
@@ -81,7 +81,14 @@
                         localStorage.setItem('token', token);
                         axios.defaults.headers.common['Authorization'] = token;
                         this.$store.commit('auth_success', token);
-                        this.$router.push("/");
+                        axios.get(this.$store.state.api + '/users/user').then((res) => {
+                            // eslint-disable-next-line no-console
+                            console.log(res.data.id);
+                            localStorage.setItem('userId', res.data.id);
+                            this.$store.commit('auth_user_id', res.data.id);
+                            this.$router.push("/");
+                        })
+
                     }
                 ).catch(() => {
                     localStorage.removeItem('token');
@@ -96,5 +103,8 @@
 <style scoped>
     .image_background {
         background: url("../assets/pexels-photo-747964.jpeg");
+    }
+    .fill-height2{
+        height: 100%;
     }
 </style>

@@ -1,6 +1,7 @@
 <template>
     <v-app-bar
             flat
+            app
             style="background: #eee;"
     >
         <v-toolbar-title>
@@ -59,6 +60,7 @@
                         onClick: () => {
                             this.$store.commit('logout');
                             localStorage.removeItem('token');
+                            localStorage.removeItem('userId');
                             delete axios.defaults.headers.common['Authorization'];
                             if (this.$route.path !== "/") {
                                 this.$router.push({path: "/"});

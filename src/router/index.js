@@ -3,11 +3,12 @@ import VueRouter from 'vue-router'
 import Home from "../views/Home";
 import Signup from "../views/Signup";
 import Login from "../views/Login";
-import User from "../views/User";
 import WorkshopDetail from "../views/WorkshopDetail";
 import ShowAttendeeWorkshopHistory from "../views/ShowAttendeeWorkshopHistory";
 import ShowGraderWorkshopHistory from "../views/ShowGraderWorkshopHistory";
 import ShowManagerWorkshopHistory from "../views/ShowManagerWorkshopHistory";
+import UserProfile from "../views/UserProfile";
+import NotFoundPage from "../views/NotFoundPage";
 
 Vue.use(VueRouter)
 
@@ -33,9 +34,10 @@ const routes = [
     component: ShowGraderWorkshopHistory
   },
   {
-    path: '/user-profile',
-    name: 'User',
-    component: User
+    path: '/user-profile/:id',
+    name: 'Profile',
+    component: UserProfile,
+    props: true
   },
   {
     path: '/signup',
@@ -53,6 +55,11 @@ const routes = [
     component: WorkshopDetail,
     props: true,
   },
+  {
+    path: '*',
+    name: "Not Found Page",
+    component: NotFoundPage
+  }
 ]
 
 const router = new VueRouter({
