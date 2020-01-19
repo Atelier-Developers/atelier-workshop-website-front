@@ -44,27 +44,32 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-group
-                    prepend-icon="fa-chalkboard"
-                    no-action
-            >
-                <template v-slot:activator>
-                    <v-list-item-content>
-                        <v-list-item-title>Workshops</v-list-item-title>
-                    </v-list-item-content>
-                </template>
 
-                <v-list-item
-                        v-for="(role, i) in userRole"
-                        :key="i"
-                        link
+            <template v-if="this.$store.getters.isLoggedIn">
+                <v-list-group
+                        prepend-icon="fa-chalkboard"
+                        no-action
                 >
-                    <v-list-item-content>
-                        <v-list-item-title v-text="role.title"/>
-                    </v-list-item-content>
+                    <template v-slot:activator>
+                        <v-list-item-content>
+                            <v-list-item-title>Workshops</v-list-item-title>
+                        </v-list-item-content>
+                    </template>
+                    <v-list-item
+                            v-for="(role, i) in userRole"
+                            :key="i"
+                            :to="role.to"
+                            link
+                    >
+                        <v-list-item-content>
+                            <v-list-item-title v-text="role.title"/>
+                        </v-list-item-content>
 
-                </v-list-item>
-            </v-list-group>
+                    </v-list-item>
+                </v-list-group>
+
+            </template>
+
         </v-list>
 
     </v-navigation-drawer>
@@ -83,8 +88,9 @@
                     {title: 'User', icon: 'mdi-account-box', to: "/user"},
                 ],
                 userRole: [
-                    {title: "Attendee", icon: "fas fa-user-graduate", to: ""},
-                    {title: "Workshop Manager", icon: "mdi-teach", to: ""}
+                    {title: "Attendee", icon: "fas fa-user-graduate", to: "/workshopAttendee"},
+                    {title: "Manager", icon: "mdi-teach", to: "/workshopManager"},
+                    {title: "Grader", icon: "mdi-teach", to: "/workshopGrader"}
                 ]
             }
         }

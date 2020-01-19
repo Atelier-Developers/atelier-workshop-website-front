@@ -14,9 +14,9 @@
         <v-card-text
                 class="pt-6"
         >
-            <div class="font-weight-light grey--text body-1 mb-2">{{workshop.workshop.name}}</div>
-            <h3 class="headline font-weight-regular blue--text mb-2">{{workshop.name}}</h3>
-            <div class="font-weight-light title mb-2">
+            <div class="font-weight-light grey--text body-1 mb-2 text-capitalize">{{workshop.workshop.name}}</div>
+            <h3 class="headline font-weight-regular blue--text mb-2 text-capitalize">{{workshop.name}}</h3>
+            <div class="font-weight-light title mb-2 text-capitalize">
                 {{manager}}
             </div>
             <div class="font-weight-regular body-1 mb-2">

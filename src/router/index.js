@@ -5,6 +5,9 @@ import Signup from "../views/Signup";
 import Login from "../views/Login";
 import User from "../views/User";
 import WorkshopDetail from "../views/WorkshopDetail";
+import ShowAttendeeWorkshopHistory from "../views/ShowAttendeeWorkshopHistory";
+import ShowGraderWorkshopHistory from "../views/ShowGraderWorkshopHistory";
+import ShowManagerWorkshopHistory from "../views/ShowManagerWorkshopHistory";
 
 Vue.use(VueRouter)
 
@@ -15,11 +18,25 @@ const routes = [
     component: Home
   },
   {
-    path: '/user',
+    path: '/workshopManager',
+    name: 'manager',
+    component: ShowManagerWorkshopHistory
+  },
+  {
+    path: '/workshopAttendee',
+    name: 'Attendee',
+    component: ShowAttendeeWorkshopHistory
+  },
+  {
+    path: '/workshopGrader',
+    name: 'Grader',
+    component: ShowGraderWorkshopHistory
+  },
+  {
+    path: '/user-profile',
     name: 'User',
     component: User
   },
-
   {
     path: '/signup',
     name: 'Sign up',
