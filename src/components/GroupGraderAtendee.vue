@@ -1,29 +1,33 @@
 <template>
-    <div>
+    <v-container>
         <v-sheet
-                class="mx-auto"
+                class="mx-auto mb-4"
                 max-width="700"
         >
-            <v-slide-group multiple show-arrows>
+            <v-slide-group mandatory show-arrows center-active dark disable-sort>
                 <v-slide-item
-                        v-for="(i,group) in groups"
+                        v-for="(group, i) in groups"
                         :key="group.id"
+                        v-slot:default="{ active, toggle}"
                 >
                     <v-btn
                             class="mx-2"
                             active-class="blue white--text"
+                            :input-value="active"
                             depressed
                             rounded
-                            @click="() => toggle(i)"
+                            @click="() => optionClick(i, toggle)"
                     >
-                        {{group.name}}
+                        {{group.groupName}}
                     </v-btn>
                 </v-slide-item>
             </v-slide-group>
         </v-sheet>
 
-        <GroupTable :group="groups[activeGroup]"/>
-    </div>
+        <v-row justify="center">
+            <GroupTable :group="groups[activeGroup]"/>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -39,7 +43,8 @@
             }
         },
         methods: {
-            toggle(i) {
+            optionClick(i, f) {
+                f();
                 this.activeGroup = i;
             }
         }

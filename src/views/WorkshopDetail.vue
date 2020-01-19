@@ -100,6 +100,7 @@
                 //     })
                 // });
                 // return null;
+
                 return this.groups;
             },
             attendeeGroup: function () {
@@ -181,7 +182,8 @@
                 //         this.groups = res.data;
                 //     });
                 // }
-
+                // eslint-disable-next-line no-console
+                console.log(this.groups);
                 this.loading = false;
             })
 
@@ -197,7 +199,7 @@
                 return axios.get(this.$store.state.api + "/users/user");
             },
             getManagerGroups() {
-                return axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/"+ this.wId + "/groupDetails");
+                return axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.wId + "/groupDetails");
             },
             getGraderGroup() {
                 return axios.get(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.wId + "/groupDetails");

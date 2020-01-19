@@ -1,7 +1,7 @@
 <template>
-    <v-card>
+    <v-card max-width="900">
         <v-toolbar flat color="primary" dark>
-            <v-toolbar-title>{{group.name}}</v-toolbar-title>
+            <v-toolbar-title class="text-capitalize">{{group.groupName}}</v-toolbar-title>
         </v-toolbar>
         <v-tabs vertical>
             <v-tab>
@@ -13,10 +13,10 @@
                 Attendees
             </v-tab>
             <v-tab-item>
-                <DataTable :items="group.attenders" :headers="headers"/>
+                <DataTable :items="group.graders" :headers="headers"/>
             </v-tab-item>
             <v-tab-item>
-                <DataTable :items="group.graders" :headers="headers"/>
+                <DataTable :items="group.attendees" :headers="headers"/>
             </v-tab-item>
         </v-tabs>
     </v-card>
@@ -31,10 +31,21 @@
         props: ["group"],
         data() {
             return {
-                headers: ["Name", "username"]
+                headers: [{
+                    text: "NAME",
+                    value: "name",
+                    sortable: false,
+                    align: 'left',
+                },
+                    {
+                        text: "USERNAME",
+                        value: "username",
+                        sortable: false,
+                        align: 'left',
+                    },]
             }
 
-        }
+        },
     }
 </script>
 

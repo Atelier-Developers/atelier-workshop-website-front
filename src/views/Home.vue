@@ -18,8 +18,6 @@
         },
         mounted() {
             axios.get(this.$store.state.api + "/workshop/offeringWorkshops").then((res) => {
-                // eslint-disable-next-line no-console
-                console.log(res.data);
                 this.workshops = res.data;
             })
         }

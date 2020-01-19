@@ -2,8 +2,8 @@
 <!--   TODO add avatar to the table-->
 
     <v-data-table
-            :headers="this.headers"
-            :items="this.items"
+            :headers="headers"
+            :items="items"
             :items-per-page="10"
             class="elevation-1">
 
@@ -21,7 +21,13 @@
         props: [
             "items",
             "headers"
-        ]
+        ],
+        mounted() {
+            // eslint-disable-next-line no-console
+            console.log(this.items);
+            // eslint-disable-next-line no-console
+            console.log(this.headers);
+        }
     }
 </script>
 
