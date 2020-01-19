@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!this.loading">
+    <v-container v-if="!this.loading">
         <v-card outlined style="border: none;">
             <v-container>
                 <v-row>
@@ -23,7 +23,7 @@
             <WorkshopList :workshops="gradedList" title="Supervised Workshops"/>
             <WorkshopList :workshops="managedList" title="Presented Workshops"/>
         </v-container>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -50,9 +50,9 @@
                 axios.get(this.$store.state.api + "/userDetails/history/" + this.user.id).then((res) => {
                     // eslint-disable-next-line no-console
                     console.log(res.data);
-                    this.attendedList = res.data.managedWorkshops;
-                    this.gradedList = res.data.attendedWorkshops;
-                    this.managedList = res.data.gradedWorkshops;
+                    this.attendedList = res.data.attendedWorkshops;
+                    this.gradedList = res.data.gradedWorkshops;
+                    this.managedList = res.data.managedWorkshops;
                     this.loading = false;
                 })
             });

@@ -14,7 +14,17 @@
                 Attendees
             </v-tab>
             <v-tab-item>
-                <DataTable :items="group.graders" :headers="headers"/>
+                <DataTable :items="group.graders" :headers="headers">
+                    <template v-slot:item.action="{ item }">
+                        <v-icon
+                                small
+                                class="mr-2"
+                                @click="editItem(item)"
+                        >
+                            edit
+                        </v-icon>
+                    </template>
+                </DataTable>
             </v-tab-item>
             <v-tab-item>
                 <DataTable :items="group.attendees" :headers="headers"/>

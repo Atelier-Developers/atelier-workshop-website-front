@@ -45,7 +45,7 @@
         mounted() {
             axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop").then((res) => {
                 if(res.status === 204){
-                    this.loading = false
+                    this.loading = false;
                     return;
                 }
                 let workshops = res.data;

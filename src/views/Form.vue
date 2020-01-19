@@ -16,26 +16,30 @@
                         ref="form"
                 >
                     <div class="form-header text-capitalize">
-                        {{this.form[0].name}}
+                        {{this.form.name}}
                     </div>
-                    <label class="question" v-for="question in this.form[0].questions" :key="question.id">
-                        {{question.text}}
-                        <v-text-field
-                                v-if="!question.choicable"
-                                outlined
-                                class="form-input"
-                        >
-                        </v-text-field>
-                        <v-select v-else
-                                  v-model="select"
-                                  :items="question.answerables"
-                                  :rules="[v => !!v || 'Item is required']"
-                                  label="Item"
-                                  required
-                                  class="form-input"
-                        ></v-select>
+                    <label class="question" v-for="(question, i) in this.form.questions" :key="question.id">
+                        {{i + 1}}) {{question.text}}
+                        <template v-if="isAnswer">
+                            <v-text-field
+                                    v-if="!question.choicable"
+                                    outlined
+                                    :disabled="!isAnswer"
+                                    class="form-input"
+                            >
+                            </v-text-field>
+                        </template>
+                        <template v-else>
+                            <v-select v-if="question.answerables.length > 0"
+                                      :items="question.answerables"
+                                      :rules="[v => !!v || 'Item is required']"
+                                      label="Item"
+                                      required
+                                      class="form-input"
+                            />
+                        </template>
                     </label>
-                    <v-btn color="primary" @click="sendForm">Submit</v-btn>
+                    <v-btn color="primary" @click="sendForm" v-if="isAnswer">Submit</v-btn>
                 </v-form>
             </v-card>
         </v-row>
@@ -43,91 +47,11 @@
 </template>
 
 <script>
+    import axios from 'axios'
 
     export default {
         name: "Form",
-        data() {
-            return {
-                form: [
-                    {
-                        "id": 35,
-                        "name": "workshop form #1 for python basic",
-                        "questions": [
-                            {
-                                "id": 37,
-                                "text": "Describe the attendee's performance?",
-                                "answerables": [],
-                                "answers": [],
-                                "choicable": false
-                            }, {
-                                "id": 39,
-                                "text": "BLahh Blaah Blaah",
-                                "answerables": [],
-                                "answers": [],
-                                "choicable": false
-                            }, {
-                                "id": 38,
-                                "text": "Ye SOal KoSOSOSheerrr",
-                                "answerables": [
-                                    {
-                                        "id": 32,
-                                        "text": "great"
-                                    },
-                                    {
-                                        "id": 33,
-                                        "text": "poor"
-                                    }
-                                ],
-                                "answers": [],
-                                "choicable": true
-                            }
-                        ],
-                        "offeredWorkshop": {
-                            "id": 27,
-                            "name": "python basic",
-                            "startTime": "2019-01-09T04:38:31.000+0000",
-                            "endTime": "2019-02-09T04:38:31.000+0000",
-                            "price": 12.50,
-                            "description": "",
-                            "workshop": {
-                                "id": 25,
-                                "name": "python"
-                            },
-                            "workshopManager": {
-                                "id": 18
-                            },
-                            "workshopForms": [
-                                35
-                            ],
-                            "workshopRelationDetails": [],
-                            "graderEvaluationForm": {
-                                "id": 30,
-                                "name": "grader eval form for python basic",
-                                "questions": [
-                                    {
-                                        "id": 31,
-                                        "text": "How did the grader do?",
-                                        "answerables": [
-                                            {
-                                                "id": 32,
-                                                "text": "great"
-                                            },
-                                            {
-                                                "id": 33,
-                                                "text": "poor"
-                                            }
-                                        ],
-                                        "answers": [],
-                                        "choicable": true
-                                    }
-                                ],
-                                "offeredWorkshop": 27
-                            }
-                        }
-                    }
-                ]
-            }
-        },
+        props: ['form', 'isAnswer', 'type', 'offid', 'appId'],
         methods: {
             sendForm() {
                 let data = [];
@@ -145,14 +69,27 @@
                     //     }
                     // } else {
                     data.push({
-                        "questionId": this.form[0].questions[i].id,
-                        "type": this.form[0].questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
+                        "questionId": this.form.questions[i].id,
+                        "type": this.form.questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
                         "answerQuestion": inputs[i].internalValue
                     })
+
+                    if (this.type !== null) {
+                        if (this.type === 'grader') {
+                            axios.post("/graders/grader/request/offeringWorkshop/" + this.offid + "/answer", data)
+
+                        } else if (this.type === 'att') {
+                            axios.post("/attendees/attendee/request/offeringWorkshop/" + this.offid + "/answer", data)
+                        } else if (this.type === 'manager') {
+                            axios.post("/offeringWorkshop/offeringWorkshop/" + this.offid + "/graderEvaluationForm/answer", {
+                                formId: this.form.id,
+                                applicantId: this.appId,
+                                answerQuestion: data
+                            })
+                        }
+                    }
                     // }
                 }
-                // eslint-disable-next-line no-console
-                console.log(data);
             }
         }
     }

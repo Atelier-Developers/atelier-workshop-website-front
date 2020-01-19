@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer
+    <v-navigation-drawer v-if="this.$store.state.drawer"
             v-model="drawer"
             :src="image"
             absolute
@@ -85,7 +85,6 @@
                 bg: 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg',
                 items: [
                     {title: 'Home', icon: 'mdi-home', to: "/"},
-                    ...this.$store.getters.isLoggedIn ? [{title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId}] : [],
                 ],
                 userRole: [
                     {title: "Attendee", icon: "fas fa-user-graduate", to: "/workshopAttendee"},
@@ -93,6 +92,18 @@
                     {title: "Grader", icon: "mdi-teach", to: "/workshopGrader"}
                 ]
             }
+        },
+        computed: {
+            userButton() {
+                return this.$store.getters.isLoggedIn ? [{title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId}] : []
+            }
+        },
+        mounted() {
+            this.items.push(...this.userButton)
+            // eslint-disable-next-line no-console
+            console.log(this.$store.getters.isLoggedIn ? [{title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId}] : []);
+
+
         }
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
-    <v-container fluid class="fill-height">
-        <v-card max-width="550" class="my-auto mx-auto py-2" raised shaped>
+    <v-container fluid class="fill-height image_background">
+        <v-card max-width="550" class="my-auto mx-auto py-2 ima" raised shaped >
             <v-form v-model="isValid">
                 <v-container>
                     <v-row justify="center" dense>
@@ -82,6 +82,8 @@
                             console.log(res.data.id);
                             localStorage.setItem('userId', res.data.id);
                             this.$store.commit('auth_user_id', res.data.id);
+                            // eslint-disable-next-line no-console
+                            console.log(this.$store.state.userId);
                             this.$router.push("/");
                         })
 
