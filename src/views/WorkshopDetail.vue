@@ -5,26 +5,70 @@
         <WorkshopDetailInfo :offered-workshop="offeredWorkshop" :count="count" :manager="manager" :w-manager="isManager"
                             :prerequsite="prereq"/>
 
-        <v-container v-if="!passed ">
+        <v-container v-if="isManager">
+            <GroupGraderAtendee v-if="groups.length > 0" :groups="groups"/>
+            <div v-if="passed">
+
+            </div>
+            <div v-else-if="isHolding">
+                <!--chat for participants and graders of this -->
+            </div>
+
+            <div v-else-if="notStarted">
+                <!--pending requests-->
+            </div>
+        </v-container>
+
+        <v-container v-else-if="isGrader">
+            <GroupTable v-if="graderGroup != null" :group="graderGroup"/>
+            <div v-if="passed">
+
+            </div>
+            <div v-else-if="isHolding">
+                <!--                chat for participants and graders of this -->
+            </div>
+
+            <div v-else-if="notStarted">
+                <!--request status-->
+            </div>
+        </v-container>
+
+        <v-container v-else-if="isAttendee">
+            <GroupTable v-if="attendeeGroup != null" :group="attendeeGroup"/>
+            <div v-if="passed">
+
+            </div>
+            <div v-else-if="isHolding">
+<!--                chat for participants and graders of this -->
+            </div>
+
+            <div v-else-if="notStarted">
+                <!--request status-->
+            </div>
+        </v-container>
+
+        <v-container v-else>
             <v-btn color="primary">
                 register now!
             </v-btn>
         </v-container>
     </div>
-<!--    <v-progress-circular v-else-->
-<!--            :size="50"-->
-<!--            color="primary"-->
-<!--            indeterminate-->
-<!--    />-->
+    <!--    <v-progress-circular v-else-->
+    <!--            :size="50"-->
+    <!--            color="primary"-->
+    <!--            indeterminate-->
+    <!--    />-->
 </template>
 
 <script>
     import axios from "axios";
     import WorkshopDetailInfo from "../components/WorkshopDetailInfo";
+    import GroupGraderAtendee from "../components/GroupGraderAtendee";
+    import GroupTable from "../components/GroupTable";
 
     export default {
         name: "WorkshopDetail",
-        components: {WorkshopDetailInfo},
+        components: {GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
         props: ["wId", "wManager"],
         data() {
             return {
@@ -32,6 +76,7 @@
                 attList: [],
                 gradList: [],
                 manager: {},
+                groups: [],
                 count: 0,
                 user: {},
                 prereq: [],
@@ -39,13 +84,43 @@
             }
         },
         computed: {
+            graderGroup: function () {
+                this.groups.forEach((group) => {
+                    group.graders.forEach((grader) => {
+                        if (grader.id === this.user.id) {
+                            return group;
+                        }
+                    })
+                });
+                return null;
+            },
+            attendeeGroup: function () {
+                this.groups.forEach((group) => {
+                    group.attenders.forEach((attender) => {
+                        if (attender.id === this.user.id) {
+                            return group;
+                        }
+                    })
+                });
+                return null;
+            },
             passed: function () {
-                let d = new Date(this.offeredWorkshop.startTime);
+                let end = new Date(this.offeredWorkshop.endTime);
                 let dnow = new Date();
-                if (d.valueOf() < dnow.valueOf()) {
-                    return true
-                }
-                return false;
+                return end.valueOf() < dnow.valueOf();
+
+            },
+            isHolding: function () {
+                let start = new Date(this.offeredWorkshop.startTime);
+                let end = new Date(this.offeredWorkshop.endTime);
+                let dnow = new Date();
+                return dnow.valueOf() < end.valueOf() && dnow.valueOf() > start.valueOf();
+
+            },
+            notStarted: function () {
+                let start = new Date(this.offeredWorkshop.startTime);
+                let dnow = new Date();
+                return start.valueOf() > dnow.valueOf();
             },
             isGrader: function () {
                 this.gradList.forEach((grader) => {
@@ -64,14 +139,6 @@
                 return false;
             },
             isManager: function () {
-                // eslint-disable-next-line no-console
-                console.log("manager");
-                // eslint-disable-next-line no-console
-                console.log(this.manager)
-                // eslint-disable-next-line no-console
-                console.log("user");
-                // eslint-disable-next-line no-console
-                console.log(this.user)
                 return this.manager.id === this.user.id;
             }
         },
@@ -81,7 +148,7 @@
                 this.offeredWorkshop = r[0].data.offeredWorkshop;
                 this.manager = r[0].data.workshopManagerUser;
                 this.attList = r[0].data.attendeeUsers;
-                this.gradList =  r[0].data.graderUsers;
+                this.gradList = r[0].data.graderUsers;
                 this.prereq = r[0].data.preRequisites;
 
                 this.count = r[1].data.count;
@@ -100,6 +167,9 @@
             },
             getUser() {
                 return axios.get(this.$store.state.api + "/users/user");
+            },
+            getGroups() {
+                return null;
             }
 
         }

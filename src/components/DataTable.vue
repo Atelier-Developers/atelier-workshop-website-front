@@ -1,22 +1,16 @@
 <template>
+<!--   TODO add avatar to the table-->
+
     <v-data-table
             :headers="this.headers"
             :items="this.items"
             :items-per-page="10"
             class="elevation-1">
-        <template v-slot:item="row">
-            <tr>
-                <td v-for="value in row.item" v-bind:key="value">
-                    {{value}}
-                </td>
-                <td>
-                    <slot></slot>
-<!--                    <v-btn class="mx-2" fab dark small color="pink"  @click="x(row.item)">-->
-<!--                        <v-icon dark>mdi-heart</v-icon>-->
-<!--                    </v-btn>-->
-                </td>
-            </tr>
-        </template>
+
+        <slot></slot>
+        <!--                    <v-btn class="mx-2" fab dark small color="pink"  @click="x(row.item)">-->
+        <!--                        <v-icon dark>mdi-heart</v-icon>-->
+        <!--                    </v-btn>-->
 
     </v-data-table>
 </template>

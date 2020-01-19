@@ -109,12 +109,10 @@
                 return moment(this.offeredWorkshop.endTime).format("lll");
             },
             passed: function () {
-                let d = new Date(this.offeredWorkshop.startTime);
+                let end = new Date(this.offeredWorkshop.endTime);
                 let dnow = new Date();
-                if (d.valueOf() < dnow.valueOf()) {
-                    return true
-                }
-                return false;
+                return end.valueOf() < dnow.valueOf();
+
             },
             remainingTime: function () {
                 return moment(this.offeredWorkshop.startTime).fromNow();
