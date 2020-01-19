@@ -3,6 +3,7 @@
 export default {
     api: 'http://localhost:5000',
     status: '',
+    drawer: true,
     token: localStorage.getItem('token') || '',
     userId: localStorage.getItem('userId') || -1
 }

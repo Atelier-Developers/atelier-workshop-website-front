@@ -3,6 +3,7 @@
             flat
             app
             style="background: #eee;"
+            v-show="this.$store.state.drawer"
     >
         <v-toolbar-title>
             <v-app-bar-nav-icon v-if="responsive" @click.stop="$emit('toggle-drawer')"/>

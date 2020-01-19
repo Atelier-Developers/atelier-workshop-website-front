@@ -85,7 +85,7 @@
                 bg: 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg',
                 items: [
                     {title: 'Home', icon: 'mdi-home', to: "/"},
-                    {title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId},
+                    ...this.$store.getters.isLoggedIn ? [{title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId}] : [],
                 ],
                 userRole: [
                     {title: "Attendee", icon: "fas fa-user-graduate", to: "/workshopAttendee"},

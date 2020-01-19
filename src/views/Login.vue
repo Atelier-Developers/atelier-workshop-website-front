@@ -1,48 +1,44 @@
 <template>
-    <v-container  style="min-height: 100%" fluid>
-        <v-row justify="center" align="center">
-            <v-col cols="12" sm="8" md="4">
-                <v-card max-width="550" class="my-auto mx-auto py-2" raised shaped>
-                    <v-form v-model="isValid">
-                        <v-container>
-                            <v-row justify="center" dense>
-                                <v-col cols="11">
-                                    <v-text-field v-model="user.username" label="username" outlined
-                                                  :rules="[this.requiredRule('username')]" prepend-icon="mdi-account"/>
-                                </v-col>
-                                <v-col cols="11">
-                                    <v-text-field v-model="user.password" label="password" outlined
-                                                  type="password"
-                                                  :rules="[this.requiredRule('password')]" prepend-icon="lock"/>
-                                </v-col>
-                            </v-row>
+    <v-container fluid class="fill-height">
+        <v-card max-width="550" class="my-auto mx-auto py-2" raised shaped>
+            <v-form v-model="isValid">
+                <v-container>
+                    <v-row justify="center" dense>
+                        <v-col cols="11">
+                            <v-text-field v-model="user.username" label="username" outlined
+                                          :rules="[this.requiredRule('username')]" prepend-icon="mdi-account"/>
+                        </v-col>
+                        <v-col cols="11">
+                            <v-text-field v-model="user.password" label="password" outlined
+                                          type="password"
+                                          :rules="[this.requiredRule('password')]" prepend-icon="lock"/>
+                        </v-col>
+                    </v-row>
 
-                            <v-row justify="center" align="center" align-content="center" dense no-gutters>
-                                <v-btn
-                                        text
-                                        class="ma-2"
-                                        color="primary"
-                                        to="/signup"
-                                >
-                                    Create Account
-                                </v-btn>
+                    <v-row justify="center" align="center" align-content="center" dense no-gutters>
+                        <v-btn
+                                text
+                                class="ma-2"
+                                color="primary"
+                                to="/signup"
+                        >
+                            Create Account
+                        </v-btn>
 
-                                <v-btn
-                                        class="ma-2"
-                                        color="primary"
-                                        @click="login"
-                                        :disabled="!isValid"
-                                        :loading="loading"
-                                >
-                                    Login
-                                </v-btn>
-                            </v-row>
-                        </v-container>
+                        <v-btn
+                                class="ma-2"
+                                color="primary"
+                                @click="login"
+                                :disabled="!isValid"
+                                :loading="loading"
+                        >
+                            Login
+                        </v-btn>
+                    </v-row>
+                </v-container>
 
-                    </v-form>
-                </v-card>
-            </v-col>
-        </v-row>
+            </v-form>
+        </v-card>
     </v-container>
 </template>
 
@@ -104,7 +100,8 @@
     .image_background {
         background: url("../assets/pexels-photo-747964.jpeg");
     }
-    .fill-height2{
+
+    .fill-height2 {
         height: 100%;
     }
 </style>
