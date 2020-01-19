@@ -24,9 +24,8 @@
             </v-slide-group>
         </v-sheet>
 
-        <v-row justify="center">
-            <GroupTable :group="groups[activeGroup]"/>
-        </v-row>
+
+        <GroupTable :group="groups[activeGroup]"/>
     </v-container>
 </template>
 

@@ -13,6 +13,6 @@ export default {
     },
     logout(state){
         state.status = '';
-        state.token = ''
+        state.token = '';
     },
 }

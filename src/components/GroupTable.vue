@@ -1,4 +1,5 @@
 <template>
+    <v-row justify="center" class="ma-5">
     <v-card max-width="900">
         <v-toolbar flat color="primary" dark>
             <v-toolbar-title class="text-capitalize">{{group.groupName}}</v-toolbar-title>
@@ -20,6 +21,7 @@
             </v-tab-item>
         </v-tabs>
     </v-card>
+    </v-row>
 </template>
 
 <script>

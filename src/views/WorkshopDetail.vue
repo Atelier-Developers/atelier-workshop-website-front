@@ -85,22 +85,13 @@
                 manager: {},
                 groups: [],
                 count: 0,
-                user: {},
+                user: null,
                 prereq: [],
                 loading: true
             }
         },
         computed: {
             graderGroup: function () {
-                // this.groups.forEach((group) => {
-                //     group.graders.forEach((grader) => {
-                //         if (grader.id === this.user.id) {
-                //             return group;
-                //         }
-                //     })
-                // });
-                // return null;
-
                 return this.groups;
             },
             attendeeGroup: function () {
@@ -132,6 +123,9 @@
                 return start.valueOf() > dnow.valueOf();
             },
             isGrader: function () {
+                if(!this.$store.getters.isLoggedIn){
+                    return false;
+                }
                 let state = false;
                 this.gradList.forEach((grader) => {
                     if (grader.id === this.user.id) {
@@ -141,6 +135,9 @@
                 return state;
             },
             isAttendee: function () {
+                if(!this.$store.getters.isLoggedIn){
+                    return false;
+                }
                 let state = false;
                 this.attList.forEach((att) => {
                     if (att.id === this.user.id) {
@@ -150,12 +147,15 @@
                 return state;
             },
             isManager: function () {
+                if(!this.$store.getters.isLoggedIn){
+                    return false;
+                }
                 return this.manager.id === this.user.id;
             }
         },
         mounted() {
 
-            axios.all([this.getOfferedWorkshop(), this.getCount(), this.getUser()]).then((r) => {
+            axios.all([this.getOfferedWorkshop(), this.getCount()]).then((r) => {
                 this.offeredWorkshop = r[0].data.offeredWorkshop;
                 this.manager = r[0].data.workshopManagerUser;
                 this.attList = r[0].data.attendeeUsers;
@@ -164,27 +164,33 @@
 
                 this.count = r[1].data.count;
 
-                this.user = r[2].data;
+                if (this.$store.getters.isLoggedIn) {
+                    this.getUser().then((res) => {
+                        this.user = res.data
+                        if (this.isManager) {
+                            this.getManagerGroups().then((res) => {
+                                this.groups = res.data;
+                                this.loading = false;
 
-                if (this.isManager) {
-                    this.getManagerGroups().then((res) => {
-                        this.groups = res.data;
-                    });
-                } else if (this.isGrader) {
+                            });
+                        } else if (this.isGrader) {
 
-                    this.getGraderGroup().then((res) => {
-                        this.groups = res.data;
-                    });
+                            this.getGraderGroup().then((res) => {
+                                this.groups = res.data;
+                                this.loading = false;
 
+                            });
+
+                        } else if (this.isAttendee) {
+                            this.getAttendeeGroup().then((res) => {
+                                this.groups = res.data;
+                                this.loading = false;
+                            });
+                        }
+                    })
+                } else {
+                    this.loading = false;
                 }
-                // else if (this.isAttendee) {
-                //     this.getAttendeeGroup().then((res) => {
-                //         this.groups = res.data;
-                //     });
-                // }
-                // eslint-disable-next-line no-console
-                console.log(this.groups);
-                this.loading = false;
             })
 
         },
@@ -204,9 +210,9 @@
             getGraderGroup() {
                 return axios.get(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.wId + "/groupDetails");
             },
-            // getAttendeeGroup() {
-            //     return null;
-            // }
+            getAttendeeGroup() {
+                return null;
+            }
 
         }
 
