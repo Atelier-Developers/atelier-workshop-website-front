@@ -5,6 +5,12 @@
         <WorkshopDetailInfo :offered-workshop="offeredWorkshop" :count="count" :manager="manager" :w-manager="isManager"
                             :prerequsite="prereq"/>
 
+
+        <!--        <v-btn color="primary">-->
+        <!--            go to chatroom-->
+        <!--        </v-btn>-->
+        <!--        <WorkshopChat/>-->
+
         <v-container v-if="isManager">
             <GroupGraderAtendee v-if="groups.length > 0" :groups="groups"/>
             <div v-if="passed">
@@ -25,7 +31,7 @@
 
             </div>
             <div v-else-if="isHolding">
-                <!--                chat for participants and graders of this -->
+                <!--chat for participants and graders of this -->
             </div>
 
             <div v-else-if="notStarted">
@@ -39,7 +45,7 @@
 
             </div>
             <div v-else-if="isHolding">
-<!--                chat for participants and graders of this -->
+                <!--                chat for participants and graders of this -->
             </div>
 
             <div v-else-if="notStarted">
@@ -65,6 +71,7 @@
     import WorkshopDetailInfo from "../components/WorkshopDetailInfo";
     import GroupGraderAtendee from "../components/GroupGraderAtendee";
     import GroupTable from "../components/GroupTable";
+    // import WorkshopChat from "../components/WorkshopChat";
 
     export default {
         name: "WorkshopDetail",
@@ -154,6 +161,22 @@
                 this.count = r[1].data.count;
 
                 this.user = r[2].data;
+
+                if (this.isManager) {
+                    this.getManagerGroups().then((res) => {
+                        this.groups = res.data;
+                    });
+                } else if (this.isGrader) {
+                    this.getGraderGroup().then((res) => {
+                        this.groups = res.data;
+                    });
+
+                } else if (this.isAttendee) {
+                    this.getAttendeeGroup().then((res) => {
+                        this.groups = res.data;
+                    });
+                }
+
                 this.loading = false;
             })
 
@@ -168,7 +191,13 @@
             getUser() {
                 return axios.get(this.$store.state.api + "/users/user");
             },
-            getGroups() {
+            getManagerGroups() {
+                return null;
+            },
+            getGraderGroup() {
+                return null;
+            },
+            getAttendeeGroup() {
                 return null;
             }
 
