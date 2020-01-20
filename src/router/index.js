@@ -65,7 +65,7 @@ const routes = [
   },
   {
     path: '/workshop/:wId',
-    name: 'WorkshopDetail',
+    name: 'Workshop',
     component: WorkshopDetail,
     props: true,
   },

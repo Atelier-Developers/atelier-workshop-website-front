@@ -31,7 +31,7 @@
         props: ['forms', 'isAnswer', 'type'],
         methods: {
             routeToForm(id) {
-                this.$router.push({
+                this.$router.replace({
                     name: 'workshopForm', params: {
                         formId: id,
                         isAnswer: this.isAnswer,
