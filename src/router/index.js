@@ -11,73 +11,86 @@ import UserProfile from "../views/UserProfile";
 import NotFoundPage from "../views/NotFoundPage";
 import Form from "../views/Form";
 import WorkshopForms from "../views/WorkshopForms";
+import AdminPage from "../views/AdminPage";
+import OfferingWorkshops from "../views/OfferingWorkshops";
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/workshopManager',
-    name: 'manager',
-    component: ShowManagerWorkshopHistory
-  },
-  {
-    path: '/workshopAttendee',
-    name: 'Attendee',
-    component: ShowAttendeeWorkshopHistory
-  },
-  {
-    path: '/workshopGrader',
-    name: 'Grader',
-    component: ShowGraderWorkshopHistory
-  },
-  {
-    path: '/user-profile/:id',
-    name: 'Profile',
-    component: UserProfile,
-    props: true
-  },
-  {
-    path: '/signup',
-    name: 'Sign up',
-    component: Signup
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/workshop/form',
-    name: 'workshopForm',
-    component: Form,
-    props: true
-  },
-  {
-    path: '/workshop/forms',
-    name: 'workshopForms',
-    component: WorkshopForms,
-    props: true
-  },
-  {
-    path: '/workshop/:wId',
-    name: 'Workshop',
-    component: WorkshopDetail,
-    props: true,
-  },
-  {
-    path: '*',
-    name: "Not Found Page",
-    component: NotFoundPage
-  }
+    {
+        path: '/',
+        name: 'Home',
+        component: Home
+    },
+    {
+        path: '/workshopManager',
+        name: 'manager',
+        component: ShowManagerWorkshopHistory
+    },
+    {
+        path: '/workshopAttendee',
+        name: 'Attendee',
+        component: ShowAttendeeWorkshopHistory
+    },
+    {
+        path: '/workshopGrader',
+        name: 'Grader',
+        component: ShowGraderWorkshopHistory
+    },
+    {
+        path: '/user-profile/:id',
+        name: 'Profile',
+        component: UserProfile,
+        props: true
+    },
+    {
+        path: '/signup',
+        name: 'Sign up',
+        component: Signup
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/workshop/form',
+        name: 'workshopForm',
+        component: Form,
+        props: true
+    },
+    {
+        path: '/workshop/forms',
+        name: 'workshopForms',
+        component: WorkshopForms,
+        props: true
+    },
+    {
+        path: '/workshop/offringworkshop/:id',
+        name: 'Offering Workshops',
+        component: OfferingWorkshops,
+        props: true,
+    },
+    {
+        path: '/workshop/:wId',
+        name: 'Workshop',
+        component: WorkshopDetail,
+        props: true,
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: AdminPage
+    },
+    {
+        path: '*',
+        name: "Not Found Page",
+        component: NotFoundPage
+    }
 ]
 
 const router = new VueRouter({
-  routes
+    routes
 })
 
 export default router
