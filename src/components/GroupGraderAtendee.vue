@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <p class="display-3 grey--text text--darken-2">Groups</p>
+        <p class="display-3 grey--text text--darken-2 my-10 text-center">Groups</p>
         <v-sheet
                 class="mx-auto mb-4"
                 max-width="700"

@@ -21,7 +21,7 @@
             <v-container v-if="isManager">
                 <GroupGraderAtendee v-if="groups.length > 0" :groups="groups" :isManager="true"/>
                 <div class="my-5">
-                    <p class="display-3 grey--text text--darken-2">Make Form</p>
+                    <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">
                         <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
                     </div>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="my-5">
-                    <p class="display-3 grey--text text--darken-2">Show Forms</p>
+                    <p class="display-3 grey--text text--darken-2 text-center my-10">Show Forms</p>
                     <div class="text-center mt-5">
 
                         <v-btn color="primary" :disabled="this.offeredWorkshop.graderEvaluationForm === null"
@@ -73,7 +73,7 @@
             <v-container v-else-if="isGrader">
                 <GroupTable v-if="graderGroup != null" :group="graderGroup"/>
                 <div class="my-5">
-                    <p class="display-3 grey--text text--darken-2" v-if="isHolding || passed">Show Forms</p>
+                    <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show Forms</p>
                     <div class="text-center">
                         <div v-if="passed">
                             <v-btn color="primary"
@@ -118,6 +118,7 @@
             </v-container>
 
             <v-container v-else>
+                <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                 <div v-if="this.$store.getters.isLoggedIn" class="text-center">
                     <v-btn color="primary" :disabled="this.attReqForm !== null"
                            class="ma-2"
@@ -129,6 +130,7 @@
                     </v-btn>
                 </div>
                 <div v-else>
+                    <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                     <div v-if="this.notStarted" class="text-center">
                         <v-btn color="primary" to="/login" class="ma-2">register now!
                         </v-btn>

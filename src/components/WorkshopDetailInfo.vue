@@ -75,20 +75,29 @@
             </v-container>
         </v-card>
 
-        <v-card tile outlined style="border: none;">
-            <v-container v-if="prerequsite.length > 0">
-                <p class="display-2 my-2">Prerequisites</p>
-                <v-row>
-                    <v-col v-for="p in prerequsite" cols="3" :key="p.id" class="title">
-                        <v-icon>fas fa-check</v-icon>
-                        {{p}}
-                    </v-col>
-                </v-row>
-            </v-container>
-            <v-container v-else>
-                <EmptyState icon="mdi-book-open-variant" title="no prerequisite needed!"/>
-            </v-container>
-        </v-card>
+       <v-row justify="center" class="my-9">
+           <v-card max-width="600" width="100%" :raised="prerequsite.length !== 0" :outlined="prerequsite.length === 0">
+               <v-container v-if="prerequsite.length > 0">
+                   <p class="display-3 grey--text text--darken-2 text-center">Prerequisites</p>
+                   <v-row>
+                       <v-col v-for="p in prerequsite" cols="6" md="3" :key="p" class="title">
+                           <v-chip
+                                   class="ma-2 text-capitalize"
+                                   color="primary"
+                                   label
+                           >
+                               <v-icon left>mdi-book-open-variant</v-icon>
+                               {{p}}
+                           </v-chip>
+
+                       </v-col>
+                   </v-row>
+               </v-container>
+               <v-container v-else>
+                   <EmptyState icon="mdi-book-open-variant" title="no prerequisite needed!"/>
+               </v-container>
+           </v-card>
+       </v-row>
     </div>
 </template>
 
