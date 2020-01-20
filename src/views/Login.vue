@@ -1,6 +1,6 @@
 <template>
     <v-container fluid class="fill-height image_background">
-        <v-card max-width="550" class="my-auto mx-auto py-2 ima" raised shaped >
+        <v-card max-width="550" class="my-auto mx-auto py-3 ima" raised shaped>
             <v-form v-model="isValid">
                 <v-container>
                     <v-row justify="center" dense>
@@ -11,7 +11,7 @@
                         <v-col cols="11">
                             <v-text-field v-model="user.password" label="password" outlined
                                           type="password"
-                                          :rules="[this.requiredRule('password')]" prepend-icon="lock"/>
+                                          :rules="[this.requiredRule('password')]" prepend-icon="mdi-lock"/>
                         </v-col>
                     </v-row>
 
@@ -35,6 +35,10 @@
                             Login
                         </v-btn>
                     </v-row>
+                    <div class="text-center error--text font-weight-regular text-uppercase mt-4" v-if="error">
+                            <v-icon class="mr-3" color="error">mdi-alert</v-icon>
+                            username or password is wrong
+                    </div>
                 </v-container>
 
             </v-form>
@@ -49,6 +53,7 @@
         name: "Login",
         data() {
             return {
+                error: false,
                 isValid: false,
                 loading: false,
                 user: {
@@ -92,6 +97,7 @@
                     localStorage.removeItem('token');
                     this.$store.commit('auth_error');
                     this.loading = false;
+                    this.error = true
                 });
             }
         }
@@ -100,7 +106,10 @@
 
 <style scoped>
     .image_background {
-        background: url("../assets/pexels-photo-747964.jpeg");
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7)), url("../assets/pexels-photo-747964.jpeg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .fill-height2 {

@@ -1,8 +1,8 @@
 <template>
-   <v-container class="fill-height">
-       <v-card max-width="550" class="my-auto mx-auto py-2" raised shaped>
+   <v-container class="fill-height image_background" fluid>
+       <v-card max-width="550" class="my-auto mx-auto py-2 " raised shaped>
 
-           <v-form v-model="isValid">
+           <v-form v-model="isValid" class="ma-3">
                <v-container>
                    <v-row justify="center" dense no-gutters>
                        <v-col cols="11">
@@ -15,11 +15,11 @@
                        </v-col>
                        <v-col cols="11">
                            <v-text-field v-model="user.password" label="Password" outlined
-                                         :rules="[this.requiredRule('password')]" type="password" prepend-icon="lock"/>
+                                         :rules="[this.requiredRule('password')]" type="password" prepend-icon="mdi-lock"/>
                        </v-col>
                        <v-col cols="11">
                            <v-text-field v-model="user.address" label="Address" outlined
-                                         :rules="[this.requiredRule('address')]" prepend-icon="place"/>
+                                         :rules="[this.requiredRule('address')]" prepend-icon="mdi-office-building"/>
                        </v-col>
 
                    </v-row>
@@ -45,7 +45,10 @@
                            Sign Up
                        </v-btn>
                    </v-row>
-
+                   <div class="text-center error--text font-weight-regular text-uppercase mt-4" v-if="error">
+                       <v-icon class="mr-3" color="error">mdi-alert</v-icon>
+                       username is already taken
+                   </div>
 
                </v-container>
 
@@ -62,6 +65,7 @@
             return {
                 isValid: false,
                 loading: false,
+                error: false,
                 user: {
                     username: "",
                     password: "",
@@ -87,6 +91,7 @@
                         this.$router.push("/");
                     }
                 ).catch(() => {
+                    this.error = true;
                     this.loading = false;
                 });
             }
@@ -95,5 +100,10 @@
 </script>
 
 <style scoped>
-
+    .image_background {
+        background-image: linear-gradient(to right, rgba(0, 0,0, 0), rgba(0, 0, 0, 0.7)), url("../assets/pexels-photo-747964.jpeg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 </style>
