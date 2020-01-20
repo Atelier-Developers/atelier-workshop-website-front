@@ -1,5 +1,5 @@
 <template>
-<!--   TODO add avatar to the table-->
+    <!--   TODO add avatar to the table-->
 
     <v-data-table
             :headers="headers"
@@ -7,7 +7,15 @@
             :items-per-page="10"
             class="elevation-1">
 
-        <slot></slot>
+        <template v-slot:item.action="{ item }" v-if="isManager">
+            <v-icon
+                    small
+                    class="mr-2"
+                    @click="() => sendAppId(item.id)"
+            >
+                fas fa-edit
+            </v-icon>
+        </template>
         <!--                    <v-btn class="mx-2" fab dark small color="pink"  @click="x(row.item)">-->
         <!--                        <v-icon dark>mdi-heart</v-icon>-->
         <!--                    </v-btn>-->
@@ -20,14 +28,27 @@
         name: "DataTable",
         props: [
             "items",
-            "headers"
+            "headers",
+            'graderReqId',
+
+            "isManager"
         ],
-        mounted() {
-            // eslint-disable-next-line no-console
-            console.log(this.items);
-            // eslint-disable-next-line no-console
-            console.log(this.headers);
-        }
+        methods: {
+            sendAppId(id) {
+                this.$store.commit('setAppId', id);
+                this.$store.commit('setShowFormValue', true);
+                this.$store.commit('setGraderEval', true);
+            },
+            routeToForm(id) {
+                this.$router.push({
+                    name: 'workshopForm', params: {
+                        formId: id,
+                        isAnswer: this.isAnswer,
+                        type: this.type
+                    }
+                })
+            },
+        },
     }
 </script>
 

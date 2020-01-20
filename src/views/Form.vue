@@ -29,17 +29,17 @@
                             >
                             </v-text-field>
                         </template>
-                        <template v-else>
                             <v-select v-if="question.answerables.length > 0"
                                       :items="question.answerables"
                                       :rules="[v => !!v || 'Item is required']"
-                                      label="Item"
+                                      label="Options"
                                       required
-                                      class="form-input"
+                                      class="form-input ma-4"
                             />
-                        </template>
                     </label>
-                    <v-btn color="primary" @click="sendForm" v-if="isAnswer">Submit</v-btn>
+                    <div>
+                        <v-btn color="primary" @click="sendForm" v-if="isAnswer" class="ma-3">Submit</v-btn>
+                    </div>
                 </v-form>
             </v-card>
         </v-row>
@@ -51,7 +51,17 @@
 
     export default {
         name: "Form",
-        props: ['form', 'isAnswer', 'type', 'offid', 'appId'],
+        props: ['formId', 'isAnswer', 'type', 'appId'],
+        data() {
+            return {
+                form: null,
+            }
+        },
+        mounted() {
+            axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
+                this.form = res.data;
+            })
+        },
         methods: {
             sendForm() {
                 let data = [];
@@ -72,16 +82,16 @@
                         "questionId": this.form.questions[i].id,
                         "type": this.form.questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
                         "answerQuestion": inputs[i].internalValue
-                    })
+                    });
 
                     if (this.type !== null) {
                         if (this.type === 'grader') {
-                            axios.post("/graders/grader/request/offeringWorkshop/" + this.offid + "/answer", data)
+                            axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
 
                         } else if (this.type === 'att') {
-                            axios.post("/attendees/attendee/request/offeringWorkshop/" + this.offid + "/answer", data)
-                        } else if (this.type === 'manager') {
-                            axios.post("/offeringWorkshop/offeringWorkshop/" + this.offid + "/graderEvaluationForm/answer", {
+                            axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
+                        } else if (this.type === 'manager' && this.isAnswer) {
+                            axios.post(this.$store.state.api + "/offeringWorkshop/offeringWorkshop/" + this.form.offeredWorkshop.id + "/graderEvaluationForm/answer", {
                                 formId: this.form.id,
                                 applicantId: this.appId,
                                 answerQuestion: data

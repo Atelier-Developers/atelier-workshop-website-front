@@ -2,11 +2,10 @@
 
     <!--    TODO add paralex image-->
     <div v-if="!this.loading">
-        <template v-if="!showForms">
+        <template>
             <WorkshopDetailInfo :offered-workshop="offeredWorkshop" :count="count" :manager="manager"
                                 :w-manager="isManager"
                                 :prerequsite="prereq"/>
-
 
             <!--        <v-btn color="primary">-->
             <!--            go to chatroom-->
@@ -14,7 +13,7 @@
             <!--        <WorkshopChat/>-->
 
             <v-container v-if="isManager">
-                <GroupGraderAtendee v-if="groups.length > 0" :groups="groups"/>
+                <GroupGraderAtendee v-if="groups.length > 0" :groups="groups" :isManager="true"/>
                 <div v-if="passed">
                     <v-btn color="primary">Make grader evaluation form</v-btn>
                 </div>
@@ -33,17 +32,21 @@
                 </div>
                 <!--            TODO  check {}-->
                 <v-btn color="primary" :disabled="this.offeredWorkshop.graderEvaluationForm === null"
-                       @click="() => setFromClick(offeredWorkshop.graderEvaluationForm, false, 'manager')">show grader
+                       @click="() => routeToForm(this.offeredWorkshop.graderEvaluationForm.id,false, 'manager')">show
+                    grader
                     evaluation
                     forms
                 </v-btn>
                 <v-btn color="primary" :disabled="this.attReqForm === null"
-                       @click="() => setFromClick(attReqForm, false)">show attendee register forms
+                       @click="() => routeToForm(this.attReqForm.id,false, 'manager')">show attendee register forms
                 </v-btn>
                 <v-btn color="primary" :disabled="this.graderReqForm === null"
-                       @click="() => setFromClick(graderReqForm, false)">show grader register forms
+                       @click="() => routeToForm(this.graderReqForm.id,false, 'manager')">show grader register forms
                 </v-btn>
-                <v-btn color="primary" :disabled="this.offeredWorkshop.workshopForms.length === 0">show workshop forms
+                <v-btn color="primary"
+                       :disabled="this.offeredWorkshop.workshopForms.length === 0"
+                       @click="() => routeToWorkshopForm(false, 'manager')"
+                >show workshop forms
                 </v-btn>
 
             </v-container>
@@ -51,15 +54,19 @@
             <v-container v-else-if="isGrader">
                 <GroupTable v-if="graderGroup != null" :group="graderGroup"/>
                 <div v-if="passed">
-                    <v-btn color="primary" :disabled="this.offeredWorkshop.workshopForms.length === 0">show workshop
-                        forms
+                    <v-btn color="primary"
+                           :disabled="this.offeredWorkshop.workshopForms.length === 0"
+                           @click="() => routeToWorkshopForm(true, 'grader')"
+                    >show workshop forms
                     </v-btn>
 
                 </div>
                 <div v-else-if="isHolding">
                     <!--chat for participants and graders of this -->
-                    <v-btn color="primary" :disabled="this.offeredWorkshop.workshopForms.length === 0">show workshop
-                        forms
+                    <v-btn color="primary"
+                           :disabled="this.offeredWorkshop.workshopForms.length === 0"
+                           @click="() => routeToWorkshopForm(true, 'grader')"
+                    >show workshop forms
                     </v-btn>
 
                 </div>
@@ -84,16 +91,24 @@
             </v-container>
 
             <v-container v-else>
-                <v-btn color="primary" :disabled="this.attReqForm !== null"
-                       @click="() => setFromClick(attReqForm, true, 'att')">register now!
-                </v-btn>
-                <v-btn color="primary" :disabled="this.graderReqForm !== null"
-                       @click="() => setFromClick(graderReqForm, true, 'grader')">Request as a grader
-                </v-btn>
+                <template v-if="this.$store.getters.isLoggedIn">
+                    <v-btn color="primary" :disabled="this.attReqForm !== null"
+                           @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
+                    </v-btn>
+                    <v-btn color="primary" :disabled="this.graderReqForm !== null"
+                           @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a grader
+                    </v-btn>
+                </template>
+                <template v-else>
+                    <template v-if="this.notStarted">
+                        <v-btn color="primary" to="/login">register now!
+                        </v-btn>
+                        <v-btn color="primary" to="/login">Request as a grader
+                        </v-btn>
+                    </template>
+                </template>
+
             </v-container>
-        </template>
-        <template v-else>
-            <Form :form="form" :is-answer="isAnswer"/>
         </template>
     </div>
     <!--    <v-progress-circular v-else-->
@@ -108,20 +123,15 @@
     import WorkshopDetailInfo from "../components/WorkshopDetailInfo";
     import GroupGraderAtendee from "../components/GroupGraderAtendee";
     import GroupTable from "../components/GroupTable";
-    import Form from "./Form";
     // import WorkshopChat from "../components/WorkshopChat";
 
     export default {
         name: "WorkshopDetail",
-        components: {Form, GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
+        components: {GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
         props: ["wId"],
         data() {
             return {
                 form: {},
-                showForms: false,
-                appId: null,
-                showWorkshopForms: false,
-                isAnswer: false,
                 offeredWorkshop: {},
                 answerType: "",
                 attList: [],
@@ -196,8 +206,6 @@
 
             axios.all([this.getOfferedWorkshop(), this.getCount()]).then((r) => {
                 this.offeredWorkshop = r[0].data.offeredWorkshop;
-                // eslint-disable-next-line no-console
-                console.log(this.offeredWorkshop);
                 this.manager = r[0].data.workshopManagerUser;
                 this.attList = r[0].data.attendeeUsers;
                 this.gradList = r[0].data.graderUsers;
@@ -240,32 +248,30 @@
                         }
                     })
                 } else {
-                    axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
-                        if (res[0].status !== 204) {
-                            this.attReqForm = res[0].data;
-                        }
-                        if (res[1].status !== 204) {
-                            this.graderReqForm = res[1].data;
-                        }
-                        this.loading = false;
-                    })
-
+                    this.loading = false;
                 }
             })
 
         },
         methods: {
-            setF(id) {
-                this.appId = id;
-                this.showForms = true;
-                this.isAnswer = true;
-                this.type = 'manager'
+            routeToWorkshopForm(isAnswer1, type) {
+                this.$router.push({
+                    name: 'workshopForms', params: {
+                        forms: this.offeredWorkshop.workshopForms,
+                        isAnswer: isAnswer1,
+                        type: type,
+                    }
+                })
             },
-            setFromClick(formW, answer, type) {
-                this.form = formW;
-                this.showForms = true;
-                this.isAnswer = answer;
-                this.answerType = type;
+            routeToForm(id, isAnswer1, type1, appid) {
+                this.$router.push({
+                    name: 'workshopForm', params: {
+                        formId: id,
+                        isAnswer: isAnswer1,
+                        type: type1,
+                        appId: appid
+                    }
+                })
             },
             getOfferedWorkshop() {
                 return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId)

@@ -25,7 +25,7 @@
         </v-sheet>
 
 
-        <GroupTable :group="groups[activeGroup]"/>
+        <GroupTable :group="groups[activeGroup]" :isManager="isManager"/>
     </v-container>
 </template>
 
@@ -35,7 +35,7 @@
     export default {
         name: "GroupGraderAtendee",
         components: {GroupTable},
-        props: ["groups"],
+        props: ["groups", "isManager"],
         data() {
             return {
                 activeGroup: 0,

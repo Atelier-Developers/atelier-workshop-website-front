@@ -5,5 +5,5 @@ export default {
     status: '',
     drawer: true,
     token: localStorage.getItem('token') || '',
-    userId: localStorage.getItem('userId') || -1
+    userId: localStorage.getItem('userId') || -1,
 }

@@ -9,6 +9,8 @@ import ShowGraderWorkshopHistory from "../views/ShowGraderWorkshopHistory";
 import ShowManagerWorkshopHistory from "../views/ShowManagerWorkshopHistory";
 import UserProfile from "../views/UserProfile";
 import NotFoundPage from "../views/NotFoundPage";
+import Form from "../views/Form";
+import WorkshopForms from "../views/WorkshopForms";
 
 Vue.use(VueRouter)
 
@@ -48,6 +50,18 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/workshop/form',
+    name: 'workshopForm',
+    component: Form,
+    props: true
+  },
+  {
+    path: '/workshop/forms',
+    name: 'workshopForms',
+    component: WorkshopForms,
+    props: true
   },
   {
     path: '/workshop/:wId',
