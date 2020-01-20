@@ -76,10 +76,10 @@
         </v-card>
 
        <v-row justify="center" class="my-9">
-           <v-card max-width="600" width="100%" :raised="prerequsite.length !== 0" :outlined="prerequsite.length === 0">
+           <v-card max-width="600" width="100%" outlined style="border: none;">
                <v-container v-if="prerequsite.length > 0">
                    <p class="display-3 grey--text text--darken-2 text-center">Prerequisites</p>
-                   <v-row>
+                   <v-row justify="center">
                        <v-col v-for="p in prerequsite" cols="6" md="3" :key="p" class="title">
                            <v-chip
                                    class="ma-2 text-capitalize"

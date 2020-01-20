@@ -1,12 +1,12 @@
 <template>
     <v-navigation-drawer v-if="this.$store.state.drawer"
-            v-model="drawer"
-            :src="image"
-            absolute
-            dark
-            app
-            width="260"
-            class="navbar"
+                         v-model="drawer"
+                         :src="image"
+                         absolute
+                         dark
+                         app
+                         width="260"
+                         class="navbar"
     >
         <v-list
                 dense
@@ -29,7 +29,7 @@
             <v-divider dark/>
 
             <v-list-item
-                    v-for="item in items"
+                    v-for="item in userButton"
                     :key="item.title"
                     :to="item.to"
                     link
@@ -83,9 +83,6 @@
                 image: 'https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg',
                 drawer: this.$store.state.drawer,
                 bg: 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg',
-                items: [
-                    {title: 'Home', icon: 'mdi-home', to: "/"},
-                ],
                 userRole: [
                     {title: "Attendee", icon: "fas fa-user-graduate", to: "/workshopAttendee"},
                     {title: "Manager", icon: "mdi-teach", to: "/workshopManager"},
@@ -95,16 +92,13 @@
         },
         computed: {
             userButton() {
-                return this.$store.getters.isLoggedIn ? [{title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId}] : []
+                return this.$store.getters.isLoggedIn ? [{title: 'Home', icon: 'mdi-home', to: "/"}, {
+                    title: 'User',
+                    icon: 'mdi-account-box',
+                    to: "/user-profile/" + this.$store.state.userId
+                }] : [{title: 'Home', icon: 'mdi-home', to: "/"}]
             }
         },
-        mounted() {
-            this.items.push(...this.userButton)
-            // eslint-disable-next-line no-console
-            console.log(this.$store.getters.isLoggedIn ? [{title: 'User', icon: 'mdi-account-box', to: "/user-profile/" + this.$store.state.userId}] : []);
-
-
-        }
     }
 </script>
 
