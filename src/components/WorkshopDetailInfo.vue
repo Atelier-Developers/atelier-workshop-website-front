@@ -1,33 +1,32 @@
 <template>
     <div>
+        <!--        TODO PowerPoint-->
         <v-card
                 dark
                 tile
         >
-            <v-container style="position: relative">
-                <v-row no-gutters justify="space-between">
+            <v-container style="position: relative" fluid>
+                <v-row no-gutters justify="space-between" class="mt-4">
                     <v-col cols="12" sm="7">
-                        <v-card-title
-                                class="headline text-capitalize"
-                                v-text="offeredWorkshop.name"
-                        />
-                        <div class="font-weight-light title mb-2 text-capitalize">
-                            {{wManager ? "By You": manager.name}}
+                        <div class="text-capitalize mb-3 display-3 font-weight-light">
+                            {{offeredWorkshop.name}}
                         </div>
-                        <v-card-text class="text-capitalize">{{offeredWorkshop.workshop.name}}</v-card-text>
-                        <div class="font-weight-regular body-1 mb-2">
+                        <div class="font-weight-light mb-2 text-capitalize title">
+                            {{wManager ? "Offered By You": "Offered by " + manager.name}}
+                        </div>
+                        <div class="text-capitalize body-1 font-italic my-5">belonging to the collection of {{offeredWorkshop.workshop.name}} workshops</div>
+                        <div class="mb-4 caption">
                             {{offeredWorkshop.description}}
                         </div>
-                        <div class="font-weight-light subtitle-2 mb-2">
-                            <v-icon>mdi-clock-in</v-icon>
-                            {{startTime}}
-                        </div>
-                        <div class="font-weight-light subtitle-2 mb-7">
-                            <v-icon>mdi-clock-out</v-icon>
+                        <div class="font-weight-light subtitle-2 mb-1 mt-10">
+                            <span class="mr-10"><v-icon>mdi-clock-in</v-icon>
+                            {{startTime}}</span>
+                            <span>
+                                <v-icon>mdi-clock-out</v-icon>
                             {{endTime}}
+                            </span>
                         </div>
-
-                        <PriceChip :price="offeredWorkshop.price"/>
+                        <PriceChip :price="offeredWorkshop.price" class="mt-2"/>
                     </v-col>
 
                     <v-col cols="12" sm="5">
@@ -56,12 +55,12 @@
                     <v-btn
                             class="hidden-sm-and-down"
                             absolute
-                            bottom
+                            top
                             text
                             depressed
-                            disabled
                             right
-                            style="z-index: 2"
+                            disabled
+                            style="z-index: 2; margin-top: -87px; margin-right: 20px"
                     >
                         <v-avatar
                                 class=" elevation-10"
@@ -70,7 +69,6 @@
                             <v-img src="https://i.udemycdn.com/course/240x135/625204_436a_2.jpg"/>
                         </v-avatar>
                     </v-btn>
-
                 </v-row>
             </v-container>
         </v-card>
@@ -89,6 +87,7 @@
                 <p class="display-3 my-2 text-capitalize">No prerequisites needed!</p>
             </v-container>
         </v-card>
+
     </div>
 </template>
 

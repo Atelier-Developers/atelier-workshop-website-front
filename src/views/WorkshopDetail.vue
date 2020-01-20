@@ -1,8 +1,14 @@
 <template>
 
     <!--    TODO add paralex image-->
+    <!--    TODO add upload file-->
+    <!--    TODO add payment-->
+    <!--    TODO add register-->
+    <!--    TODO certificate-->
+
     <div v-if="!this.loading">
         <template>
+           <v-img src="../assets/maranda-vandergriff-7aakZdIl4vg-unsplash.jpg" height="350"/>
             <WorkshopDetailInfo :offered-workshop="offeredWorkshop" :count="count" :manager="manager"
                                 :w-manager="isManager"
                                 :prerequsite="prereq"/>
