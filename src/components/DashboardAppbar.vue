@@ -2,10 +2,12 @@
     <v-app-bar
             flat
             app
-            style="background: #eee;"
+            elevation="10"
+            hide-on-scroll
+            color="#eee"
             v-show="this.$store.state.drawer"
     >
-        <v-toolbar-title>
+        <v-toolbar-title class="display-1 font-weight-light">
             <v-app-bar-nav-icon v-if="responsive" @click.stop="$emit('toggle-drawer')"/>
             {{title}}
         </v-toolbar-title>
@@ -102,11 +104,4 @@
 </script>
 
 <style scoped>
-    @media all and (max-width: 550px) {
-
-        .v-toolbar-title {
-            width: 100%;
-        }
-
-    }
 </style>

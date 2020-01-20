@@ -1,6 +1,6 @@
 <template>
    <v-container class="fill-height image_background" fluid>
-       <v-card max-width="550" class="my-auto mx-auto py-2 " raised shaped>
+       <v-card max-width="550" class="my-auto mx-auto py-2 card" raised>
 
            <v-form v-model="isValid" class="ma-3">
                <v-container>

@@ -11,7 +11,9 @@
 </template>
 
 <style lang="scss">
-
+    .card{
+        border-radius: 10px !important;
+    }
 </style>
 <script>
     import DashboardNavigationDrawer from "./components/DashboardNavigationDrawer";
