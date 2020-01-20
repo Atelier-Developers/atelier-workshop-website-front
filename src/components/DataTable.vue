@@ -7,19 +7,15 @@
             :items-per-page="10"
             class="elevation-1">
 
-        <template v-slot:item.action="{ item }" v-if="isManager">
+        <template v-slot:item.action="{ item }" v-if="actionFunction != null">
             <v-icon
                     small
                     class="mr-2"
-                    @click="() => sendAppId(item.id)"
+                    @click="() => actionFunction(item.id)"
             >
-                fas fa-edit
+                fas fa-eye
             </v-icon>
         </template>
-        <!--                    <v-btn class="mx-2" fab dark small color="pink"  @click="x(row.item)">-->
-        <!--                        <v-icon dark>mdi-heart</v-icon>-->
-        <!--                    </v-btn>-->
-
     </v-data-table>
 </template>
 
@@ -30,14 +26,17 @@
             "items",
             "headers",
             'graderReqId',
-
+            'actionFunction',
             "isManager"
         ],
         methods: {
             sendAppId(id) {
-                this.$store.commit('setAppId', id);
-                this.$store.commit('setShowFormValue', true);
-                this.$store.commit('setGraderEval', true);
+                this.$router.push({
+                    name: 'workshopForm', params: {
+                        formId: id,
+                        isAnswer: false,
+                    }
+                })
             },
             routeToForm(id) {
                 this.$router.push({

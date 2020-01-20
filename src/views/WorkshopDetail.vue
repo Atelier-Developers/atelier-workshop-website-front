@@ -19,7 +19,13 @@
             <!--        <WorkshopChat/>-->
 
             <v-container v-if="isManager">
-                <GroupGraderAtendee v-if="groups.length > 0" :groups="groups" :isManager="true"/>
+                <GroupGraderAtendee
+                        v-if="groups.length > 0"
+                        :groups="groups"
+                        :isManager="true"
+                        :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id)"
+                        :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
+                />
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">
@@ -71,7 +77,12 @@
             </v-container>
 
             <v-container v-else-if="isGrader">
-                <GroupTable v-if="graderGroup != null" :group="graderGroup"/>
+                <GroupTable
+                        v-if="graderGroup != null"
+                        :group="graderGroup"
+                        :action-function-grader="null"
+                        :action-function-attendee="(id) => routeToWorkshopForm(true, 'graderWorkshopForm', id)"
+                />
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show Forms</p>
                     <div class="text-center">
@@ -104,7 +115,12 @@
             </v-container>
 
             <v-container v-else-if="isAttendee">
-                <GroupTable v-if="attendeeGroup != null" :group="attendeeGroup"/>
+                <GroupTable
+                        v-if="attendeeGroup != null"
+                        :group="attendeeGroup"
+                        :action-function-grader="null"
+                        :action-function-attendee="null"
+                />
                 <div v-if="passed">
 
                 </div>
@@ -285,12 +301,14 @@
 
         },
         methods: {
-            routeToWorkshopForm(isAnswer1, type) {
+            routeToWorkshopForm(isAnswer1, type, appId) {
                 this.$router.push({
                     name: 'workshopForms', params: {
                         forms: this.offeredWorkshop.workshopForms,
                         isAnswer: isAnswer1,
                         type: type,
+                        appId: appId,
+                        fillerId: this.user.id
                     }
                 })
             },

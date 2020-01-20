@@ -28,14 +28,15 @@
 <script>
     export default {
         name: "WorkshopForms",
-        props: ['forms', 'isAnswer', 'type'],
+        props: ['forms', 'isAnswer', 'type', 'appId'],
         methods: {
             routeToForm(id) {
                 this.$router.replace({
                     name: 'workshopForm', params: {
                         formId: id,
                         isAnswer: this.isAnswer,
-                        type: this.type
+                        type: this.type,
+                        appId: this.appId
                     }
                 })
             },

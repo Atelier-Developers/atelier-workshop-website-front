@@ -54,10 +54,14 @@
                     {
                         title: "Show Profile",
                         onClick: () => {
-                            this.$router.push({path: "/user-profile"})
+                            this.$router.push({
+                                name: "Profile", params: {
+                                    id: localStorage.getItem('userId')
+                                }
+                            })
                         }
-                    }
-                    ,
+
+                    },
                     {
                         title: "Logout",
                         onClick: () => {
@@ -98,7 +102,7 @@
                 } else {
                     this.responsive = false
                 }
-            }
+            },
         }
     }
 </script>

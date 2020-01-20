@@ -29,13 +29,13 @@
                             >
                             </v-text-field>
                         </template>
-                            <v-select v-if="question.answerables.length > 0"
-                                      :items="question.answerables"
-                                      :rules="[v => !!v || 'Item is required']"
-                                      label="Options"
-                                      required
-                                      class="form-input ma-4"
-                            />
+                        <v-select v-if="question.answerables.length > 0"
+                                  :items="question.answerables"
+                                  :rules="[v => !!v || 'Item is required']"
+                                  label="Options"
+                                  required
+                                  class="form-input ma-4"
+                        />
                     </label>
                     <div>
                         <v-btn color="primary" @click="sendForm" v-if="isAnswer" class="ma-3">Submit</v-btn>
@@ -51,15 +51,23 @@
 
     export default {
         name: "Form",
-        props: ['formId', 'isAnswer', 'type', 'appId'],
+        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId'],
         data() {
             return {
                 form: null,
+                answers: {}
             }
         },
         mounted() {
             axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                 this.form = res.data;
+                if (this.type == null) {
+                    this.form.questions.forEach((q) => {
+                        q.answers.forEach((a) => {
+                            a;
+                        })
+                    })
+                }
             })
         },
         methods: {
@@ -96,6 +104,9 @@
                                 applicantId: this.appId,
                                 answerQuestion: data
                             })
+                        } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
+                            // eslint-disable-next-line no-console
+                            console.log("graderWorkshopForm")
                         }
                     }
                     // }
