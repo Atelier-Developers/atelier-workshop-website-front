@@ -8,7 +8,7 @@
 
     <div v-if="!this.loading">
         <template>
-           <v-img src="../assets/maranda-vandergriff-7aakZdIl4vg-unsplash.jpg" height="350"/>
+            <v-img src="../assets/maranda-vandergriff-7aakZdIl4vg-unsplash.jpg" height="350"/>
             <WorkshopDetailInfo :offered-workshop="offeredWorkshop" :count="count" :manager="manager"
                                 :w-manager="isManager"
                                 :prerequsite="prereq"/>
@@ -20,66 +20,87 @@
 
             <v-container v-if="isManager">
                 <GroupGraderAtendee v-if="groups.length > 0" :groups="groups" :isManager="true"/>
-                <div v-if="passed">
-                    <v-btn color="primary">Make grader evaluation form</v-btn>
-                </div>
-                <div v-else-if="isHolding">
-                    <v-btn color="primary">Make workshop forms</v-btn>
-                    <v-btn color="primary">Make grader evaluation form</v-btn>
-                    <!--chat for participants and graders of this -->
-                </div>
+                <div class="my-5">
+                    <p class="display-3 grey--text text--darken-2">Make Form</p>
+                    <div v-if="passed" class="text-center">
+                        <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
+                    </div>
+                    <div v-else-if="isHolding" class="text-center">
+                        <v-btn color="primary" class="ma-2" small>workshop forms</v-btn>
+                        <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
+                        <!--TODO chat for participants and graders of this -->
+                    </div>
 
-                <div v-else-if="notStarted">
-                    <v-btn color="primary">Make grader request forms</v-btn>
-                    <v-btn color="primary">Make attendee register form</v-btn>
-                    <v-btn color="primary">Make grader evaluation form</v-btn>
-                    <v-btn color="primary">Make workshop forms</v-btn>
-                    <!--pending requests-->
+                    <div v-else-if="notStarted" class="text-center">
+                        <v-btn color="primary" class="ma-2" small>grader request forms</v-btn>
+                        <v-btn color="primary" class="ma-2" small>attendee register form</v-btn>
+                        <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
+                        <v-btn color="primary" class="ma-2" small>workshop forms</v-btn>
+                        <!-- TODO pending requests-->
+                    </div>
                 </div>
-                <!--            TODO  check {}-->
-                <v-btn color="primary" :disabled="this.offeredWorkshop.graderEvaluationForm === null"
-                       @click="() => routeToForm(this.offeredWorkshop.graderEvaluationForm.id,false, 'manager')">show
-                    grader
-                    evaluation
-                    forms
-                </v-btn>
-                <v-btn color="primary" :disabled="this.attReqForm === null"
-                       @click="() => routeToForm(this.attReqForm.id,false, 'manager')">show attendee register forms
-                </v-btn>
-                <v-btn color="primary" :disabled="this.graderReqForm === null"
-                       @click="() => routeToForm(this.graderReqForm.id,false, 'manager')">show grader register forms
-                </v-btn>
-                <v-btn color="primary"
-                       :disabled="this.offeredWorkshop.workshopForms.length === 0"
-                       @click="() => routeToWorkshopForm(false, 'manager')"
-                >show workshop forms
-                </v-btn>
+                <div class="my-5">
+                    <p class="display-3 grey--text text--darken-2">Show Forms</p>
+                    <div class="text-center mt-5">
+
+                        <v-btn color="primary" :disabled="this.offeredWorkshop.graderEvaluationForm === null"
+                               class="ma-2" small
+                               @click="() => routeToForm(this.offeredWorkshop.graderEvaluationForm.id,false, 'manager')">
+                            grader
+                            evaluation
+                            forms
+                        </v-btn>
+                        <v-btn color="primary" :disabled="this.attReqForm === null"
+                               class="ma-2"
+                               small
+                               @click="() => routeToForm(this.attReqForm.id,false, 'manager')">attendee register forms
+                        </v-btn>
+                        <v-btn color="primary" :disabled="this.graderReqForm === null"
+                               class="ma-2" small
+                               @click="() => routeToForm(this.graderReqForm.id,false, 'manager')">grader register forms
+                        </v-btn>
+                        <v-btn color="primary"
+                               :disabled="this.offeredWorkshop.workshopForms.length === 0"
+                               class="ma-2" small
+                               @click="() => routeToWorkshopForm(false, 'manager')"
+                        >workshop forms
+                        </v-btn>
+                    </div>
+                </div>
 
             </v-container>
 
             <v-container v-else-if="isGrader">
                 <GroupTable v-if="graderGroup != null" :group="graderGroup"/>
-                <div v-if="passed">
-                    <v-btn color="primary"
-                           :disabled="this.offeredWorkshop.workshopForms.length === 0"
-                           @click="() => routeToWorkshopForm(true, 'grader')"
-                    >show workshop forms
-                    </v-btn>
+                <div class="my-5">
+                    <p class="display-3 grey--text text--darken-2" v-if="isHolding || passed">Show Forms</p>
+                    <div class="text-center">
+                        <div v-if="passed">
+                            <v-btn color="primary"
+                                   class="ma-2" small
+                                   :disabled="this.offeredWorkshop.workshopForms.length === 0"
+                                   @click="() => routeToWorkshopForm(true, 'grader')"
+                            >workshop forms
+                            </v-btn>
 
-                </div>
-                <div v-else-if="isHolding">
-                    <!--chat for participants and graders of this -->
-                    <v-btn color="primary"
-                           :disabled="this.offeredWorkshop.workshopForms.length === 0"
-                           @click="() => routeToWorkshopForm(true, 'grader')"
-                    >show workshop forms
-                    </v-btn>
+                        </div>
+                        <div v-else-if="isHolding">
+                            <!--chat for participants and graders of this -->
+                            <v-btn color="primary"
+                                   class="ma-2" small
+                                   :disabled="this.offeredWorkshop.workshopForms.length === 0"
+                                   @click="() => routeToWorkshopForm(true, 'grader')"
+                            >workshop forms
+                            </v-btn>
 
+                        </div>
+
+                        <div v-else-if="notStarted">
+                            <!--request status-->
+                        </div>
+                    </div>
                 </div>
 
-                <div v-else-if="notStarted">
-                    <!--request status-->
-                </div>
             </v-container>
 
             <v-container v-else-if="isAttendee">
@@ -97,22 +118,24 @@
             </v-container>
 
             <v-container v-else>
-                <template v-if="this.$store.getters.isLoggedIn">
+                <div v-if="this.$store.getters.isLoggedIn" class="text-center">
                     <v-btn color="primary" :disabled="this.attReqForm !== null"
+                           class="ma-2"
                            @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
                     </v-btn>
                     <v-btn color="primary" :disabled="this.graderReqForm !== null"
+                           class="ma-2"
                            @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a grader
                     </v-btn>
-                </template>
-                <template v-else>
-                    <template v-if="this.notStarted">
-                        <v-btn color="primary" to="/login">register now!
+                </div>
+                <div v-else>
+                    <div v-if="this.notStarted" class="text-center">
+                        <v-btn color="primary" to="/login" class="ma-2">register now!
                         </v-btn>
-                        <v-btn color="primary" to="/login">Request as a grader
+                        <v-btn color="primary" to="/login" class="ma-2">Request as a grader
                         </v-btn>
-                    </template>
-                </template>
+                    </div>
+                </div>
 
             </v-container>
         </template>

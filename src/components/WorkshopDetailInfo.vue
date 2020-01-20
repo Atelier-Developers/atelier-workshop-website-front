@@ -14,7 +14,9 @@
                         <div class="font-weight-light mb-2 text-capitalize title">
                             {{wManager ? "Offered By You": "Offered by " + manager.name}}
                         </div>
-                        <div class="text-capitalize body-1 font-italic my-5">belonging to the collection of {{offeredWorkshop.workshop.name}} workshops</div>
+                        <div class="text-capitalize body-1 font-italic my-5">belonging to the collection of
+                            {{offeredWorkshop.workshop.name}} workshops
+                        </div>
                         <div class="mb-4 caption">
                             {{offeredWorkshop.description}}
                         </div>
@@ -84,22 +86,22 @@
                 </v-row>
             </v-container>
             <v-container v-else>
-                <p class="display-3 my-2 text-capitalize">No prerequisites needed!</p>
+                <EmptyState icon="mdi-book-open-variant" title="no prerequisite needed!"/>
             </v-container>
         </v-card>
-
     </div>
 </template>
 
 <script>
     import moment from "moment";
     import PriceChip from "../components/PriceChip";
+    import EmptyState from "./EmptyState";
 
 
     export default {
         name: "WorkshopDetailInfo",
         props: ["offeredWorkshop", "count", "wManager", "manager", "prerequsite"],
-        components: {PriceChip},
+        components: {EmptyState, PriceChip},
         computed: {
             startTime: function () {
                 return moment(this.offeredWorkshop.startTime).format("lll");

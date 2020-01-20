@@ -10,7 +10,7 @@
                     Graders
                 </v-tab>
                 <v-tab>
-                    <v-icon left>mdi-lock</v-icon>
+                    <v-icon left>mdi-school</v-icon>
                     Attendees
                 </v-tab>
                 <v-tab-item>
