@@ -13,6 +13,7 @@ import Form from "../views/Form";
 import WorkshopForms from "../views/WorkshopForms";
 import AdminPage from "../views/AdminPage";
 import OfferingWorkshops from "../views/OfferingWorkshops";
+import WorkshopCreateForm from "../views/WorkshopCreateForm";
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,12 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
+    },
+    {
+        path: '/createForm',
+        name: 'Create Form',
+        component: WorkshopCreateForm,
+        props: true
     },
     {
         path: '/workshopManager',

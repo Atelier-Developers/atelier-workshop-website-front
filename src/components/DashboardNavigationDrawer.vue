@@ -95,7 +95,7 @@
                 return this.$store.getters.isLoggedIn ? [{title: 'Home', icon: 'mdi-home', to: "/"}, {
                     title: 'User',
                     icon: 'mdi-account-box',
-                    to: "/user-profile/" + this.$store.state.userId
+                    to: "/user-profile/" + localStorage.getItem('userId')
                 }, {title: 'Admin', icon: 'mdi-admin', to: "/admin"}] : [{title: 'Home', icon: 'mdi-home', to: "/"},  {title: 'Admin', icon: 'mdi-admin', to: "/admin"}]
             }
         },

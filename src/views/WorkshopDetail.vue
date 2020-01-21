@@ -28,19 +28,21 @@
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">
-                        <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(true, false, false,false)" :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                        </v-btn>
                     </div>
                     <div v-else-if="isHolding" class="text-center">
-                        <v-btn color="primary" class="ma-2" small>workshop forms</v-btn>
-                        <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
+                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, false, false,true)" >workshop forms</v-btn>
+                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(true, false, false,false)" :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form</v-btn>
                         <!--TODO chat for participants and graders of this -->
                     </div>
 
                     <div v-else-if="notStarted" class="text-center">
-                        <v-btn color="primary" class="ma-2" small>grader request forms</v-btn>
-                        <v-btn color="primary" class="ma-2" small>attendee register form</v-btn>
-                        <v-btn color="primary" class="ma-2" small>grader evaluation form</v-btn>
-                        <v-btn color="primary" class="ma-2" small>workshop forms</v-btn>
+                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, false, true,false)" :disabled="graderReqForm !== null">grader request forms</v-btn>
+                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, true, false,false)" :disabled="attReqForm !== null">attendee register form</v-btn>
+                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(true, false, false,false)" :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form</v-btn>
+                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, false, false,true)">workshop forms</v-btn>
                         <!-- TODO pending requests-->
                     </div>
                 </div>
@@ -83,7 +85,8 @@
                         :action-function-attendee="(id) => routeToWorkshopForm(true, 'graderWorkshopForm', id)"
                 />
                 <div class="my-5">
-                    <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show Forms</p>
+                    <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show
+                        Forms</p>
                     <div class="text-center">
                         <div v-if="passed">
                             <v-btn color="primary"
@@ -189,7 +192,8 @@
                 attReqForm: null,
                 user: null,
                 prereq: [],
-                loading: true
+                loading: true,
+                offImg : "",
             }
         },
         computed: {
@@ -249,9 +253,10 @@
             }
         },
         mounted() {
-
             axios.all([this.getOfferedWorkshop(), this.getCount()]).then((r) => {
                 this.offeredWorkshop = r[0].data.offeredWorkshop;
+                // eslint-disable-next-line no-console
+                console.log(this.offeredWorkshop)
                 this.manager = r[0].data.workshopManagerUser;
                 this.attList = r[0].data.attendeeUsers;
                 this.gradList = r[0].data.graderUsers;
@@ -296,10 +301,19 @@
                 } else {
                     this.loading = false;
                 }
-            })
-
+            });
         },
         methods: {
+            routeToWorkshopCreateForm(graderEval, attReg, graderReq, workshopForm) {
+                this.$router.push({
+                    name: 'Create Form', params: {
+                        graderEval: graderEval,
+                        attReg: attReg,
+                        graderReq: graderReq,
+                        workshopForm: workshopForm,
+                    }
+                })
+            },
             routeToWorkshopForm(isAnswer1, type, appId) {
                 this.$router.push({
                     name: 'workshopForms', params: {
@@ -322,6 +336,7 @@
                 })
             },
             getOfferedWorkshop() {
+                // eslint-disable-next-line no-console
                 return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId)
             },
             getCount() {

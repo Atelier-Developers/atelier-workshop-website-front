@@ -5,9 +5,12 @@
                 <v-row>
                     <v-col cols="12" md="2">
                         <v-row justify-md="start" justify="center">
-                            <v-avatar size="150" class="elevation-9">
-                                <v-img src="https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg"/>
-                            </v-avatar>
+                            <v-col cols="12">
+                                <v-avatar size="150" class="elevation-9">
+                                    <v-img :src="this.userImg"/>
+                                </v-avatar>
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-col>
                         </v-row>
                     </v-col>
                     <v-col cols="12" md="9" class="ml-4">
@@ -40,9 +43,13 @@
                 attendedList: [],
                 gradedList: [],
                 managedList: [],
+                userImg: ""
             }
         },
         mounted() {
+            // eslint-disable-next-line no-console
+            console.log(this.id);
+            this.userImg = this.$store.state.api + "/userDetails/pic/user/" + this.id;
             axios.get(this.$store.state.api + "/userDetails/" + this.id).then((res) => {
                 this.user = res.data;
                 // eslint-disable-next-line no-console

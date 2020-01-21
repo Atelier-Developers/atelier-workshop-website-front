@@ -68,7 +68,7 @@
                                 class=" elevation-10"
                                 size="170"
                         >
-                            <v-img src="https://i.udemycdn.com/course/240x135/625204_436a_2.jpg"/>
+                            <v-img :src="this.offImg"/>
                         </v-avatar>
                     </v-btn>
                 </v-row>
@@ -110,6 +110,16 @@
     export default {
         name: "WorkshopDetailInfo",
         props: ["offeredWorkshop", "count", "wManager", "manager", "prerequsite"],
+        data(){
+            return{
+                offImg: "",
+            }
+        },
+        mounted() {
+            this.offImg = this.$store.state.api + "/userDetails/pic/offeringWorkshop/" + this.offeredWorkshop.id;
+            // eslint-disable-next-line no-console
+            console.log(this.offImg);
+        },
         components: {EmptyState, PriceChip},
         computed: {
             startTime: function () {

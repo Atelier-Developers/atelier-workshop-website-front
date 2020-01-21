@@ -29,8 +29,13 @@
                             >
                             </v-text-field>
                         </template>
+                        <template v-else>
+                            {{getAnswerFromId(question)}}
+                        </template>
                         <v-select v-if="question.answerables.length > 0"
                                   :items="question.answerables"
+                                  :item-value="question.answerables.id"
+                                  :item-text="question.answerables.text"
                                   :rules="[v => !!v || 'Item is required']"
                                   label="Options"
                                   required
@@ -85,6 +90,10 @@
             })
         },
         methods: {
+            getAnswerFromId() {
+                return
+
+            },
             sendForm() {
                 let data = [];
                 // this.$refs.form._data.inputs.forEach((input) => data.push(input.internalValue));
@@ -101,29 +110,36 @@
                     //     }
                     // } else {
                     data.push({
-                        "questionId": this.form.questions[i].id,
-                        "type": this.form.questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
-                        "answerQuestion": inputs[i].internalValue
-                    });
-
-                    if (this.type !== null) {
-                        if (this.type === 'grader') {
-                            axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
-
-                        } else if (this.type === 'att') {
-                            axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
-                        } else if (this.type === 'manager' && this.isAnswer) {
-                            axios.post(this.$store.state.api + "/offeringWorkshop/offeringWorkshop/" + this.form.offeredWorkshop.id + "/graderEvaluationForm/answer", {
-                                formId: this.form.id,
-                                applicantId: this.appId,
-                                answerQuestion: data
-                            })
-                        } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
-                            // eslint-disable-next-line no-console
-                            console.log("graderWorkshopForm")
+                        questionId: this.form.questions[i].id,
+                        type: this.form.questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
+                        answerData: {
+                            text: inputs[i].internalValue,
+                            choice: inputs[i].internalValue
                         }
-                    }
+                    });
                     // }
+                }
+                // eslint-disable-next-line no-console
+                console.log(data)
+                if (this.type !== null) {
+                    if (this.type === 'grader') {
+                        axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
+
+                    } else if (this.type === 'att') {
+                        axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
+                    } else if (this.type === 'manager' && this.isAnswer) {
+                        axios.post(this.$store.state.api + "/offeringWorkshop/offeringWorkshop/" + this.form.offeredWorkshop.id + "/graderEvaluationForm/answer", {
+                            formId: this.form.id,
+                            applicantId: this.appId,
+                            answerQuestion: data
+                        })
+                    } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
+                        axios.post(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.form.offeredWorkshop.id + "/workshopForm/answer", {
+                            formId: this.form.id,
+                            applicantId: this.appId,
+                            answerQuestion: data
+                        })
+                    }
                 }
             }
         }

@@ -91,7 +91,7 @@
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
                                                 v-model="endDate"
-                                                label="Start Date"
+                                                label="End Date"
                                                 readonly
                                                 v-on="on"
                                         ></v-text-field>
@@ -195,6 +195,7 @@
                     preRequisiteId: [],
                     startTime: null,
                     endTime: null,
+                    workshopId : null,
                 },
                 startDate: null,
                 startTime: null,
@@ -208,8 +209,12 @@
             }
         },
         mounted() {
+
             axios.get(this.$store.state.api + `/workshop/workshops/${this.id}/offeringWorkshop`).then((res) => {
                 this.offeringWorkshops = res.data;
+                // eslint-disable-next-line no-console
+                console.log(this.offeringWorkshops);
+
             });
             axios.get(this.$store.state.api + `/workshop/workshops`).then((res) => {
                 this.workshops = res.data;
@@ -217,13 +222,24 @@
         },
         methods: {
             addOfferingWorkshop() {
+
                 let sdate = new Date(this.startDate + "," + this.startTime);
                 let edate = new Date(this.endDate + "," + this.endTime);
-                this.workshop.startTime = sdate.toISOString();
-                this.workshop.endTime = edate.toISOString();
+                let esDate = sdate.toISOString();
+                esDate = esDate.slice(0, esDate.length - 5);
+                esDate = esDate.concat("+0000");
+                let eeDate = edate.toISOString();
+                eeDate = eeDate.slice(0, eeDate.length - 5);
+                eeDate = eeDate.concat("+0000");
+                this.workshop.startTime = esDate;
+                this.workshop.endTime = eeDate;
+                this.workshop.workshopId = this.id;
 
+                // eslint-disable-next-line no-console
+                console.log(this.workshop)
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then(() => {
                     this.dialoga = false;
+                    this.$router.go(this.$router.currentRoute);
                 })
             },
             checkPrice() {

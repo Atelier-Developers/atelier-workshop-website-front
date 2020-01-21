@@ -12,6 +12,7 @@
                     width="80%"
             >
                 <v-container class="questions">
+                    <v-text-field label="Form Name" v-model="name"/>
                     <v-row class="question-header" v-if="this.questions.length > 0">
                         <v-col cols="6" class="font-weight-bold">Question</v-col>
                         <v-col cols="6" class="font-weight-bold">Header</v-col>
@@ -94,11 +95,12 @@
                                     </div>
                                 </v-col>
                             </v-row>
-                            <v-row>
-                                <v-btn @click="addQuestion" color="primary" class="mt-3">Add Question</v-btn>
+                            <v-row justify="end">
+                                <v-btn @click="addQuestion" color="primary" class="mr-3">Add Question</v-btn>
+                                <v-btn @click="sendForm" color="success" class="mr-3">Submit Form</v-btn>
                             </v-row>
                             <v-row>
-                                <v-btn @click="sendForm" color="primary" class="mt-3">Submit Form</v-btn>
+
                             </v-row>
                         </v-form>
                     </v-container>
@@ -113,8 +115,10 @@
 
     export default {
         name: "WorkshopCreateForm",
+        props: ['graderEval', 'attReg', 'graderReq', 'workshopForm', 'offId'],
         data() {
             return {
+                name: "",
                 questions: [],
                 question: {
                     text: "",
@@ -148,10 +152,57 @@
                 this.$refs.form_option.resetValidation();
             },
             sendForm() {
-                axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
-                        this.$router.replace({path: "/"});
-                    }
-                )
+                if (this.graderEval) {
+                    // eslint-disable-next-line no-console
+                    console.log(this.questions);
+
+                    axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/graderEvaluationForm', {
+                        name: this.name
+                    }).then(() => {
+                            let qs = [];
+                            this.questions.forEach((q) => {
+                                if (q.type === 'Text') {
+                                    qs.push({
+                                        text: q.text,
+                                    });
+                                } else if (q.type === 'Option') {
+                                    let answ = [];
+                                    q.options.forEach((op) => {
+                                        answ.push({
+                                            text: op
+                                        });
+                                    });
+                                    qs.push({
+                                        text: q.text,
+                                        answerables: answ
+                                    })
+                                }
+                            });
+                        // eslint-disable-next-line no-console
+                            console.log(qs)
+                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/form/questions', {
+                                text: this.name
+                            });
+                            this.$router.replace({path: "/"});
+                        }
+                    )
+                } else if (this.attReg) {
+                    axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
+                            this.$router.replace({path: "/"});
+                        }
+                    )
+                } else if (this.graderReq) {
+                    axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
+                            this.$router.replace({path: "/"});
+                        }
+                    )
+                } else if (this.workshopForm) {
+                    axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
+                            this.$router.replace({path: "/"});
+                        }
+                    )
+                }
+
             }
         }
     }
