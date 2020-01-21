@@ -97,6 +97,9 @@
                             <v-row>
                                 <v-btn @click="addQuestion" color="primary" class="mt-3">Add Question</v-btn>
                             </v-row>
+                            <v-row>
+                                <v-btn @click="sendForm" color="primary" class="mt-3">Submit Form</v-btn>
+                            </v-row>
                         </v-form>
                     </v-container>
                 </div>
@@ -106,15 +109,17 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "WorkshopCreateForm",
         data() {
             return {
                 questions: [],
                 question: {
-                    "text": "",
-                    "type": "",
-                    "options": []
+                    text: "",
+                    type: "",
+                    options: []
                 },
                 option: "",
                 valid: false,
@@ -128,9 +133,9 @@
                     return;
                 this.questions.push(this.question);
                 this.question = {
-                    "text": "",
-                    "type": "",
-                    "options": []
+                    text: "",
+                    type: "",
+                    options: []
                 };
                 this.$refs.form.reset();
                 this.$refs.form.resetValidation();
@@ -141,6 +146,12 @@
                 this.question.options.push(this.option);
                 this.$refs.form_option.reset();
                 this.$refs.form_option.resetValidation();
+            },
+            sendForm() {
+                axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
+                        this.$router.replace({path: "/"});
+                    }
+                )
             }
         }
     }

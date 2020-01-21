@@ -64,7 +64,21 @@
                 if (this.type == null) {
                     this.form.questions.forEach((q) => {
                         q.answers.forEach((a) => {
-                            a;
+                            if (a.formApplicant === this.appId) {
+                                if ('formFiller' in a) {
+                                    if (a.formFiller === this.fillerId) {
+                                        this.answers[q.id] = {
+                                            answer: a,
+                                            type: 'choice' in a ? 'choice' : 'text'
+                                        };
+                                    }
+                                } else {
+                                    this.answers[q.id] = {
+                                        answer: a,
+                                        type: 'choice' in a ? 'choice' : 'text'
+                                    };
+                                }
+                            }
                         })
                     })
                 }

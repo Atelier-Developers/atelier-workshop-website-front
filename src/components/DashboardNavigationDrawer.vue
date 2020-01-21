@@ -96,7 +96,7 @@
                     title: 'User',
                     icon: 'mdi-account-box',
                     to: "/user-profile/" + this.$store.state.userId
-                }] : [{title: 'Home', icon: 'mdi-home', to: "/"}]
+                }, {title: 'Admin', icon: 'mdi-admin', to: "/admin"}] : [{title: 'Home', icon: 'mdi-home', to: "/"},  {title: 'Admin', icon: 'mdi-admin', to: "/admin"}]
             }
         },
     }

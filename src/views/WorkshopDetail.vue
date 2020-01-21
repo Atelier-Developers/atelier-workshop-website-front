@@ -1,6 +1,5 @@
 <template>
 
-    <!--    TODO add paralex image-->
     <!--    TODO add upload file-->
     <!--    TODO add payment-->
     <!--    TODO add register-->
@@ -23,7 +22,7 @@
                         v-if="groups.length > 0"
                         :groups="groups"
                         :isManager="true"
-                        :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id)"
+                        :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, true, 'manager', id)"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
                 />
                 <div class="my-5">
