@@ -16,6 +16,8 @@
             </v-row>
         </v-parallax>
         <v-container>
+            <workshop-list :workshops="popularWorkshops" title="Popular Workshops"/>
+            <workshop-list :workshops="workshopOfDay" title="Workshop of Day"/>
             <workshop-list :workshops="workshops" title="Offered Workshops"/>
         </v-container>
     </div>
@@ -31,13 +33,27 @@
         components: {WorkshopList},
         data() {
             return {
-                workshops: []
+                workshops: [],
+                popularWorkshops: [],
+                workshopOfDay: []
+            }
+        },
+        methods: {
+            getOfferingWorkshops(){
+                return axios.get(this.$store.state.api + "/workshop/offeringWorkshops");
+            },
+            getPopularWorkshop(){
+                return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/popular");
             }
         },
         mounted() {
-            axios.get(this.$store.state.api + "/workshop/offeringWorkshops").then((res) => {
-                this.workshops = res.data;
+            axios.all([this.getOfferingWorkshops(), this.getPopularWorkshop()])
+            .then((res) => {
+                this.workshops = res[0].data;
+                this.popularWorkshops = res[1].data;
+                this.workshopOfDay = [this.popularWorkshops[Math.floor(Math.random() * 5)]]
             })
+
         }
     }
 </script>

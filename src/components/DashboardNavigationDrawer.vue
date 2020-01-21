@@ -33,7 +33,7 @@
                     :key="item.title"
                     :to="item.to"
                     link
-                    active-class="success"
+                    active-class="primary"
             >
                 <v-list-item-action>
                     <v-icon>{{ item.icon }}</v-icon>
@@ -96,7 +96,7 @@
                     title: 'User',
                     icon: 'mdi-account-box',
                     to: "/user-profile/" + localStorage.getItem('userId')
-                }, {title: 'Admin', icon: 'mdi-admin', to: "/admin"}] : [{title: 'Home', icon: 'mdi-home', to: "/"},  {title: 'Admin', icon: 'mdi-admin', to: "/admin"}]
+                }, {title: 'Admin', icon: 'mdi-account-circle', to: "/admin"}] : [{title: 'Home', icon: 'mdi-home', to: "/"},  {title: 'Admin', icon: 'mdi-admin', to: "/admin"}]
             }
         },
     }
