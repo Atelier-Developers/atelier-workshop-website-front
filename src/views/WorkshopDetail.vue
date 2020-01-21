@@ -141,11 +141,11 @@
                <template v-if="notStarted">
                    <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                    <div v-if="this.$store.getters.isLoggedIn" class="text-center">
-                       <v-btn color="primary" :disabled="this.attReqForm !== null"
+                       <v-btn color="primary" :disabled="this.attReqForm === null"
                               class="ma-2"
                               @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
                        </v-btn>
-                       <v-btn color="primary" :disabled="this.graderReqForm !== null"
+                       <v-btn color="primary" :disabled="this.graderReqForm === null"
                               class="ma-2"
                               @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a grader
                        </v-btn>
@@ -289,7 +289,14 @@
                             this.getGraderGroup().then((res) => {
                                 this.groups = res.data;
                                 this.loading = false;
-
+                                axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
+                                    if (res[0].status !== 204) {
+                                        this.attReqForm = res[0].data;
+                                    }
+                                    if (res[1].status !== 204) {
+                                        this.graderReqForm = res[1].data;
+                                    }
+                                })
 
                             });
 
@@ -297,9 +304,25 @@
                             this.getAttendeeGroup().then((res) => {
                                 this.groups = res.data;
                                 this.loading = false;
+                                axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
+                                    if (res[0].status !== 204) {
+                                        this.attReqForm = res[0].data;
+                                    }
+                                    if (res[1].status !== 204) {
+                                        this.graderReqForm = res[1].data;
+                                    }
+                                })
                             });
                         } else {
                             this.loading = false;
+                            axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
+                                if (res[0].status !== 204) {
+                                    this.attReqForm = res[0].data;
+                                }
+                                if (res[1].status !== 204) {
+                                    this.graderReqForm = res[1].data;
+                                }
+                            })
                         }
                     })
                 } else {
@@ -337,7 +360,8 @@
                         isAnswer: isAnswer1,
                         type: type1,
                         appId: appid,
-                        showAnswers: showAnswers
+                        showAnswers: showAnswers,
+                        offId: this.wId,
                     }
                 })
             },

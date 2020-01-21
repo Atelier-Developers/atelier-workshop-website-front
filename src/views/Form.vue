@@ -41,6 +41,16 @@
                         <div v-else-if="showAnswers">
                             {{getAnswerFromId(question)}}
                         </div>
+                        <div v-else>
+                            <v-select v-if="question.answerables.length > 0"
+                                      :items="question.answerables"
+                                      :item-value="question.answerables.id"
+                                      :item-text="question.answerables.text"
+                                      :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
+                                      label="Options"
+                                      class="form-input ma-4"
+                            />
+                        </div>
 
                     </label>
                     <div>
@@ -57,7 +67,7 @@
 
     export default {
         name: "Form",
-        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers'],
+        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers', "offId"],
         data() {
             return {
                 form: null,
@@ -159,12 +169,26 @@
                 console.log(data)
                 if (this.type !== null) {
                     // eslint-disable-next-line no-debugger
-                    debugger;
                     if (this.type === 'grader') {
-                        axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
+                        let attData = {
+                            "answerQuestionContexts" : data
+                        };
+                        axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.offId + "/answer", attData).then(() => {
+                            this.$router.back();
+                        });
 
                     } else if (this.type === 'att') {
-                        axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
+                        let attData = {
+                            "answerQuestionContexts" : data
+                        };
+                        // eslint-disable-next-line no-console
+                        console.log(attData);
+                        axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.offId + "/answer", attData).then((res) => {
+                            // eslint-disable-next-line no-console
+                            console.log(res);
+                            this.$router.back();
+
+                        }).catch()
                     } else if (this.type === 'manager' && this.isAnswer) {
                         axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {
                             // eslint-disable-next-line no-console
@@ -177,7 +201,9 @@
                                 formId: this.form.id,
                                 applicantId: res.data.id,
                                 answerQuestion: data
-                            })
+                            }).then(() => {
+                                this.$router.back();
+                            });
                             // eslint-disable-next-line no-console
                             console.log(res);
                         })
@@ -188,6 +214,9 @@
                                 formId: this.form.id,
                                 applicantId: res.data.id,
                                 answerQuestion: data
+                            }).then(() => {
+                                this.$router.back();
+
                             })
                         })
 
