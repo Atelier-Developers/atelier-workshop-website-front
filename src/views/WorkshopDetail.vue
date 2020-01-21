@@ -18,6 +18,10 @@
             <!--        <WorkshopChat/>-->
 
             <v-container v-if="isManager">
+                <v-row>
+                    <v-btn color="primary"
+                           @click="this.$router.push({name: 'Workshop Requests',params: {id:this.wId}})"></v-btn>
+                </v-row>
                 <GroupGraderAtendee
                         v-if="groups.length > 0"
                         :groups="groups"
@@ -29,20 +33,37 @@
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">
                         <v-btn color="primary" class="ma-2" small
-                               @click="() => routeToWorkshopCreateForm(true, false, false,false)" :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                               @click="() => routeToWorkshopCreateForm(true, false, false,false)"
+                               :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
                         </v-btn>
                     </div>
                     <div v-else-if="isHolding" class="text-center">
-                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, false, false,true)" >workshop forms</v-btn>
-                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(true, false, false,false)" :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form</v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(false, false, false,true)">workshop forms
+                        </v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(true, false, false,false)"
+                               :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                        </v-btn>
                         <!--TODO chat for participants and graders of this -->
                     </div>
 
                     <div v-else-if="notStarted" class="text-center">
-                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, false, true,false)" :disabled="graderReqForm !== null">grader request forms</v-btn>
-                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, true, false,false)" :disabled="attReqForm !== null">attendee register form</v-btn>
-                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(true, false, false,false)" :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form</v-btn>
-                        <v-btn color="primary" class="ma-2" small @click="() => routeToWorkshopCreateForm(false, false, false,true)">workshop forms</v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(false, false, true,false)"
+                               :disabled="graderReqForm !== null">grader request forms
+                        </v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(false, true, false,false)"
+                               :disabled="attReqForm !== null">attendee register form
+                        </v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(true, false, false,false)"
+                               :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                        </v-btn>
+                        <v-btn color="primary" class="ma-2" small
+                               @click="() => routeToWorkshopCreateForm(false, false, false,true)">workshop forms
+                        </v-btn>
                         <!-- TODO pending requests-->
                     </div>
                 </div>
@@ -193,7 +214,7 @@
                 user: null,
                 prereq: [],
                 loading: true,
-                offImg : "",
+                offImg: "",
             }
         },
         computed: {
