@@ -162,6 +162,16 @@
                                 ></v-select>
                             </v-col>
                         </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-file-input
+                                        label="Image"
+                                        v-model="workshop.offeredWorkshop.file"
+                                        prepend-icon="mdi-camera"
+                                        accept="image/*"
+                                ></v-file-input>
+                            </v-col>
+                        </v-row>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -170,6 +180,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
         <workshop-list :workshops="offeringWorkshops" title="Offered Workshops"/>
     </v-container>
 </template>
@@ -191,11 +202,13 @@
                         name: "",
                         description: "",
                         price: 0,
+                        file: null
                     },
                     preRequisiteId: [],
                     startTime: null,
                     endTime: null,
-                    workshopId : null,
+                    workshopId: null,
+
                 },
                 startDate: null,
                 startTime: null,

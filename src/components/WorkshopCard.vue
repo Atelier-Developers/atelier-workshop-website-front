@@ -10,7 +10,7 @@
     >
         <v-img
                 :aspect-ratio="16/9"
-                src="https://i.udemycdn.com/course/240x135/625204_436a_2.jpg"
+                :src="this.$store.state.api + '/userDetails/pic/offeringWorkshop/' + this.workshop.id"
         />
         <v-card-text
                 class="pt-6"
