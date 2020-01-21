@@ -19,11 +19,12 @@
                             :headers="headers"
                             :is-manager="isManager"
                             :action-function="actionFunctionGrader"
+                            :action-function2="actionFunctionGrader2"
                     >
                     </DataTable>
                 </v-tab-item>
                 <v-tab-item>
-                    <DataTable :items="group.attendees" :headers="headers" :action-function="actionFunctionAttendee"/>
+                    <DataTable :items="group.attendees" :headers="headers" :action-function="actionFunctionAttendee" :action-function2="actionFunctionAttendee2"/>
                 </v-tab-item>
             </v-tabs>
         </v-card>
@@ -36,7 +37,7 @@
     export default {
         name: "GroupTable",
         components: {DataTable},
-        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionAttendee"],
+        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2"],
 
         data() {
             return {

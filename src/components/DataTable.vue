@@ -15,6 +15,13 @@
             >
                 fas fa-eye
             </v-icon>
+            <v-icon
+                    small
+                    class="mr-2"
+                    @click="() => actionFunction2(item.id)"
+            >
+                fas fa-eye
+            </v-icon>
         </template>
     </v-data-table>
 </template>
@@ -27,7 +34,8 @@
             "headers",
             'graderReqId',
             'actionFunction',
-            "isManager"
+            "isManager",
+            "actionFunction2"
         ],
         methods: {
             sendAppId(id) {

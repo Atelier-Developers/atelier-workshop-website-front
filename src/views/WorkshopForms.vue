@@ -16,7 +16,7 @@
                         <p class="form-header text-capitalize">
                             {{i + 1}}) {{form.name}}
                         </p>
-                        <v-btn outlined @click="() => routeToForm(form.id)">show form</v-btn>
+                        <v-btn outlined @click="() => routeToForm(form.id)" class="mb-3">show form</v-btn>
                         <v-divider/>
                     </v-col>
                 </v-row>
