@@ -166,7 +166,7 @@
                             <v-col cols="12">
                                 <v-file-input
                                         label="Image"
-                                        v-model="workshop.offeredWorkshop.file"
+                                        v-model="file"
                                         prepend-icon="mdi-camera"
                                         accept="image/*"
                                 ></v-file-input>
@@ -202,7 +202,6 @@
                         name: "",
                         description: "",
                         price: 0,
-                        file: null
                     },
                     preRequisiteId: [],
                     startTime: null,
@@ -210,6 +209,7 @@
                     workshopId: null,
 
                 },
+                file: null,
                 startDate: null,
                 startTime: null,
                 endDate: null,
@@ -235,7 +235,6 @@
         },
         methods: {
             addOfferingWorkshop() {
-
                 let sdate = new Date(this.startDate + "," + this.startTime);
                 let edate = new Date(this.endDate + "," + this.endTime);
                 let esDate = sdate.toISOString();
@@ -249,8 +248,18 @@
                 this.workshop.workshopId = this.id;
 
                 // eslint-disable-next-line no-console
-                console.log(this.workshop)
-                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then(() => {
+                console.log(this.workshop);
+                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then((res) => {
+                    let formData = new FormData();
+                    formData.append('file', this.uploadImg);
+                    axios.post(this.$store.state.api + "/userDetails/setPic/offeringWorkshop/" + res.data.id,
+                        formData
+                        , {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    );
                     this.dialoga = false;
                     this.$router.go(this.$router.currentRoute);
                 })
