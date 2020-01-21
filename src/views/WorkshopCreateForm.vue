@@ -97,7 +97,9 @@
                             </v-row>
                             <v-row justify="end">
                                 <v-btn @click="addQuestion" color="primary" class="mr-3">Add Question</v-btn>
-                                <v-btn @click="sendForm" color="success" class="mr-3">Submit Form</v-btn>
+                                <v-btn @click="sendForm" color="success" class="mr-3" :loading="this.loading">Submit
+                                    Form
+                                </v-btn>
                             </v-row>
                             <v-row>
 
@@ -127,11 +129,43 @@
                 },
                 option: "",
                 valid: false,
-                valid_option: false
+                valid_option: false,
+                loading: false,
             };
         },
-
         methods: {
+            sendFormData(url, id) {
+                this.loading = true;
+                let qs = [];
+                this.questions.forEach((q) => {
+                    if (q.type === 'Text') {
+                        qs.push({
+                            text: q.text,
+                        });
+                    } else if (q.type === 'Option') {
+                        let answ = [];
+                        q.options.forEach((op) => {
+                            answ.push({
+                                text: op
+                            });
+                        });
+                        qs.push({
+                            text: q.text,
+                            answerables: answ
+                        })
+                    }
+                });
+                // eslint-disable-next-line no-console
+                console.log(qs);
+                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/form/questions', {
+                    formId: id,
+                    question: qs,
+
+                }).then(() => {
+                    this.loading = false;
+                    this.$router.replace({path: "/"});
+                });
+            },
             addQuestion() {
                 if (!this.valid)
                     return;
@@ -151,56 +185,22 @@
                 this.$refs.form_option.reset();
                 this.$refs.form_option.resetValidation();
             },
+            submitForm(url) {
+                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/' + url, {
+                    name: this.name
+                }).then((res) => {
+                    this.sendFormData(url, res.data.id)
+                })
+            },
             sendForm() {
                 if (this.graderEval) {
-                    // eslint-disable-next-line no-console
-                    console.log(this.questions);
-
-                    axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/graderEvaluationForm', {
-                        name: this.name
-                    }).then(() => {
-                            let qs = [];
-                            this.questions.forEach((q) => {
-                                if (q.type === 'Text') {
-                                    qs.push({
-                                        text: q.text,
-                                    });
-                                } else if (q.type === 'Option') {
-                                    let answ = [];
-                                    q.options.forEach((op) => {
-                                        answ.push({
-                                            text: op
-                                        });
-                                    });
-                                    qs.push({
-                                        text: q.text,
-                                        answerables: answ
-                                    })
-                                }
-                            });
-                        // eslint-disable-next-line no-console
-                            console.log(qs)
-                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/form/questions', {
-                                text: this.name
-                            });
-                            this.$router.replace({path: "/"});
-                        }
-                    )
+                    this.submitForm("graderEvaluationForm")
                 } else if (this.attReg) {
-                    axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
-                            this.$router.replace({path: "/"});
-                        }
-                    )
+                    this.submitForm("attenderRegisterForm")
                 } else if (this.graderReq) {
-                    axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
-                            this.$router.replace({path: "/"});
-                        }
-                    )
+                    this.submitForm("graderRequestForm")
                 } else if (this.workshopForm) {
-                    axios.post(this.$store.state.api + "/" + this.questions).then(() => { // TODO link
-                            this.$router.replace({path: "/"});
-                        }
-                    )
+                    this.submitForm("workshopForms")
                 }
 
             }

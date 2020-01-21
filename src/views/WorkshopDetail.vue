@@ -22,7 +22,8 @@
                         v-if="groups.length > 0"
                         :groups="groups"
                         :isManager="true"
-                        :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, true, 'manager', id)"
+                        :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, true, 'manager', id, false)"
+                        :action-function-grader2="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id, true)"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
                 />
                 <div class="my-5">
@@ -52,7 +53,7 @@
 
                         <v-btn color="primary" :disabled="this.offeredWorkshop.graderEvaluationForm === null"
                                class="ma-2" small
-                               @click="() => routeToForm(this.offeredWorkshop.graderEvaluationForm.id,false, 'manager')">
+                               @click="() => routeToForm(this.offeredWorkshop.graderEvaluationForm.id,false, 'manager', false)">
                             grader
                             evaluation
                             forms
@@ -60,11 +61,11 @@
                         <v-btn color="primary" :disabled="this.attReqForm === null"
                                class="ma-2"
                                small
-                               @click="() => routeToForm(this.attReqForm.id,false, 'manager')">attendee register forms
+                               @click="() => routeToForm(this.attReqForm.id,false, 'manager' , false)">attendee register forms
                         </v-btn>
                         <v-btn color="primary" :disabled="this.graderReqForm === null"
                                class="ma-2" small
-                               @click="() => routeToForm(this.graderReqForm.id,false, 'manager')">grader register forms
+                               @click="() => routeToForm(this.graderReqForm.id,false, 'manager', false)">grader register forms
                         </v-btn>
                         <v-btn color="primary"
                                :disabled="this.offeredWorkshop.workshopForms.length === 0"
@@ -83,6 +84,7 @@
                         :group="graderGroup"
                         :action-function-grader="null"
                         :action-function-attendee="(id) => routeToWorkshopForm(true, 'graderWorkshopForm', id)"
+                        :action-function-attendee2="(id) => routeToWorkshopForm(false, 'graderWorkshopForm', id)"
                 />
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show
@@ -136,26 +138,28 @@
             </v-container>
 
             <v-container v-else>
-                <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
-                <div v-if="this.$store.getters.isLoggedIn" class="text-center">
-                    <v-btn color="primary" :disabled="this.attReqForm !== null"
-                           class="ma-2"
-                           @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
-                    </v-btn>
-                    <v-btn color="primary" :disabled="this.graderReqForm !== null"
-                           class="ma-2"
-                           @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a grader
-                    </v-btn>
-                </div>
-                <div v-else>
-                    <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
-                    <div v-if="this.notStarted" class="text-center">
-                        <v-btn color="primary" to="/login" class="ma-2">register now!
-                        </v-btn>
-                        <v-btn color="primary" to="/login" class="ma-2">Request as a grader
-                        </v-btn>
-                    </div>
-                </div>
+               <template v-if="notStarted">
+                   <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
+                   <div v-if="this.$store.getters.isLoggedIn" class="text-center">
+                       <v-btn color="primary" :disabled="this.attReqForm !== null"
+                              class="ma-2"
+                              @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
+                       </v-btn>
+                       <v-btn color="primary" :disabled="this.graderReqForm !== null"
+                              class="ma-2"
+                              @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a grader
+                       </v-btn>
+                   </div>
+                   <div v-else>
+                       <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
+                       <div v-if="this.notStarted" class="text-center">
+                           <v-btn color="primary" to="/login" class="ma-2">register now!
+                           </v-btn>
+                           <v-btn color="primary" to="/login" class="ma-2">Request as a grader
+                           </v-btn>
+                       </div>
+                   </div>
+               </template>
 
             </v-container>
         </template>
@@ -311,6 +315,7 @@
                         attReg: attReg,
                         graderReq: graderReq,
                         workshopForm: workshopForm,
+                        offId: this.wId
                     }
                 })
             },
@@ -325,13 +330,14 @@
                     }
                 })
             },
-            routeToForm(id, isAnswer1, type1, appid) {
+            routeToForm(id, isAnswer1, type1, appid, showAnswers) {
                 this.$router.push({
                     name: 'workshopForm', params: {
                         formId: id,
                         isAnswer: isAnswer1,
                         type: type1,
-                        appId: appid
+                        appId: appid,
+                        showAnswers: showAnswers
                     }
                 })
             },

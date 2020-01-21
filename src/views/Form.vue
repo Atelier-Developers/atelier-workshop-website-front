@@ -28,19 +28,20 @@
                                     class="form-input"
                             >
                             </v-text-field>
+                            <v-select v-if="question.answerables.length > 0"
+                                      :items="question.answerables"
+                                      :item-value="question.answerables.id"
+                                      :item-text="question.answerables.text"
+                                      :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
+                                      label="Options"
+                                      required
+                                      class="form-input ma-4"
+                            />
                         </template>
-                        <template v-else>
+                        <div v-else-if="showAnswers">
                             {{getAnswerFromId(question)}}
-                        </template>
-                        <v-select v-if="question.answerables.length > 0"
-                                  :items="question.answerables"
-                                  :item-value="question.answerables.id"
-                                  :item-text="question.answerables.text"
-                                  :rules="[v => !!v || 'Item is required']"
-                                  label="Options"
-                                  required
-                                  class="form-input ma-4"
-                        />
+                        </div>
+
                     </label>
                     <div>
                         <v-btn color="primary" @click="sendForm" v-if="isAnswer" class="ma-3">Submit</v-btn>
@@ -56,7 +57,7 @@
 
     export default {
         name: "Form",
-        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId'],
+        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers'],
         data() {
             return {
                 form: null,
@@ -67,6 +68,8 @@
             axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                 this.form = res.data;
                 if (this.type == null) {
+                    // eslint-disable-next-line no-console
+                    console.log(this.forms.questions);
                     this.form.questions.forEach((q) => {
                         q.answers.forEach((a) => {
                             if (a.formApplicant === this.appId) {
@@ -90,8 +93,26 @@
             })
         },
         methods: {
-            getAnswerFromId() {
-                return
+            getAnswerFromId(question) {
+
+                // eslint-disable-next-line no-console
+                console.log(this.answers)
+                if ( Object.keys(this.answers).length === 0 ){
+                    return "No Answers Yet";
+                }
+                let ans = this.answers[question.id];
+
+                if (ans === null) {
+                    return ;
+                }
+
+                if (ans.type === 'text'){
+                    return ans.answer.answerData.text;
+                }
+                else if (ans.type === 'choice'){
+                    let able = question.answerables;
+                    return able[ans.answer.answerData.choice];
+                }
 
             },
             sendForm() {
@@ -109,36 +130,67 @@
                     //         })
                     //     }
                     // } else {
-                    data.push({
-                        questionId: this.form.questions[i].id,
-                        type: this.form.questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
-                        answerData: {
-                            text: inputs[i].internalValue,
-                            choice: inputs[i].internalValue
+                    let answerDat = {}
+                    if ( this.form.questions[i].choicable ){
+                        let index;
+                        for ( let j = 0 ; j < this.form.questions[i].answerables.length ; ++j ){
+                            if (inputs[i].internalValue === this.form.questions[i].answerables[j].text){
+                                index = j;
+                            }
                         }
+                        answerDat = {
+                            "choice" : index
+                        }
+                    }
+
+                    else{
+                        answerDat = {
+                            "text" : inputs[i].internalValue
+                        }
+                    }
+                    data.push({
+                        "questionId": this.form.questions[i].id,
+                        "type": this.form.questions[i].choicable ? "ChoiceAnswer" : "TextAnswer",
+                        "answerData": answerDat
                     });
                     // }
                 }
                 // eslint-disable-next-line no-console
                 console.log(data)
                 if (this.type !== null) {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
                     if (this.type === 'grader') {
                         axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
 
                     } else if (this.type === 'att') {
                         axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.form.offeredWorkshop.id + "/answer", data)
                     } else if (this.type === 'manager' && this.isAnswer) {
-                        axios.post(this.$store.state.api + "/offeringWorkshop/offeringWorkshop/" + this.form.offeredWorkshop.id + "/graderEvaluationForm/answer", {
-                            formId: this.form.id,
-                            applicantId: this.appId,
-                            answerQuestion: data
+                        axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {
+                            // eslint-disable-next-line no-console
+                            console.log({
+                                formId: this.form.id,
+                                applicantId: res.data.id,
+                                answerQuestion: data
+                            });
+                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.form.offeredWorkshop.id + "/graderEvaluationForm/answer", {
+                                formId: this.form.id,
+                                applicantId: res.data.id,
+                                answerQuestion: data
+                            })
+                            // eslint-disable-next-line no-console
+                            console.log(res);
                         })
                     } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
-                        axios.post(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.form.offeredWorkshop.id + "/workshopForm/answer", {
-                            formId: this.form.id,
-                            applicantId: this.appId,
-                            answerQuestion: data
+                        axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {
+
+                            axios.post(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.form.offeredWorkshop.id + "/workshopForm/answer", {
+                                formId: this.form.id,
+                                applicantId: res.data.id,
+                                answerQuestion: data
+                            })
                         })
+
                     }
                 }
             }
