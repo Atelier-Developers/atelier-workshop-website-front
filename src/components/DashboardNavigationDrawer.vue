@@ -13,13 +13,13 @@
                 height="100%"
         >
             <v-list-item two-line>
-                <v-list-item-avatar color="white">
-                    <v-img src="http://www.atelierdelaforge.com/wp-content/uploads/AtelierdelaForge_Logo_Nero.png"
-                           sizes="45"
+                <v-list-item-avatar>
+                    <v-img src="../assets/675469ae-39e8-40b3-93a9-94a7ba0ff76b_200x200 (2).png"
+                           height="100"
                            contain/>
                 </v-list-item-avatar>
 
-                <v-list-item-content>
+                <v-list-item-content class="display-2 font-weight-light">
                     Atelier
                 </v-list-item-content>
             </v-list-item>
