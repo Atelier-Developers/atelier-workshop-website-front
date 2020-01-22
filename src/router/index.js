@@ -16,6 +16,7 @@ import OfferingWorkshops from "../views/OfferingWorkshops";
 import WorkshopCreateForm from "../views/WorkshopCreateForm";
 import WorkshopRequests from "../views/WorkshopRequests";
 import Certificate from "../views/Certificate";
+import workshopAddPage from "../views/workshopAddPage";
 
 Vue.use(VueRouter)
 
@@ -99,8 +100,13 @@ const routes = [
     },
     {
         path: '/admin',
-        name: 'Admin',
-        component: AdminPage
+        name: 'Admin Workshop',
+        component: AdminPage,
+    },
+    {
+        path: '/workshops',
+        name: 'Workshops',
+        component: workshopAddPage,
     },
     {
         path: '*',

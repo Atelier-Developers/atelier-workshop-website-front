@@ -5,6 +5,5 @@ export default {
     status: '',
     drawer: true,
     token: localStorage.getItem('token') || '',
-
-
+    isAdmin: false,
 }

@@ -1,13 +1,13 @@
 <template>
     <v-app-bar
             flat
-            app
+            dark
             elevation="10"
             hide-on-scroll
-            color="#eee"
+            class="blue darken-4"
             v-show="this.$store.state.drawer"
     >
-        <v-toolbar-title class="display-1 font-weight-light">
+        <v-toolbar-title class="display-1 font-weight-light text-capitalize">
             <v-app-bar-nav-icon v-if="responsive" @click.stop="$emit('toggle-drawer')"/>
             {{title}}
         </v-toolbar-title>

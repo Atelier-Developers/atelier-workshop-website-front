@@ -27,11 +27,12 @@
                                 <v-img :src="this.userImg"/>
                             </v-avatar>
                         </v-row>
-                        <v-btn class="ml-auto mr-7" @click="dialog = !dialog">
-                            <v-row>
-                                <v-icon>mdi-image-plus</v-icon>
-                            </v-row>
-                        </v-btn>
+                       <v-row justify="center" justify-md="start" class="my-6" >
+                           <v-btn @click="dialog = !dialog" color="warning">
+                               Upload Image
+                               <v-icon right>mdi-cloud-upload</v-icon>
+                           </v-btn>
+                       </v-row>
                     </v-col>
                     <v-col cols="12" md="9" class="ml-4">
                         <p class="display-3 text-capitalize my-6">{{user.name}}</p>

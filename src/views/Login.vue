@@ -87,6 +87,7 @@
                             console.log(res.data.id);
                             localStorage.setItem('userId', res.data.id);
                             this.$store.commit('auth_user_id', res.data.id);
+                            this.$store.commit('setAdmin', res.data.username === "admin");
                             // eslint-disable-next-line no-console
                             console.log(this.$store.state.userId);
                             this.$router.push("/");

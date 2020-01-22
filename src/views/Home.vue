@@ -35,24 +35,28 @@
             return {
                 workshops: [],
                 popularWorkshops: [],
-                workshopOfDay: []
+                workshopOfDay: [],
+                isLoading: true,
             }
         },
         methods: {
-            getOfferingWorkshops(){
+            getOfferingWorkshops() {
                 return axios.get(this.$store.state.api + "/workshop/offeringWorkshops");
             },
-            getPopularWorkshop(){
+            getPopularWorkshop() {
                 return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/popular");
             }
         },
         mounted() {
             axios.all([this.getOfferingWorkshops(), this.getPopularWorkshop()])
-            .then((res) => {
-                this.workshops = res[0].data;
-                this.popularWorkshops = res[1].data;
-                this.workshopOfDay = [this.popularWorkshops[Math.floor(Math.random() * 5)]]
-            })
+                .then((res) => {
+                    // eslint-disable-next-line no-console
+                    console.log(res);
+                    this.workshops = res[0].data;
+                    this.popularWorkshops = res[1].data;
+                    this.workshopOfDay = [this.popularWorkshops[Math.floor(Math.random() * 5)]];
+                    this.isLoading = false;
+                })
 
         }
     }

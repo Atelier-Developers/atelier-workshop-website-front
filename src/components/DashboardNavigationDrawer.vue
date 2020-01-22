@@ -1,18 +1,16 @@
 <template>
     <v-navigation-drawer v-if="this.$store.state.drawer"
                          v-model="drawer"
-                         :src="image"
                          absolute
+                         class="blue darken-4 navbar"
                          dark
                          app
                          width="260"
-                         class="navbar"
     >
         <v-list
                 dense
                 nav
                 height="100%"
-                class="py-0 image_overlay"
         >
             <v-list-item two-line>
                 <v-list-item-avatar color="white">
@@ -33,7 +31,8 @@
                     :key="item.title"
                     :to="item.to"
                     link
-                    active-class="primary"
+                    color="blue"
+                    active-class="white"
             >
                 <v-list-item-action>
                     <v-icon>{{ item.icon }}</v-icon>
@@ -49,13 +48,17 @@
                 <v-list-group
                         prepend-icon="fa-chalkboard"
                         no-action
+                        color="blue"
+                        active-class="white"
                 >
                     <template v-slot:activator>
                         <v-list-item-content>
-                            <v-list-item-title>Workshops</v-list-item-title>
+                            <v-list-item-title>Profile</v-list-item-title>
                         </v-list-item-content>
                     </template>
                     <v-list-item
+                            color="white"
+                            active-class="primary"
                             v-for="(role, i) in userRole"
                             :key="i"
                             :to="role.to"
@@ -90,13 +93,37 @@
                 ]
             }
         },
+        methods: {
+            routeToPage(name) {
+                this.$router.push({name: name})
+            },
+            routeToPath(path) {
+                this.$router.push({path: path})
+            },
+            routeToAdmin() {
+                this.$route.push({
+                    name: "Workshops", params: {
+                        isAdmin: true
+                    }
+                })
+            }
+        },
         computed: {
             userButton() {
-                return this.$store.getters.isLoggedIn ? [{title: 'Home', icon: 'mdi-home', to: "/"}, {
-                    title: 'User',
-                    icon: 'mdi-account-box',
-                    to: "/user-profile/" + localStorage.getItem('userId')
-                }, {title: 'Admin', icon: 'mdi-account-circle', to: "/admin"}] : [{title: 'Home', icon: 'mdi-home', to: "/"},  {title: 'Admin', icon: 'mdi-admin', to: "/admin"}]
+                let menus = [{title: 'Home', icon: 'mdi-home', to: '/'}];
+                if (this.$store.getters.isLoggedIn) {
+                    menus.push({
+                        title: 'User',
+                        icon: 'mdi-account-box',
+                        to: "/user-profile/" + localStorage.getItem('userId')
+                    })
+                    if (this.$store.state.isAdmin) {
+                        menus.push({title: 'Workshops', icon: 'mdi-account-circle', to: '/admin'})
+                    } else {
+                        menus.push({title: 'Workshops', icon: 'fa-chalkboard-teacher', to: '/workshops'})
+                    }
+                }
+                return menus;
             }
         },
     }

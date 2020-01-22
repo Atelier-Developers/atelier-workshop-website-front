@@ -117,7 +117,7 @@
                                                 label="Picker in dialog"
                                                 readonly
                                                 v-on="on"
-                                        ></v-text-field>
+                                        />
                                     </template>
                                     <v-time-picker
                                             v-if="modal4"
@@ -139,7 +139,7 @@
                                         v-model="workshop.offeredWorkshop.price"
                                         :rules="[checkPrice]"
                                         required
-                                ></v-text-field>
+                                />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -147,7 +147,7 @@
                                 <v-text-field
                                         label="Description"
                                         v-model="workshop.offeredWorkshop.description"
-                                ></v-text-field>
+                                />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -159,7 +159,7 @@
                                         item-text="name"
                                         item-value="id"
                                         multiple
-                                ></v-select>
+                                />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -169,7 +169,7 @@
                                         v-model="file"
                                         prepend-icon="mdi-camera"
                                         accept="image/*"
-                                ></v-file-input>
+                                />
                             </v-col>
                         </v-row>
                     </v-form>
@@ -181,7 +181,7 @@
             </v-card>
         </v-dialog>
 
-        <workshop-list :workshops="offeringWorkshops" title="Offered Workshops"/>
+        <workshop-list :workshops="offeringWorkshops" title="Offered Workshops" v-if="!managerPage"/>
     </v-container>
 </template>
 
