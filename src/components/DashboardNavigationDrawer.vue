@@ -2,7 +2,8 @@
     <v-navigation-drawer v-if="this.$store.state.drawer"
                          v-model="drawer"
                          absolute
-                         class="blue darken-4 navbar"
+                         class="indigo darken-3 navbar elevation-5"
+                         expand-on-hover
                          dark
                          app
                          width="260"

@@ -3,13 +3,18 @@
         <v-row class="fill-height" justify="center" align="center">
             <v-col cols="12" class="text-center">
                 <div class="display-4 mt-9">
-                    Aref Sayareh <!--TODO Name-->
+                    {{name}}
                 </div>
             </v-col>
             <v-col cols="12" class="text-center">
                 <div class="display-1">
-                    You've Successfully Passed Python Workshop
+                    You've Successfully Passed {{workshopName}} Workshop
                     <br/> we wish you the best!<!--TODO Workshop-->
+                </div>
+            </v-col>
+            <v-col cols="12" class="text-center">
+                <div class="display-1">
+                    {{managerName}}
                 </div>
             </v-col>
         </v-row>
@@ -18,7 +23,8 @@
 
 <script>
     export default {
-        name: "Certificate"
+        name: "Certificate",
+        props: ['name', 'workshopName', 'managerName']
     }
 </script>
 

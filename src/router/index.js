@@ -72,7 +72,8 @@ const routes = [
     {
         path: '/certificate',
         name: 'certificate',
-        component: Certificate
+        component: Certificate,
+        props: true
     },
     {
         path: '/workshopRequests',

@@ -2,9 +2,9 @@
     <v-app-bar
             flat
             dark
-            elevation="10"
+            elevation="5"
             hide-on-scroll
-            class="blue darken-4"
+            class="indigo darken-3"
             v-show="this.$store.state.drawer"
     >
         <v-toolbar-title class="display-1 font-weight-light text-capitalize">
@@ -97,7 +97,7 @@
             },
 
             onResponsiveInverted() {
-                if (window.innerWidth < 991) {
+                if (window.innerWidth < 1260) {
                     this.responsive = true
                 } else {
                     this.responsive = false
