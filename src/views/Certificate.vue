@@ -1,29 +1,30 @@
 <template>
-    <v-container>
-        <v-row class="display-4">
-            <div>
-                Aref Sayareh <!--TODO Name-->
-            </div>
-        </v-row>
-        <v-row class="display-3">
-            <div>
-                You've Passed Python Workshop <!--TODO Workshop-->
-            </div>
-        </v-row>
-        <v-row>
-            <v-col cols="6">
-                Graders List
+    <v-img class="fill-height" src="../assets/certificate background 1610.jpg">
+        <v-row class="fill-height" justify="center" align="center">
+            <v-col cols="12" class="text-center">
+                <div class="display-4 mt-9">
+                    {{name}}
+                </div>
             </v-col>
-            <v-col cols="6">
-                Workshop Manager
+            <v-col cols="12" class="text-center">
+                <div class="display-1">
+                    You've Successfully Passed {{workshopName}} Workshop
+                    <br/> we wish you the best!<!--TODO Workshop-->
+                </div>
+            </v-col>
+            <v-col cols="12" class="text-center">
+                <div class="display-1">
+                    {{managerName}}
+                </div>
             </v-col>
         </v-row>
-    </v-container>
+    </v-img>
 </template>
 
 <script>
     export default {
-        name: "Certificate"
+        name: "Certificate",
+        props: ['name', 'workshopName', 'managerName']
     }
 </script>
 

@@ -21,5 +21,9 @@ export default {
         state.status = '';
         state.token = '';
         state.userId = -1;
+        state.isAdmin = false;
+    },
+    setAdmin(state, admin) {
+        state.isAdmin = admin;
     },
 }

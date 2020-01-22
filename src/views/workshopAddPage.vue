@@ -9,7 +9,7 @@
                 right
                 fixed
                 elevation="5"
-                v-if="true"
+                v-if="false"
                 @click="dialog = !dialog"
         >
             <v-icon size="30">mdi-plus</v-icon>

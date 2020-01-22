@@ -1,13 +1,13 @@
 <template>
     <v-app-bar
             flat
-            app
-            elevation="10"
+            dark
+            elevation="5"
             hide-on-scroll
-            color="#eee"
+            class="indigo darken-3"
             v-show="this.$store.state.drawer"
     >
-        <v-toolbar-title class="display-1 font-weight-light">
+        <v-toolbar-title class="display-1 font-weight-light text-capitalize">
             <v-app-bar-nav-icon v-if="responsive" @click.stop="$emit('toggle-drawer')"/>
             {{title}}
         </v-toolbar-title>
@@ -97,7 +97,7 @@
             },
 
             onResponsiveInverted() {
-                if (window.innerWidth < 991) {
+                if (window.innerWidth < 1260) {
                     this.responsive = true
                 } else {
                     this.responsive = false

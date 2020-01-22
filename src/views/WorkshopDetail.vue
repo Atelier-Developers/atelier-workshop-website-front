@@ -152,7 +152,11 @@
                         :action-function-attendee="null"
                 />
                 <div v-if="passed">
+                    <v-btn @click="() => this.$router.push({name: 'certificate', params: {
 
+                    }})">
+                        Show certificate
+                    </v-btn>
                 </div>
                 <div v-else-if="isHolding">
                     <!--                chat for participants and graders of this -->

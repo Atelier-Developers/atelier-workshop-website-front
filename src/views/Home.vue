@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!isLoading">
         <v-parallax
                 dark
                 height="500"
@@ -16,8 +16,15 @@
             </v-row>
         </v-parallax>
         <v-container>
+            <workshop-list :workshops="popularWorkshops" title="Popular Workshops"/>
+            <workshop-list :workshops="workshopOfDay" title="Workshop of Day"/>
             <workshop-list :workshops="workshops" title="Offered Workshops"/>
         </v-container>
+    </div>
+    <div class="fill-height" v-else>
+        <v-row class="fill-height" justify="center" align="center">
+            <v-progress-circular indeterminate color="blue" size="60"/>
+        </v-row>
     </div>
 
 </template>
@@ -31,15 +38,31 @@
         components: {WorkshopList},
         data() {
             return {
-                workshops: []
+                workshops: [],
+                popularWorkshops: [],
+                workshopOfDay: [],
+                isLoading: true,
+            }
+        },
+        methods: {
+            getOfferingWorkshops() {
+                return axios.get(this.$store.state.api + "/workshop/offeringWorkshops");
+            },
+            getPopularWorkshop() {
+                return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/popular");
             }
         },
         mounted() {
-            axios.get(this.$store.state.api + "/workshop/offeringWorkshops").then((res) => {
-                this.workshops = res.data;
-                // eslint-disable-next-line no-console
-                console.log(res.data);
-            })
+            axios.all([this.getOfferingWorkshops(), this.getPopularWorkshop()])
+                .then((res) => {
+                    // eslint-disable-next-line no-console
+                    console.log(res);
+                    this.workshops = res[0].data;
+                    this.popularWorkshops = res[1].data;
+                    this.workshopOfDay = this.popularWorkshops.length > 5 ? [this.popularWorkshops[Math.floor(Math.random() * 5)]] : [this.popularWorkshops[Math.floor(Math.random() * this.popularWorkshops.length)]];
+                    this.isLoading = false;
+                })
+
         }
     }
 </script>
