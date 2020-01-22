@@ -37,6 +37,8 @@
         mounted() {
             axios.get(this.$store.state.api + "/workshop/offeringWorkshops").then((res) => {
                 this.workshops = res.data;
+                // eslint-disable-next-line no-console
+                console.log(res.data);
             })
         }
     }

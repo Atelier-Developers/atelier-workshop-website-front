@@ -218,7 +218,7 @@
                 modal: false,
                 modal2: false,
                 modal3: false,
-                modal4: false
+                modal4: false,
             }
         },
         mounted() {
@@ -251,8 +251,8 @@
                 console.log(this.workshop);
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then((res) => {
                     let formData = new FormData();
-                    formData.append('file', this.uploadImg);
-                    axios.post(this.$store.state.api + "/userDetails/setPic/offeringWorkshop/" + res.data.id,
+                    formData.append('file', this.file);
+                    axios.post(this.$store.state.api + "/userDetails/setPic/offeringWorkshop/" + res.data,
                         formData
                         , {
                             headers: {

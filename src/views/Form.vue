@@ -67,7 +67,7 @@
 
     export default {
         name: "Form",
-        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers', "offId"],
+        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers', "offId", "appType"],
         data() {
             return {
                 form: null,
@@ -75,53 +75,125 @@
             }
         },
         mounted() {
-            axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
-                this.form = res.data;
-                if (this.type == null) {
-                    // eslint-disable-next-line no-console
-                    console.log(this.forms.questions);
-                    this.form.questions.forEach((q) => {
-                        q.answers.forEach((a) => {
-                            if (a.formApplicant === this.appId) {
-                                if ('formFiller' in a) {
-                                    if (a.formFiller === this.fillerId) {
-                                        this.answers[q.id] = {
-                                            answer: a,
-                                            type: 'choice' in a ? 'choice' : 'text'
-                                        };
-                                    }
-                                } else {
-                                    this.answers[q.id] = {
-                                        answer: a,
-                                        type: 'choice' in a ? 'choice' : 'text'
-                                    };
-                                }
+            let graderAppId;
+            let user = {};
+
+            if ( this.appId === false || this.appId === undefined){
+                axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
+                    this.form = res.data;
+                });
+            }
+            else  {
+
+                if ( this.appType === "grader"){
+                    axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
+                        user = res.data;
+
+                        graderAppId = user.roles[1].graderWorkshopConnection;
+
+
+
+                        axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
+                            this.form = res.data;
+                            if (this.type != null) {
+                                // eslint-disable-next-line no-console
+                                console.log(this.form.questions);
+                                this.form.questions.forEach((q) => {
+                                    q.answers.forEach((a) => {
+                                        // if (a.formApplicant === this.appId) {
+                                        //     if ('formFiller' in a) {
+                                        //         if (a.formFiller === this.fillerId) {
+                                        //             this.answers[q.id] = {
+                                        //                 answer: a,
+                                        //                 type: 'choice' in a ? 'choice' : 'text'
+                                        //             };
+                                        //         }
+                                        //     } else {
+                                        //
+                                        //     }
+                                        // }
+
+                                        if (a.formApplicant.workshopGraderInfo.workshopGrader.id === graderAppId.id){
+                                            this.answers[q.id] = {
+                                                answer: a,
+                                                type: 'choice' in a ? 'choice' : 'text'
+                                            };
+                                        }
+                                    })
+                                })
                             }
                         })
                     })
                 }
-            })
+
+                else if (this.appType === "att") {
+                    axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
+                        user = res.data;
+
+                        let attAppId = user.roles[0].attenderWorkshopConnection;
+
+
+
+                        axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
+                            this.form = res.data;
+                            if (this.type != null) {
+                                // eslint-disable-next-line no-console
+                                console.log(this.form.questions);
+                                this.form.questions.forEach((q) => {
+                                    q.answers.forEach((a) => {
+                                        // if (a.formApplicant === this.appId) {
+                                        //     if ('formFiller' in a) {
+                                        //         if (a.formFiller === this.fillerId) {
+                                        //             this.answers[q.id] = {
+                                        //                 answer: a,
+                                        //                 type: 'choice' in a ? 'choice' : 'text'
+                                        //             };
+                                        //         }
+                                        //     } else {
+                                        //
+                                        //     }
+                                        // }
+
+                                        if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id){
+                                            this.answers[q.id] = {
+                                                answer: a,
+                                                type: 'choice' in a ? 'choice' : 'text'
+                                            };
+                                        }
+                                    })
+                                })
+                            }
+                        })
+                    })
+                }
+
+            }
+
+
+
         },
         methods: {
             getAnswerFromId(question) {
 
-                // eslint-disable-next-line no-console
-                console.log(this.answers)
+
                 if ( Object.keys(this.answers).length === 0 ){
                     return "No Answers Yet";
                 }
                 let ans = this.answers[question.id];
+
+                // eslint-disable-next-line no-console
+                console.log(ans);
 
                 if (ans === null) {
                     return ;
                 }
 
                 if (ans.type === 'text'){
-                    return ans.answer.answerData.text;
+                    return ans.answer.answerData[0].text;
                 }
                 else if (ans.type === 'choice'){
                     let able = question.answerables;
-                    return able[ans.answer.answerData.choice];
+                    return able[ans.answer.answerData[0].choice];
                 }
 
             },
@@ -191,6 +263,8 @@
                         }).catch()
                     } else if (this.type === 'manager' && this.isAnswer) {
                         axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {
+                            // eslint-disable-next-line no-console
+                            console.log("jlfak");
                             // eslint-disable-next-line no-console
                             console.log({
                                 formId: this.form.id,
