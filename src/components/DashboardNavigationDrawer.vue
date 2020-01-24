@@ -116,7 +116,7 @@
                     menus.push({
                         title: 'User',
                         icon: 'mdi-account-box',
-                        to: "/user-profile/" + localStorage.getItem('userId')
+                        to: "/user-profile/" + this.$store.state.userId
                     })
                     if (this.$store.state.isAdmin) {
                         menus.push({title: 'Workshops', icon: 'mdi-account-circle', to: '/admin'})

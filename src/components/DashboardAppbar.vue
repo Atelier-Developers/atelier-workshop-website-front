@@ -23,7 +23,7 @@
                 <template v-slot:activator="{ on }">
                     <v-btn class="mr-2" v-on="on" icon>
                         <v-avatar>
-                            <v-img src="https://www.biography.com/.image/t_share/MTE4MDAzNDEwNzMzODYwMzY2/robert-downey-jr-9542052-1-402.jpg"/>
+                            <v-img :src="userImage" @error="hasError"/>
                         </v-avatar>
                     </v-btn>
                 </template>
@@ -50,6 +50,7 @@
         data() {
             return {
                 responsive: false,
+                faildImage: false,
                 items: [
                     {
                         title: "Show Profile",
@@ -78,6 +79,10 @@
             }
         },
         computed: {
+            userImage: function () {
+                return this.faildImage ? "https://winaero.com/blog/wp-content/uploads/2015/05/user-200.png" :
+                    this.$store.state.api + '/userDetails/profilePic/user/' +  localStorage.getItem('userId')
+            },
             title() {
                 return this.$route.name;
             },
@@ -90,12 +95,14 @@
             window.removeEventListener('resize', this.onResponsiveInverted)
         },
         methods: {
+            hasError() {
+                this.faildImage = true
+            },
             onClickBtn() {
                 // eslint-disable-next-line no-console
                 console.log(this.$store.state.drawer);
                 this.$store.commit("toggleDrawer")
             },
-
             onResponsiveInverted() {
                 if (window.innerWidth < 1260) {
                     this.responsive = true

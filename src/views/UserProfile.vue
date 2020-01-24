@@ -13,7 +13,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn flat color="primary" @click="uploadImage">Submit</v-btn>
+                        <v-btn flat color="primary" @click="uploadImage" :loading="isUploading">Submit</v-btn>
                     </v-card-actions>
                 </v-form>
             </v-card>
@@ -24,15 +24,15 @@
                     <v-col cols="12" md="2">
                         <v-row justify-md="start" justify="center">
                             <v-avatar size="150" class="elevation-9">
-                                <v-img :src="this.userImg"/>
+                                <v-img :src="userImg" v-on:error="hasError"/>
                             </v-avatar>
                         </v-row>
-                       <v-row justify="center" justify-md="start" class="my-6" >
-                           <v-btn @click="dialog = !dialog" color="warning">
-                               Upload Image
-                               <v-icon right>mdi-cloud-upload</v-icon>
-                           </v-btn>
-                       </v-row>
+                        <v-row justify="center" justify-md="start" class="my-6">
+                            <v-btn @click="dialog = !dialog" color="warning">
+                                Upload Image
+                                <v-icon right>mdi-cloud-upload</v-icon>
+                            </v-btn>
+                        </v-row>
                     </v-col>
                     <v-col cols="12" md="9" class="ml-4">
                         <p class="display-3 text-capitalize my-6">{{user.name}}</p>
@@ -69,42 +69,52 @@
                 attendedList: [],
                 gradedList: [],
                 managedList: [],
-                userImg: "",
+                userImg: this.$store.state.api + '/userDetails/profilePic/user/' + this.id,
                 dialog: false,
-                uploadImg: null
+                isUploading: false,
+                uploadImg: null,
+                faildImage: false,
             }
         },
         mounted() {
-            // eslint-disable-next-line no-console
-            console.log(this.id);
-            this.userImg = this.$store.state.api + "/userDetails/pic/user/" + this.id;
-            axios.get(this.$store.state.api + "/userDetails/" + this.id).then((res) => {
-                this.user = res.data;
-                // eslint-disable-next-line no-console
-                console.log(this.user);
-                axios.get(this.$store.state.api + "/userDetails/history/" + this.user.id).then((res) => {
-                    // eslint-disable-next-line no-console
-                    console.log(res.data);
-                    this.attendedList = res.data.attendedWorkshops;
-                    this.gradedList = res.data.gradedWorkshops;
-                    this.managedList = res.data.managedWorkshops;
-                    this.loading = false;
-                })
-            });
+            axios.all([axios.get(this.$store.state.api + "/userDetails/" + this.id),
+                axios.get(this.$store.state.api + "/userDetails/history/" + this.id)
+            ]).then((res) => {
+                this.user = res[0].data;
+                this.attendedList = res[1].data.attendedWorkshops;
+                this.gradedList = res[1].data.gradedWorkshops;
+                this.managedList = res[1].data.managedWorkshops;
+                this.loading = false;
+            })
         },
         methods: {
+            hasError() {
+                this.faildImage = true
+            },
+            userImage: function () {
+                return this.faildImage ? "https://cdn2.iconfinder.com/data/icons/avatar-profile/421/avatar_user_default_cardigan_contact-512.png"
+                    : this.$store.state.api + '/userDetails/profilePic/user/' + this.id
+            },
             uploadImage() {
                 let formData = new FormData();
                 formData.append('file', this.uploadImg);
-                axios.post(this.$store.state.api + "/userDetails/setPic/user/" + this.id,
+                this.isUploading = true;
+                axios.post(this.$store.state.api + "/userDetails/profilePic/user/" + this.id,
                     formData
                     , {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
                     }
-                );
-                this.dialog = false;
+                ).then((res) => {
+                    // eslint-disable-next-line no-console
+                    console.log(res.data);
+                    this.dialog = false;
+                    this.isUploading = false;
+                    this.$router.go(0);
+
+                });
+
             }
         }
     }
