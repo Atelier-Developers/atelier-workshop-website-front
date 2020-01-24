@@ -10,7 +10,7 @@
     >
         <v-img
                 :aspect-ratio="16/9"
-                :src="this.$store.state.api + '/userDetails/pic/offeringWorkshop/' + this.workshop.id"
+                src="https://library.kissclipart.com/20181005/xwq/kissclipart-java-core-clipart-java-platform-enterprise-editio-79b63cdfe5ed19c5.jpg"
         />
         <v-card-text
                 class="pt-6"
