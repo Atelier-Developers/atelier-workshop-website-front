@@ -1,36 +1,42 @@
 <template>
-    <v-container>
-        <v-btn
-                class="mb-5 mr-5"
-                fab
-                color="primary"
-                bottom
-                small
-                right
-                fixed
-                elevation="5"
-                v-if="false"
-                @click="dialog = !dialog"
-        >
-            <v-icon size="30">mdi-plus</v-icon>
-        </v-btn>
-        <v-dialog v-model="dialog" max-width="500px">
-            <v-card class="py-3 px-3">
-                <v-card-text>
-                    <v-text-field
-                            label="Workshop Name"
-                            v-model="new_WorkshopName"
-                    ></v-text-field>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="addWorkshop">Submit</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-container>
+    <v-container class="fill-height">
+        <template v-if="isAdmin">
+            <v-btn
+                    class="mb-5 mr-5"
+                    fab
+                    color="primary"
+                    bottom
+                    small
+                    right
+                    fixed
+                    elevation="5"
+                    @click="goForAdd"
+            >
+                <v-icon size="30">mdi-plus</v-icon>
+            </v-btn>
+            <v-dialog v-model="dialog" max-width="500px">
+                <v-card class="py-3 px-3">
+                    <v-card-text>
+                        <v-text-field
+                                label="Workshop Name"
+                                v-model="new_WorkshopName"
+                        />
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer/>
+                        <v-btn color="primary" @click="submitFunction"
+                               :loading="isLoading">Submit
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template>
+        <template>
+            <v-row justify="center" align="center" class="fill-height">
+                <empty-state title="No Workshop" icon="fa-box-open"/>
+            </v-row>
             <v-row>
-                <v-col v-for="workshop in workshops" cols="6" sm="4" md="3" lg="2" :key="workshop.text">
+                <v-col v-for="workshop in workshops" cols="6" sm="4" md="3" lg="2" :key="workshop.id">
                     <v-card
                             class="mx-auto"
                             color="grey lighten-4"
@@ -40,34 +46,45 @@
                             @click="() => navigateToWorkshop(workshop.id)"
                             style="position: relative"
                     >
-                        <!--                        <v-img-->
-                        <!--                                :aspect-ratio="16/9"-->
-                        <!--                                src="https://i.udemycdn.com/course/240x135/625204_436a_2.jpg"-->
-                        <!--                        />-->
                         <v-card-text
                                 class="pt-6"
                         >
-                            <div class="font-weight-light grey--text body-1 mb-2 text-capitalize">
+                            <div class="font-weight-light body-1 mb-2 text-capitalize ">
                                 {{workshop.name}}
                             </div>
                         </v-card-text>
+                        <v-card-actions v-if="isAdmin">
+                            <v-row justify="end" align="center" class="mr-1">
+                                <v-btn icon color="warning" @click.stop="() => goForEdit(workshop.id, workshop.name)">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn icon color="error" @click.stop="() => deleteWorkshop(workshop.id)">
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </v-row>
+                        </v-card-actions>
                     </v-card>
                 </v-col>
             </v-row>
-        </v-container>
+        </template>
     </v-container>
 </template>
 
 <script>
     import axios from 'axios';
+    import EmptyState from "../components/EmptyState";
 
     export default {
-        name: "AdminPage",
+        name: "workshopAddPage",
+        components: {EmptyState},
         data() {
             return {
                 workshops: [],
                 dialog: false,
-                new_WorkshopName: ""
+                edit_mode: false,
+                new_WorkshopName: "",
+                workshop_id: null,
+                isLoading: false
             }
         },
         mounted() {
@@ -75,18 +92,56 @@
                 this.workshops = res.data;
             })
         },
+        computed: {
+            isAdmin() {
+                return this.$store.state.isAdmin;
+            }
+        },
         methods: {
+            submitFunction(){
+                return this.edit_mode ? this.editWorkshop() : this.addWorkshop();
+            },
+            goForAdd() {
+                this.dialog = !this.dialog;
+                this.edit_mode = false;
+            },
+            goForEdit(id, name) {
+                this.dialog = !this.dialog;
+                this.new_WorkshopName = name;
+                this.workshop_id = id;
+                this.edit_mode = true;
+            },
+            editWorkshop() {
+                // eslint-disable-next-line no-console
+                console.log({
+                    name: this.new_WorkshopName,
+                    id: this.workshop_id,
+                })
+                this.isLoading = true;
+                axios.put(this.$store.state.api + "/admin/workshops", {
+                    name: this.new_WorkshopName,
+                    id: this.workshop_id,
+                }).then(() => {
+                    this.$router.go(0);
+                })
+            },
+            deleteWorkshop(id) {
+                // TODO check for deleting offering workshop
+                this.isLoading = true;
+                axios.delete(this.$store.state.api + "/admin/workshops/" + id).then(() => {
+                    this.$router.go(0);
+                })
+            },
             navigateToWorkshop(id) {
                 return this.$router.push({name: `Offering Workshops`, params: {id: id}});
             },
             addWorkshop() {
+                this.isLoading = true;
                 let name = this.new_WorkshopName;
                 axios.post(this.$store.state.api + "/admin/workshops/", {name: name}).then(() => {
-                    axios.get(this.$store.state.api + "/workshop/workshops").then((res) => {
-                        this.workshops = res.data;
-                    });
+                    this.$router.go(0);
                 });
-                this.dialog = false;
+
             }
         }
     }

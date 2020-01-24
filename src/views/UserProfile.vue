@@ -9,7 +9,7 @@
                                 v-model="uploadImg"
                                 prepend-icon="mdi-camera"
                                 accept="image/*"
-                        ></v-file-input>
+                        />
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -24,7 +24,7 @@
                     <v-col cols="12" md="2">
                         <v-row justify-md="start" justify="center">
                             <v-avatar size="150" class="elevation-9">
-                                <v-img :src="userImg" v-on:error="hasError"/>
+                                <v-img :src="userImage" v-on:error="hasError"/>
                             </v-avatar>
                         </v-row>
                         <v-row justify="center" justify-md="start" class="my-6">
@@ -44,7 +44,7 @@
         </v-card>
         <v-container>
             <WorkshopList :workshops="attendedList" title="Attended Workshops"/>
-            <WorkshopList :workshops="gradedList" title="Supervised Workshops"/>
+            <WorkshopList :workshops="gradedList" title="Assisted Workshops"/>
             <WorkshopList :workshops="managedList" title="Presented Workshops"/>
         </v-container>
     </v-container>
@@ -63,13 +63,18 @@
         name: "User",
         components: {WorkshopList},
         props: ['id'],
+        computed: {
+            userImage: function () {
+                return this.faildImage ? "https://winaero.com/blog/wp-content/uploads/2015/05/user-200.png"
+                    : this.$store.state.api + '/userDetails/profilePic/user/' + this.id
+            }
+        },
         data() {
             return {
                 loading: true,
                 attendedList: [],
                 gradedList: [],
                 managedList: [],
-                userImg: this.$store.state.api + '/userDetails/profilePic/user/' + this.id,
                 dialog: false,
                 isUploading: false,
                 uploadImg: null,
@@ -91,10 +96,7 @@
             hasError() {
                 this.faildImage = true
             },
-            userImage: function () {
-                return this.faildImage ? "https://cdn2.iconfinder.com/data/icons/avatar-profile/421/avatar_user_default_cardigan_contact-512.png"
-                    : this.$store.state.api + '/userDetails/profilePic/user/' + this.id
-            },
+
             uploadImage() {
                 let formData = new FormData();
                 formData.append('file', this.uploadImg);

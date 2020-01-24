@@ -6,5 +6,5 @@ export default {
     drawer: true,
     userId:  localStorage.getItem('userId') || -1,
     token: localStorage.getItem('token') || '',
-    isAdmin: false,
+    isAdmin: localStorage.getItem("isAdmin") === "admin" || false,
 }

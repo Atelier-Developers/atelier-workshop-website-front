@@ -72,7 +72,7 @@
                 <v-tabs vertical>
                     <v-tab>
                         <v-icon left>mdi-account</v-icon>
-                        Graders
+                        Assistant
                     </v-tab>
                     <v-tab>
                         <v-icon left>mdi-school</v-icon>

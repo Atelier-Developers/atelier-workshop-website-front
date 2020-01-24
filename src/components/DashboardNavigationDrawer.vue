@@ -14,7 +14,7 @@
                 height="100%"
         >
             <v-list-item two-line>
-                <v-list-item-avatar tile="true">
+                <v-list-item-avatar tile>
                     <v-img src="../assets/675469ae-39e8-40b3-93a9-94a7ba0ff76b_200x200 (2).png"
                            height="100"
                            tile
@@ -91,7 +91,7 @@
                 userRole: [
                     {title: "Attendee", icon: "fas fa-user-graduate", to: "/workshopAttendee"},
                     {title: "Manager", icon: "mdi-teach", to: "/workshopManager"},
-                    {title: "Grader", icon: "mdi-teach", to: "/workshopGrader"}
+                    {title: "Assistant", icon: "mdi-teach", to: "/workshopAssistant"}
                 ]
             }
         },
@@ -118,12 +118,8 @@
                         title: 'User',
                         icon: 'mdi-account-box',
                         to: "/user-profile/" + this.$store.state.userId
-                    })
-                    if (this.$store.state.isAdmin) {
-                        menus.push({title: 'Workshops', icon: 'mdi-account-circle', to: '/admin'})
-                    } else {
-                        menus.push({title: 'Workshops', icon: 'fa-chalkboard-teacher', to: '/workshops'})
-                    }
+                    });
+                    menus.push({title: 'Workshops', icon: 'fa-chalkboard-teacher', to: '/workshops'})
                 }
                 return menus;
             }

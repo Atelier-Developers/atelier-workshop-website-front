@@ -56,7 +56,7 @@
                         </v-btn>
                         <v-btn color="primary" class="ma-2" small
                                @click="() => routeToWorkshopCreateForm(true, false, false,false)"
-                               :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                               :disabled="offeredWorkshop.graderEvaluationForm !== null">Assistant evaluation form
                         </v-btn>
                         <v-btn color="primary" class="ma-2" small
                                @click="() => routeToWorkshopCreateForm(false, false, false,true)">workshop forms
@@ -70,7 +70,7 @@
                             <v-btn color="primary" :disabled="this.offeredWorkshop.graderEvaluationForm === null"
                                    class="ma-2" small
                                    @click="() => routeToForm(this.offeredWorkshop.graderEvaluationForm.id,false, 'manager', false)">
-                                grader
+                                Assistant
                                 evaluation
                                 forms
                             </v-btn>

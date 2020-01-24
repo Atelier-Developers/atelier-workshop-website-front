@@ -82,12 +82,10 @@
                         axios.defaults.headers.common['Authorization'] = token;
                         this.$store.commit('auth_success', token);
                         axios.get(this.$store.state.api + '/users/user').then((res) => {
-                            // eslint-disable-next-line no-console
-                            console.log(res.data.id);
                             localStorage.setItem('userId', res.data.id);
                             this.$store.commit('auth_user_id', res.data.id);
+                            localStorage.setItem('isAdmin', res.data.username === "admin" ? "admin" : "");
                             this.$store.commit('setAdmin', res.data.username === "admin");
-                            // eslint-disable-next-line no-console
                             this.loading = false;
                             this.$router.push("/");
                         })

@@ -11,7 +11,6 @@ import UserProfile from "../views/UserProfile";
 import NotFoundPage from "../views/NotFoundPage";
 import Form from "../views/Form";
 import WorkshopForms from "../views/WorkshopForms";
-import AdminPage from "../views/AdminPage";
 import OfferingWorkshops from "../views/OfferingWorkshops";
 import WorkshopCreateForm from "../views/WorkshopCreateForm";
 import WorkshopRequests from "../views/WorkshopRequests";
@@ -43,8 +42,8 @@ const routes = [
         component: ShowAttendeeWorkshopHistory
     },
     {
-        path: '/workshopGrader',
-        name: 'Grader',
+        path: '/workshopAssistant',
+        name: 'Assistant',
         component: ShowGraderWorkshopHistory
     },
     {
@@ -98,11 +97,6 @@ const routes = [
         name: 'Workshop',
         component: WorkshopDetail,
         props: true,
-    },
-    {
-        path: '/admin',
-        name: 'Admin Workshop',
-        component: AdminPage,
     },
     {
         path: '/workshops',
