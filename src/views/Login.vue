@@ -77,7 +77,6 @@
                 axios.post(apiUrl + '\\login', this.user, {
                     headers: header
                 }).then((resp) => {
-                        this.loading = false;
                         const token = resp.headers.authorization;
                         localStorage.setItem('token', token);
                         axios.defaults.headers.common['Authorization'] = token;
@@ -89,7 +88,7 @@
                             this.$store.commit('auth_user_id', res.data.id);
                             this.$store.commit('setAdmin', res.data.username === "admin");
                             // eslint-disable-next-line no-console
-                            console.log(this.$store.state.userId);
+                            this.loading = false;
                             this.$router.push("/");
                         })
 

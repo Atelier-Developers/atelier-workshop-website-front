@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!--        TODO PowerPoint-->
         <v-card
                 dark
                 tile
@@ -68,7 +67,7 @@
                                 class=" elevation-10"
                                 size="170"
                         >
-                            <v-img :src="this.offImg"/>
+                            <v-img :src="workshopImage" @error="hasError"/>
                         </v-avatar>
                     </v-btn>
                 </v-row>
@@ -111,17 +110,20 @@
         name: "WorkshopDetailInfo",
         props: ["offeredWorkshop", "count", "wManager", "manager", "prerequsite"],
         data(){
-            return{
-                offImg: "",
+            return {
+                faildImage: false,
             }
         },
-        mounted() {
-            this.offImg = this.$store.state.api + "/userDetails/pic/offeringWorkshop/" + this.offeredWorkshop.id;
-            // eslint-disable-next-line no-console
-            console.log(this.offImg);
+        methods: {
+            hasError(){
+                this.faildImage = true
+            }
         },
         components: {EmptyState, PriceChip},
         computed: {
+            workshopImage: function () {
+                return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + "/userDetails//pic/offeringWorkshop/" + this.offeredWorkshop.id
+            },
             startTime: function () {
                 return moment(this.offeredWorkshop.startTime).format("lll");
             },
@@ -137,6 +139,7 @@
             remainingTime: function () {
                 return moment(this.offeredWorkshop.startTime).fromNow();
             },
+
             offeredWorkshopEndingStatus: function () {
                 let start = new Date(this.offeredWorkshop.startTime);
                 let end = new Date(this.offeredWorkshop.endTime);

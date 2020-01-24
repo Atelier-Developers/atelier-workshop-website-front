@@ -10,7 +10,8 @@
     >
         <v-img
                 :aspect-ratio="16/9"
-                :src="this.$store.state.api + '/userDetails/pic/offeringWorkshop/' + this.workshop.id"
+                :src="workshopImage"
+                v-on:error="hasError"
         />
         <v-card-text
                 class="pt-6"
@@ -45,12 +46,23 @@
     export default {
         name: "WorkshopCard",
         props: ["workshop", "manager"],
+        data() {
+            return {
+                faildImage: false,
+            }
+        },
         methods: {
             navigateToWorkshop() {
                 return this.$router.push({path: `/workshop/${this.workshop.id}`});
+            },
+            hasError(){
+                this.faildImage = true
             }
         },
         computed: {
+            workshopImage: function () {
+                return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + '/userDetails/pic/offeringWorkshop/' + this.workshop.id
+            },
             startTime: function () {
                 return moment(this.workshop.startTime).format("lll");
             },
