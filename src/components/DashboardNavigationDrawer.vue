@@ -14,9 +14,10 @@
                 height="100%"
         >
             <v-list-item two-line>
-                <v-list-item-avatar>
+                <v-list-item-avatar tile="true">
                     <v-img src="../assets/675469ae-39e8-40b3-93a9-94a7ba0ff76b_200x200 (2).png"
                            height="100"
+                           tile
                            contain/>
                 </v-list-item-avatar>
 
