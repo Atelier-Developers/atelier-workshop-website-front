@@ -30,7 +30,7 @@
                         <PriceChip :price="offeredWorkshop.price" class="mt-2"/>
                     </v-col>
 
-                    <v-col cols="12" sm="5">
+                    <v-col cols="12" sm="5" class="mt-4">
                         <v-row justify="center" align="center" class="fill-height">
                             <v-col cols="6" v-if="!passed">
                                 <v-card outlined style="border: none">
@@ -61,7 +61,7 @@
                             depressed
                             right
                             disabled
-                            style="z-index: 2; margin-top: -87px; margin-right: 20px"
+                            style="z-index: 2; margin-top: -110px; margin-right: 20px"
                     >
                         <v-avatar
                                 class=" elevation-10"

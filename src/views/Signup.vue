@@ -16,12 +16,22 @@
                         </v-col>
                         <v-col cols="11">
                             <v-text-field v-model="user.password" label="Password" outlined
-                                          :rules="[this.requiredRule('password'),  v => v.length > 8 || 'At least 8 characters']" type="password"
+                                          validate-on-blur
+                                          :rules="[this.requiredRule('password'),  v => v.length >= 8 || 'At least 8 characters']"
+                                          type="password"
                                           prepend-icon="mdi-lock"/>
                         </v-col>
                         <v-col cols="11">
-                            <v-text-field v-model="user.address" label="Address" outlined
-                                          :rules="[this.requiredRule('address')]" prepend-icon="mdi-office-building"/>
+                            <v-text-field v-model="user.rePassword" label="Confirm Password" outlined
+                                          validate-on-blur
+                                          :rules="[passwordConfirmationRule]" type="password"
+                                          prepend-icon="mdi-lock"/>
+                        </v-col>
+                        <v-col cols="11">
+                            <v-text-field v-model="user.email" label="Email" outlined
+                                          validate-on-blur
+                                          :rules="[this.requiredRule('Email'),  v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid']"
+                                          prepend-icon="mdi-mail"/>
                         </v-col>
 
                     </v-row>
@@ -71,12 +81,17 @@
                 user: {
                     username: "",
                     password: "",
+                    rePassword: "",
                     name: "",
-                    address: ""
+                    email: ""
                 }
             }
-        }
-        , methods: {
+        },
+        computed: {
+            passwordConfirmationRule() {
+                return () => (this.user.password === this.user.rePassword) || 'Password must match'
+            },
+        }, methods: {
             requiredRule(msg) {
                 return v => !!v || msg + " is required!";
             },

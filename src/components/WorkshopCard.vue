@@ -1,4 +1,5 @@
 <template>
+<!--    TODO fix offering workshop add -->
     <v-card
             class="mx-auto"
             color="grey lighten-4"

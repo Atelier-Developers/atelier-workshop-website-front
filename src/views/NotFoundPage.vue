@@ -16,11 +16,11 @@
     export default {
         name: "NotFoundPage",
         mounted() {
-            this.$store.commit('toggleNavBar', false);
+            this.$store.commit('setNavBar', false);
         },
         methods:{
             f(){
-                this.$store.commit('toggleNavBar', true);
+                this.$store.commit('setNavBar', true);
                 this.$router.push({path: '/'})
             }
         }

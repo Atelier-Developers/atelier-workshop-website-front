@@ -15,8 +15,8 @@
         <v-spacer/>
 
 
-        <v-btn v-if="!this.$store.getters.isLoggedIn" icon to="/login">
-            <v-icon>mdi-account</v-icon>
+        <v-btn v-if="!this.$store.getters.isLoggedIn" color="white" class="indigo--text" to="/login">
+            Login <v-icon right>mdi-account</v-icon>
         </v-btn>
         <div class="text-center" v-else>
             <v-menu offset-y>

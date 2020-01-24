@@ -4,7 +4,10 @@ export default {
     auth_request(state) {
         state.status = 'loading'
     },
-    toggleNavBar(state, drawer) {
+    toggleNavBar(state) {
+        state.drawer = !state.drawer;
+    },
+    setNavBar(state, drawer) {
         state.drawer = drawer;
     },
     auth_success(state, token) {

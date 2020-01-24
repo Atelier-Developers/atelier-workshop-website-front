@@ -181,7 +181,6 @@
                         </v-btn>
                     </div>
                     <div v-else>
-                        <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                         <div v-if="this.notStarted" class="text-center">
                             <v-btn color="primary" to="/login" class="ma-2">register now!
                             </v-btn>
