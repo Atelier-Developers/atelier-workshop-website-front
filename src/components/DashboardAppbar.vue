@@ -81,7 +81,7 @@
         computed: {
             userImage: function () {
                 return this.faildImage ? "https://winaero.com/blog/wp-content/uploads/2015/05/user-200.png" :
-                    this.$store.state.api + '/userDetails/profilePic/user/' +  localStorage.getItem('userId')
+                    this.$store.state.api + '/userDetails/profilePic/user/' +  this.$store.state.userId
             },
             title() {
                 return this.$route.name;
