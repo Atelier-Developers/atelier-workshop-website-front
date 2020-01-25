@@ -135,5 +135,6 @@
     .navbar {
         top: 0;
         position: fixed;
+        height: 100vh;
     }
 </style>

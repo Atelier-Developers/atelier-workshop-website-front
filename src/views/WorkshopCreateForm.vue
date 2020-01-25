@@ -163,7 +163,11 @@
 
                 }).then(() => {
                     this.loading = false;
-                    this.$router.replace({path: "/"});
+                    this.$router.replace({
+                        name: "Workshop", params: {
+                            wId: this.offId
+                        }
+                    });
                 });
             },
             addQuestion() {
