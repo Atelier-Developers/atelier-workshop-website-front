@@ -185,25 +185,31 @@
                     <v-icon>mdi-clock-in</v-icon>
                     {{startTime}}
                 </div>
-                <div class="font-weight-light subtitle-2 mb-7">
+                <div class="font-weight-light subtitle-2 mb-2">
                     <v-icon>mdi-clock-out</v-icon>
                     {{endTime}}
                 </div>
 
-                <div class="font-weight-bold title mb-2" style="position: absolute; bottom: 5px; right: 10px">
-                    ${{workshop.price}}
-                </div>
-            </v-card-text>
-            <v-card-actions v-if="isAdmin">
-                <v-row justify="end" align="center" class="mr-1">
-                    <v-btn icon color="warning" @click.stop="() => goForEdit()">
-                        <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-btn icon color="error" @click.stop="() => deleteOfferedWorkshop(workshop.id)">
-                        <v-icon>mdi-delete</v-icon>
-                    </v-btn>
+                <v-row>
+                    <v-col cols="9">
+                            <v-row justify="start" align="center" class="mr-1" v-if="isAdmin">
+                                <v-btn icon color="warning" @click.stop="() => goForEdit()">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn icon color="error" @click.stop="() => deleteOfferedWorkshop(workshop.id)">
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </v-row>
+                    </v-col>
+                    <v-col cols="3">
+                        <v-row class="font-weight-bold title mr-2" justify="end">
+                            ${{workshop.price}}
+                        </v-row>
+                    </v-col>
                 </v-row>
-            </v-card-actions>
+
+            </v-card-text>
+
         </v-card>
     </div>
 
