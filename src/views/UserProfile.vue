@@ -36,7 +36,7 @@
                     </v-col>
                     <v-col cols="12" md="9" class="ml-4">
                         <p class="display-3 text-capitalize my-6">{{user.name}}</p>
-                        <p class="body-1">{{user.address}}</p>
+                        <p class="body-1">{{user.email}}</p>
                     </v-col>
 
                 </v-row>

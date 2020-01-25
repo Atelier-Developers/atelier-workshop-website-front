@@ -9,7 +9,6 @@
                     small
                     right
                     fixed
-                    flat
                     elevation="5"
                     @click="dialogs = !dialogs"
             >
@@ -166,6 +165,17 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12">
+                                    <v-combobox
+                                            label="Workshop Managers"
+                                            v-model="workshop.userManagerId"
+                                            :items="users"
+                                            item-text="name"
+                                            chips
+                                    />
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="12">
                                     <v-file-input
                                             label="Image"
                                             v-model="file"
@@ -178,12 +188,12 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer/>
-                        <v-btn flat color="primary" @click="addOfferingWorkshop">Submit</v-btn>
+                        <v-btn color="primary" @click="addOfferingWorkshop" :loading="loading">Submit</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
         </template>
-        <workshop-list :workshops="offeringWorkshops" title="Offered Workshops" v-if="!managerPage"/>
+        <workshop-list :workshops="offeringWorkshops" title="Offered Workshops"/>
     </v-container>
 </template>
 
@@ -214,8 +224,9 @@
                     startTime: null,
                     endTime: null,
                     workshopId: null,
-
+                    userManagerId: null
                 },
+                users: [],
                 file: null,
                 startDate: null,
                 startTime: null,
@@ -226,16 +237,26 @@
                 modal2: false,
                 modal3: false,
                 modal4: false,
+                loading: false,
             }
         },
         mounted() {
             axios.all([axios.get(this.$store.state.api + `/workshop/workshops/${this.id}/offeringWorkshop`),
-                axios.get(this.$store.state.api + `/workshop/workshops`)]).then((res) => {
+                ]).then((res) => {
                 this.offeringWorkshops = res[0].data;
-                this.workshops = res[1].data;
+                if(this.isAdmin){
+                    axios.all([axios.get(this.$store.state.api + `/workshop/workshops`),
+                        axios.get(this.$store.state.api + '/users/allUsers')]).then((r) => {
+                        this.workshops = r[0].data;
+                        // eslint-disable-next-line no-console
+                        console.log(r[1].data);
+                        this.users = r[1].data;
+                    })
+                }
             });
         },
         methods: {
+
             addOfferingWorkshop() {
                 let sdate = new Date(this.startDate + "," + this.startTime);
                 let edate = new Date(this.endDate + "," + this.endTime);
@@ -248,22 +269,24 @@
                 this.workshop.startTime = esDate;
                 this.workshop.endTime = eeDate;
                 this.workshop.workshopId = this.id;
-
-                // eslint-disable-next-line no-console
-                console.log(this.workshop);
+                this.workshop.userManagerId = this.workshop.userManagerId.id;
+                this.loading = true;
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then((res) => {
                     let formData = new FormData();
                     formData.append('file', this.file);
-                    axios.post(this.$store.state.api + "/userDetails/setPic/offeringWorkshop/" + res.data,
+                    axios.post(this.$store.state.api + "/userDetails/pic/offeringWorkshop/" + res.data,
                         formData
                         , {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
                         }
-                    );
-                    this.dialogs = false;
-                    this.$router.go(this.$router.currentRoute);
+                    ).then(() => {
+                        this.dialogs = false;
+                        this.loading = false;
+                        this.$router.go(this.$router.currentRoute);
+                    });
+
                 })
             },
             checkPrice() {

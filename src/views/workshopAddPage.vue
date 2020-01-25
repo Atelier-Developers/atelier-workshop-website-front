@@ -1,5 +1,5 @@
 <template>
-    <v-container class="fill-height">
+    <v-container>
         <template v-if="isAdmin">
             <v-btn
                     class="mb-5 mr-5"
@@ -32,10 +32,10 @@
             </v-dialog>
         </template>
         <template>
-            <v-row justify="center" align="center" class="fill-height">
+            <v-row justify="center" align="center" class="fill-height" v-if="workshops.length === 0">
                 <empty-state title="No Workshop" icon="fa-box-open"/>
             </v-row>
-            <v-row>
+            <v-row v-else>
                 <v-col v-for="workshop in workshops" cols="6" sm="4" md="3" lg="2" :key="workshop.id">
                     <v-card
                             class="mx-auto"
