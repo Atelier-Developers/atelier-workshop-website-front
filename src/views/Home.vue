@@ -59,7 +59,11 @@
                     console.log(res);
                     this.workshops = res[0].data;
                     this.popularWorkshops = res[1].data;
-                    this.workshopOfDay = this.popularWorkshops.length > 5 ? [this.popularWorkshops[Math.floor(Math.random() * 5)]] : [this.popularWorkshops[Math.floor(Math.random() * this.popularWorkshops.length)]];
+                    if (this.popularWorkshops.length === 0) {
+                        this.workshopOfDay = [];
+                    } else {
+                        this.workshopOfDay = this.popularWorkshops.length > 5 ? [this.popularWorkshops[Math.floor(Math.random() * 5)]] : [this.popularWorkshops[Math.floor(Math.random() * this.popularWorkshops.length)]];
+                    }
                     this.isLoading = false;
                 })
 
