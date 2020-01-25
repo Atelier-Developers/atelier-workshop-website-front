@@ -31,7 +31,7 @@
                     <div v-if="passed" class="text-center">
                         <v-btn color="primary" class="ma-2" small
                                @click="() => routeToWorkshopCreateForm(true, false, false,false)"
-                               :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                               :disabled="offeredWorkshop.graderEvaluationForm !== null">assistant evaluation form
                         </v-btn>
                     </div>
                     <div v-else-if="isHolding" class="text-center">
@@ -40,7 +40,7 @@
                         </v-btn>
                         <v-btn color="primary" class="ma-2" small
                                @click="() => routeToWorkshopCreateForm(true, false, false,false)"
-                               :disabled="offeredWorkshop.graderEvaluationForm !== null">grader evaluation form
+                               :disabled="offeredWorkshop.graderEvaluationForm !== null">assistant evaluation form
                         </v-btn>
                         <!--TODO chat for participants and graders of this -->
                     </div>
@@ -48,7 +48,7 @@
                     <div v-else-if="notStarted" class="text-center">
                         <v-btn color="primary" class="ma-2" small
                                @click="() => routeToWorkshopCreateForm(false, false, true,false)"
-                               :disabled="graderReqForm !== null">grader request forms
+                               :disabled="graderReqForm !== null">assistant request forms
                         </v-btn>
                         <v-btn color="primary" class="ma-2" small
                                @click="() => routeToWorkshopCreateForm(false, true, false,false)"
@@ -83,7 +83,7 @@
                             </v-btn>
                             <v-btn color="primary" :disabled="this.graderReqForm === null"
                                    class="ma-2" small
-                                   @click="() => routeToForm(this.graderReqForm.id,false, 'manager', false)">grader
+                                   @click="() => routeToForm(this.graderReqForm.id,false, 'manager', false)">assistant
                                 register
                                 forms
                             </v-btn>
@@ -177,14 +177,14 @@
                         </v-btn>
                         <v-btn color="primary" :disabled="this.graderReqForm === null"
                                class="ma-2"
-                               @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a grader
+                               @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a assistant
                         </v-btn>
                     </div>
                     <div v-else>
                         <div v-if="this.notStarted" class="text-center">
                             <v-btn color="primary" to="/login" class="ma-2">register now!
                             </v-btn>
-                            <v-btn color="primary" to="/login" class="ma-2">Request as a grader
+                            <v-btn color="primary" to="/login" class="ma-2">Request as a assistant
                             </v-btn>
                         </div>
                     </div>
