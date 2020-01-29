@@ -1,54 +1,52 @@
 <template>
     <v-container>
-        <v-dialog v-model="groupDialog" max-width="500px">
-            <v-card class="py-3 px-3">
-                <v-card-text>
-                    <v-form>
-                        <v-text-field
-                                label="Group Name"
-                                v-model="newGroup.name"
-                        ></v-text-field>
-                    </v-form>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="addGroup">Add Group</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
         <v-row>
             <v-col cols="12" md="4">
                 <!--                ATTENDEES-->
                 <v-select
                         v-model="roles.selectedAtt"
                         :items="this.roles.att"
+                        :item-text="getItemName"
+                        item-value="infoId"
+                        label="Attendees"
+                        solo
                         multiple
-                ></v-select>
+                />
             </v-col>
             <v-col cols="12" md="4">
                 <!--                GRADERS-->
                 <v-select
                         v-model="roles.selectedGrader"
-                        :item-text="this.roles.grader"
+                        :items="this.roles.graders"
+                        label="Assistants"
+                        solo
+                        :item-text="getItemName"
+                        item-value="infoId"
                         multiple
-                ></v-select>
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-btn @click="addMembers">Add to Group</v-btn>
+                />
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="12" md="4">
-                <v-select
-                        v-model="selectedGroup"
-                        items="groups"
-                ></v-select>
-            </v-col>
-            <v-col cols="12" md="4">
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-btn @click="showGroupDialog">Make Group</v-btn>
-            </v-col>
+        <v-row justify="center">
+            <template v-if="editMode">
+                <v-col cols="12" md="4">
+                    <v-btn @click="editGroup" :loading="loading">edit Group</v-btn>
+                </v-col>
+            </template>
+            <template v-else>
+                <v-col cols="12" md="4">
+                    <v-form>
+                        <v-text-field
+                                label="Group Name"
+                                v-model="newGroup.name"
+                                validate-on-blur
+                                :rules="[v => !!v ||'name is required!']"
+                        />
+                    </v-form>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-btn @click="addGroup" :loading="loading">Make Group</v-btn>
+                </v-col>
+            </template>
         </v-row>
     </v-container>
 </template>
@@ -58,6 +56,7 @@
 
     export default {
         name: "MakeGroups",
+        props: ['id', "editMode", "groupId"],
         data() {
             return {
                 groups: [],
@@ -65,15 +64,14 @@
                     name: "",
                     id: ""
                 },
+                selectedGroup : {},
                 roles: {
                     att: [],
                     selectedAtt: [],
-
-                    grader: [],
+                    graders: [],
                     selectedGrader: [],
                 },
-
-                groupDialog: false,
+                loading: false
             }
         },
         mounted() {
@@ -81,6 +79,8 @@
                 + "/workshopManagers/offeringWorkshop/"
                 + this.id
                 + "/groupless/graderInfos").then((res) => {
+                // eslint-disable-next-line no-console
+                console.log("graderss")
                 // eslint-disable-next-line no-console
                 console.log(res.data);
                 this.roles.graders = res.data; // TODO these are just ids..., we need names. its bad to request for everybody's name
@@ -99,29 +99,32 @@
             })
         },
         methods: {
+            getItemName(item){
+                return item.user.name;
+            },
             addGroup() {
-                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/group",
-                    {text: this.newGroup.name})
+                this.loading = true;
+                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/"
+                + this.id
+                + "/groups",
+                    [{name: this.newGroup.name, gradersId: this.roles.selectedGrader, attendersId: this.roles.selectedAtt}])
                     .then((res) => {
                         // eslint-disable-next-line no-console
-                        console.log(res.data);
-                        this.newGroup.id = res.data.id;
-                        this.groups.push(res.data);
-                        this.newGroup = {
-                            name: "",
-                            id: ""
-                        };
-                        this.groupDialog = false;
+                        console.log(res)
+                        this.$router.replace({name: "Workshop", params: {wId: this.id}})
                     })
 
             },
-            addMembers() {
-                axios.post("SOME URL", this.roles.selectedGrader + this.roles.selectedAtt); // TODO waiting for API
-            },
-            showGroupDialog() {
-                this.groupDialog = true;
+            editGroup(){
+                this.loading = true;
+                axios.put(this.$store.state.api + "/workshopManagers/offeringWorkshop/"
+                    + this.id
+                    + "/groups",
+                    {groupId: this.groupId, gradersId: this.roles.selectedGrader, attendersId: this.roles.selectedAtt})
+                    .then(() => {
+                        this.$router.replace({name: "Workshop", params: {id: this.id}})
+                    })
             }
-
         }
     }
 </script>

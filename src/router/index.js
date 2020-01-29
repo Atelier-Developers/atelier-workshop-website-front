@@ -16,6 +16,7 @@ import WorkshopCreateForm from "../views/WorkshopCreateForm";
 import WorkshopRequests from "../views/WorkshopRequests";
 import Certificate from "../views/Certificate";
 import workshopAddPage from "../views/workshopAddPage";
+import MakeGroups from "../views/MakeGroups";
 
 Vue.use(VueRouter)
 
@@ -50,6 +51,12 @@ const routes = [
         path: '/user-profile/:id',
         name: 'Profile',
         component: UserProfile,
+        props: true
+    },
+    {
+        path: '/makeGroup',
+        name: "Make Group",
+        component: MakeGroups,
         props: true
     },
     {

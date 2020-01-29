@@ -3,70 +3,22 @@
         <v-dialog v-model="formDialog" max-width="500px">
             <v-card class="py-3 px-3">
                 <v-card-text>
-                    <v-row v-for="question in this.form.questions" :key="question.question.id">
-                        <div class="question title">{{question.question.text}}</div>
-                        <div class="answer title font-weight-light ml-3" v-if="question.question.choicable">
-                            {{ question.question.answerables[question.answer.answerData[0].choice].text}}
-                        </div>
-
-                        <div class="answer title font-weight-light ml-3" v-else>
-                            {{question.answer.answerData[0].text}}
-                        </div>
-                    </v-row>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-row>
+                    <v-row v-for="(question, i) in this.form.questions" :key="question.question.id">
+                        <div class="question title">{{i + 1}}) {{question.question.text}}</div>
                         <v-col cols="12">
-                            <v-select
-                                    label="Group"
-                                    v-model="form.groupId"
-                                    :items="groups"
-                                    item-text="name"
-                                    item-value="id"
-                            ></v-select>
+                            <div class="answer title font-weight-light ml-3" v-if="question.question.choicable">
+                                {{ question.question.answerables[question.answer.answerData[0].choice].text}}
+                            </div>
 
+                            <div class="answer title font-weight-light ml-3" v-else>
+                                {{question.answer.answerData[0].text}}
+                            </div>
                         </v-col>
-                        <v-col cols="12" md="6">
-                            <v-btn flat color="primary" class="mr-4" @click="acceptMember">Accept</v-btn>
-                            <v-btn flat color="error" @click="declineMember">Decline</v-btn>
-                        </v-col>
+
                     </v-row>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-dialog v-model="groupDialog" max-width="500px">
-            <v-card class="py-3 px-3">
-                <v-card-text>
-                    <v-form>
-                        <v-text-field
-                                label="Group Name"
-                                v-model="newGroup.name"
-                        ></v-text-field>
-                    </v-form>
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="addGroup">Add Group</v-btn>
-                </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-slide-group mandatory show-arrows center-active dark disable-sort>
-            <v-slide-item
-                    v-for="group in groups"
-                    :key="group.id"
-                    v-slot:default="{active, toggle}"
-            >
-                <v-btn
-                        class="mx-2"
-                        active-class="blue white--text"
-                        depressed
-                        rounded
-                >
-                    {{group.name}}
-                </v-btn>
-            </v-slide-item>
-        </v-slide-group>
         <v-row justify="center" align="center" class="mt-12">
             <v-card max-width="900">
                 <v-tabs vertical>
@@ -83,15 +35,25 @@
                                 :headers="headers"
                                 :items="this.graders"
                                 :items-per-page="10"
+                                @click:row="(val) => showForm(val.roles[1].id, 'grader')"
                                 class="elevation-1">
 
                             <template v-slot:item.action="{ item }" v-if="showForm != null">
                                 <v-icon
                                         small
                                         class="mr-2"
-                                        @click="() => showForm(item.roles[1].id, 'grader')"
+                                        color="success"
+                                        @click.stop="() => showDetail(item, 'grader', 'ACCEPTED')"
                                 >
-                                    fas fa-eye
+                                    fas fa-check
+                                </v-icon>
+                                <v-icon
+                                        small
+                                        class="mr-2"
+                                        color="error"
+                                        @click.stop="() => showDetail(item, 'grader', 'REJECTED')"
+                                >
+                                    fas fa-times
                                 </v-icon>
                             </template>
                         </v-data-table>
@@ -101,27 +63,31 @@
                                 :headers="headers"
                                 :items="this.attendees"
                                 :items-per-page="10"
+                                @click:row="(val) => showForm(val.roles[0].id, 'attendee')"
                                 class="elevation-1">
 
                             <template v-slot:item.action="{ item }" v-if="showForm != null">
                                 <v-icon
                                         small
                                         class="mr-2"
-                                        @click="() => showForm(item.roles[0].id, 'attendee')"
+                                        color="success"
+                                        @click.stop="() => showDetail(item, 'attendee', 'ACCEPTED')"
                                 >
-                                    fas fa-eye
+                                    fas fa-check
+                                </v-icon>
+                                <v-icon
+                                        small
+                                        class="mr-2"
+                                        color="error"
+                                        @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
+                                >
+                                    fas fa-times
                                 </v-icon>
                             </template>
                         </v-data-table>
                     </v-tab-item>
                 </v-tabs>
             </v-card>
-        </v-row>
-        <v-row class="mt-5">
-            <v-col cols="8"></v-col>
-            <v-col cols="4">
-                <v-btn color="primary" @click="showGroupDialog" class="add-gp">Add Group</v-btn>
-            </v-col>
         </v-row>
     </v-container>
 </template>
@@ -177,8 +143,6 @@
                 + "/workshopManagers/offeringWorkshop/"
                 + this.id
                 + "/requests/pending/graders").then((res) => {
-                // eslint-disable-next-line no-console
-                console.log(res.data);
                 this.graders = res.data;
             });
             axios.get(this.$store.state.api
@@ -192,19 +156,53 @@
                 + this.id
                 + "/groups").then((res) => {
                 this.groups = res.data;
-                // eslint-disable-next-line no-console
-                console.log("GROUP");
-                // eslint-disable-next-line no-console
-                console.log(this.groups);
             })
         },
         methods: {
+            reloadPage() {
+                let location = {
+                    name: "Workshop Requests", params: {
+                        id: this.id
+                    }
+                };
+                this.$router.replace("/");
+                this.$nextTick(() => this.$router.replace(location))
+            },
+            showDetail(item, type, status) {
+                if (type === "grader") {
+                    axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[1].id)
+                        // eslint-disable-next-line no-console
+                        .then((res) => {
+                            // eslint-disable-next-line no-console
+                            let req = {};
+                            req.requestId = res.data.id;
+                            req.requestState = status;
+                            req.userId = item.id;
+                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
+                                .then(() => {
+                                    this.reloadPage()
+                                })
+                        })
+                } else if (type === "attendee") {
+                    axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[0].id)
+                        // eslint-disable-next-line no-console
+                        .then((res) => {
+                            let req = {};
+                            req.requestId = res.data.id;
+                            req.requestState = status;
+                            req.userId = item.id;
+                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
+                                .then(() => {
+                                    this.reloadPage()
+                                })
+                        })
+                }
+
+            },
             showForm(id, type) {
                 this.form.id = id;
                 this.form.type = type;
                 if (type === "grader") {
-                    // eslint-disable-next-line no-console
-                    console.log(id);
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/graderRequestForm")
                         .then((res) => {
                             this.graderRequestForm = res.data;
@@ -237,8 +235,6 @@
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/group",
                     {text: this.newGroup.name})
                     .then((res) => {
-                        // eslint-disable-next-line no-console
-                        console.log(res.data);
                         this.newGroup.id = res.data.id;
                         this.groups.push(res.data);
                         this.newGroup = {
@@ -280,8 +276,6 @@
                                     + "/workshopManagers/offeringWorkshop/"
                                     + this.id
                                     + "/requests/pending/graders").then((res) => {
-                                    // eslint-disable-next-line no-console
-                                    console.log(res.data);
                                     this.graders = res.data;
                                 });
 
@@ -349,8 +343,6 @@
                                 + "/workshopManagers/offeringWorkshop/"
                                 + this.id
                                 + "/requests/pending/graders").then((res) => {
-                                // eslint-disable-next-line no-console
-                                console.log(res.data);
                                 this.graders = res.data;
                             });
 

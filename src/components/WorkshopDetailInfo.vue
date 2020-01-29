@@ -122,7 +122,7 @@
         components: {EmptyState, PriceChip},
         computed: {
             workshopImage: function () {
-                return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + "/userDetails//pic/offeringWorkshop/" + this.offeredWorkshop.id
+                return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + "/userDetails/pic/offeringWorkshop/" + this.offeredWorkshop.id
             },
             startTime: function () {
                 return moment(this.offeredWorkshop.startTime).format("lll");

@@ -3,6 +3,11 @@
         <v-card max-width="900">
             <v-toolbar flat color="primary" dark>
                 <v-toolbar-title class="text-capitalize">{{group.groupName}}</v-toolbar-title>
+                <v-spacer/>
+
+                <v-btn icon @click="routeToGroupEdit" v-if="isManager">
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
             </v-toolbar>
             <v-tabs vertical>
                 <v-tab>
@@ -24,7 +29,8 @@
                     </DataTable>
                 </v-tab-item>
                 <v-tab-item>
-                    <DataTable :items="group.attendees" :headers="headers" :action-function="actionFunctionAttendee" :action-function2="actionFunctionAttendee2"/>
+                    <DataTable :items="group.attendees" :headers="headers" :action-function="actionFunctionAttendee"
+                               :action-function2="actionFunctionAttendee2"/>
                 </v-tab-item>
             </v-tabs>
         </v-card>
@@ -37,7 +43,7 @@
     export default {
         name: "GroupTable",
         components: {DataTable},
-        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2"],
+        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2", "offId"],
 
         data() {
             return {
@@ -57,6 +63,21 @@
             }
 
         },
+        methods: {
+            routeToGroupEdit() {
+                // eslint-disable-next-line no-console
+                console.log("group");
+                // eslint-disable-next-line no-console
+                console.log(this.group);
+                this.$router.push({
+                    name: "Make Group", params: {
+                        id: this.offId,
+                        editMode: true,
+                        groupId: this.group.groupId
+                    }
+                })
+            }
+        }
     }
 </script>
 

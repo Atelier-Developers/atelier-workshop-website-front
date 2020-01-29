@@ -19,13 +19,14 @@
 
             <v-container v-if="isManager">
                 <GroupGraderAtendee
-                        v-if="groups.length > 0"
                         :groups="groups"
                         :isManager="true"
+                        :off-id="this.wId"
                         :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, true, 'manager', id, false)"
                         :action-function-grader2="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id, true, 'grader')"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
                 />
+                <v-btn @click="routeToMakeGroup" color="primary">make group</v-btn>
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">
@@ -303,6 +304,8 @@
                         if (this.isManager) {
                             this.getManagerGroups().then((res) => {
                                 this.groups = res.data;
+                                // eslint-disable-next-line no-console
+                                console.log(this.groups);
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
                                     if (res[0].status !== 204) {
@@ -360,6 +363,14 @@
             });
         },
         methods: {
+            routeToMakeGroup(){
+                this.$router.push({
+                    name: "Make Group",
+                    params: {
+                        id: this.wId
+                    }
+                })
+            },
             routeToWorkshopRequest() {
                 this.$router.push({
                     name: 'Workshop Requests',
