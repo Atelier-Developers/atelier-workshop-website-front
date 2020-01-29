@@ -13,7 +13,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn flat color="primary" @click="uploadImage" :loading="isUploading">Submit</v-btn>
+                        <v-btn text color="primary" @click="uploadImage" :loading="isUploading">Submit</v-btn>
                     </v-card-actions>
                 </v-form>
             </v-card>

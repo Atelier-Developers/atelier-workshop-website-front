@@ -102,7 +102,9 @@
                         </v-row>
                     </div>
                 </div>
-
+                <div class="my-5">
+                    <content-provider type="manager" :w-id="wId"/>
+                </div>
             </v-container>
 
             <v-container v-else-if="isGrader">
@@ -142,6 +144,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="my-5">
+
+                    <ContentProvider type="grader" :w-id="wId"/>
+                </div>
 
             </v-container>
 
@@ -165,6 +171,9 @@
 
                 <div v-else-if="notStarted">
                     <!--request status-->
+                </div>
+                <div class="my-5">
+                    <content-provider type="attendee" :w-id="wId"/>
                 </div>
             </v-container>
 
@@ -206,11 +215,12 @@
     import WorkshopDetailInfo from "../components/WorkshopDetailInfo";
     import GroupGraderAtendee from "../components/GroupGraderAtendee";
     import GroupTable from "../components/GroupTable";
+    import ContentProvider from "../components/ContentProvider";
     // import WorkshopChat from "../components/WorkshopChat";
 
     export default {
         name: "WorkshopDetail",
-        components: {GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
+        components: {ContentProvider, GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
         props: ["wId"],
         data() {
             return {
@@ -363,7 +373,7 @@
             });
         },
         methods: {
-            routeToMakeGroup(){
+            routeToMakeGroup() {
                 this.$router.push({
                     name: "Make Group",
                     params: {
@@ -399,7 +409,7 @@
                         appId: appId,
                         fillerId: this.user.id,
                         appType: appType,
-                        showAnswers : showAnswers
+                        showAnswers: showAnswers
                     }
                 })
             },
@@ -412,7 +422,7 @@
                         appId: appid,
                         showAnswers: showAnswers,
                         offId: this.wId,
-                        appType : appType
+                        appType: appType
                     }
                 })
             },
