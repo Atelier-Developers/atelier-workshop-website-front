@@ -17,7 +17,7 @@
             <v-dialog v-model="dialogs" max-width="500px">
                 <v-card class="py-3 px-3">
                     <v-card-text>
-                        <v-form>
+                        <v-form v-model="isValid">
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field
@@ -69,7 +69,7 @@
                                         <v-time-picker
                                                 v-if="modal3"
                                                 v-model="startTime"
-                                                format="24h"
+                                                format="24hr"
                                                 full-width
                                         >
                                             <v-spacer/>
@@ -123,7 +123,7 @@
                                         <v-time-picker
                                                 v-if="modal4"
                                                 v-model="endTime"
-                                                format="24h"
+                                                format="24hr"
                                                 full-width
                                         >
                                             <v-spacer/>
@@ -170,6 +170,7 @@
                                             v-model="workshop.userManagerId"
                                             :items="users"
                                             item-text="name"
+                                            multiple
                                             chips
                                     />
                                 </v-col>
@@ -188,8 +189,15 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer/>
-                        <v-btn color="primary" @click="addOfferingWorkshop" :loading="loading">Submit</v-btn>
+                        <v-btn color="primary" @click="addOfferingWorkshop" :loading="loading" :disabled="!isValid">
+                            Submit
+                        </v-btn>
                     </v-card-actions>
+
+                    <div class="text-center error--text font-weight-regular text-uppercase mt-4" v-if="error">
+                        <v-icon class="mr-3" color="error">mdi-alert</v-icon>
+                        {{errorMsg}}
+                    </div>
                 </v-card>
             </v-dialog>
         </template>
@@ -208,10 +216,11 @@
         computed: {
             isAdmin() {
                 return this.$store.state.isAdmin;
-            }
+            },
         },
         data() {
             return {
+                isValid: false,
                 offeringWorkshops: [],
                 workshops: [],
                 workshop: {
@@ -226,6 +235,7 @@
                     workshopId: null,
                     userManagerId: null
                 },
+                errorMsg: "",
                 users: [],
                 file: null,
                 startDate: null,
@@ -238,13 +248,14 @@
                 modal3: false,
                 modal4: false,
                 loading: false,
+                error: false,
             }
         },
         mounted() {
             axios.all([axios.get(this.$store.state.api + `/workshop/workshops/${this.id}/offeringWorkshop`),
-                ]).then((res) => {
+            ]).then((res) => {
                 this.offeringWorkshops = res[0].data;
-                if(this.isAdmin){
+                if (this.isAdmin) {
                     axios.all([axios.get(this.$store.state.api + `/workshop/workshops`),
                         axios.get(this.$store.state.api + '/users/allUsers')]).then((r) => {
                         this.workshops = r[0].data;
@@ -256,10 +267,22 @@
             });
         },
         methods: {
-
+            getItemName(item) {
+                return item.name;
+            },
             addOfferingWorkshop() {
                 let sdate = new Date(this.startDate + "," + this.startTime);
                 let edate = new Date(this.endDate + "," + this.endTime);
+                if (sdate > edate) {
+                    this.error = true;
+                    this.errorMsg = "start date should be before end date";
+                    return;
+                }
+                else if(sdate < Date.now()){
+                    this.error = true;
+                    this.errorMsg = "You should choose a time in future";
+                    return
+                }
                 let esDate = sdate.toISOString();
                 esDate = esDate.slice(0, esDate.length - 5);
                 esDate = esDate.concat("+0000");
@@ -269,7 +292,12 @@
                 this.workshop.startTime = esDate;
                 this.workshop.endTime = eeDate;
                 this.workshop.workshopId = this.id;
-                this.workshop.userManagerId = this.workshop.userManagerId.id;
+                let ids = [];
+                this.workshop.userManagerId.forEach((user) => {
+                        ids.push(user.id);
+                    }
+                );
+                this.workshop.userManagerId = ids;
                 this.loading = true;
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then((res) => {
                     let formData = new FormData();

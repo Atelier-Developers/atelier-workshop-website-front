@@ -35,7 +35,10 @@
             <contents :files="graderFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
             <contents :files="attFiles"/>
-            <v-btn @click="uploadDialog">Upload file</v-btn>
+            <v-row justify="center" class="mt-4">
+                <v-btn @click="uploadDialog" color="primary" rounded>
+                    <v-icon left>fa-cloud-upload-alt</v-icon>Upload file</v-btn>
+            </v-row>
 
         </div>
     </div>
@@ -70,6 +73,13 @@
             },
             uploadFile() {
                 this.isUploading = true;
+                // eslint-disable-next-line no-console
+                if(this.selectedType === "Assistants"){
+                    this.selectedType = "grader"
+                }
+                else if(this.selectedType === "Attendees"){
+                    this.selectedType = "attendee"
+                }
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.wId +
                     "/workshopFile/create", {
                     title: this.item.title,
@@ -91,6 +101,7 @@
                     }).then(() => {
                         this.isUploading = false;
                         this.dialog = false;
+                        this.$router.go(0);
                     })
                 })
             },

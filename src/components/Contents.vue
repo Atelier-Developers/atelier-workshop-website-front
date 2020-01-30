@@ -10,7 +10,7 @@
                         {{file.description}}
                     </v-card-text>
                     <v-row justify="center" align="center" class="my-3">
-                        <v-btn color="primary" href="https://google.com" outlined rounded target="_blank">
+                        <v-btn color="primary" :href="file.downloadURI" outlined rounded target="_blank">
                             <v-icon left>fa-cloud-download-alt</v-icon>
                             Download
                         </v-btn>

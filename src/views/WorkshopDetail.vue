@@ -293,7 +293,12 @@
                 if (!this.$store.getters.isLoggedIn) {
                     return false;
                 }
-                return this.manager.id === this.user.id;
+                for(let i = 0; i < this.manager.length; ++i){
+                    if(this.manager[i].id === this.user.id){
+                        return true;
+                    }
+                }
+                return false;
             }
         },
         mounted() {
