@@ -11,7 +11,7 @@
                             {{offeredWorkshop.name}}
                         </div>
                         <div class="font-weight-light mb-2 text-capitalize title">
-                            {{wManager ? "Offered By You": "Offered by " + manager.name}}
+                            {{wManager ? "Offered By You": "Offered by " + managerNames}}
                         </div>
                         <div class="text-capitalize body-1 font-italic my-5">belonging to the collection of
                             {{offeredWorkshop.workshop.name}} workshops
@@ -74,29 +74,29 @@
             </v-container>
         </v-card>
 
-       <v-row justify="center" class="my-9">
-           <v-card max-width="600" width="100%" outlined style="border: none;">
-               <v-container v-if="prerequsite.length > 0">
-                   <p class="display-3 grey--text text--darken-2 text-center">Prerequisites</p>
-                   <v-row justify="center">
-                       <v-col v-for="p in prerequsite" cols="6" md="3" :key="p" class="title">
-                           <v-chip
-                                   class="ma-2 text-capitalize"
-                                   color="primary"
-                                   label
-                           >
-                               <v-icon left>mdi-book-open-variant</v-icon>
-                               {{p}}
-                           </v-chip>
+        <v-row justify="center" class="my-9">
+            <v-card max-width="600" width="100%" outlined style="border: none;">
+                <v-container v-if="prerequsite.length > 0">
+                    <p class="display-3 grey--text text--darken-2 text-center">Prerequisites</p>
+                    <v-row justify="center">
+                        <v-col v-for="p in prerequsite" cols="6" md="3" :key="p" class="title">
+                            <v-chip
+                                    class="ma-2 text-capitalize"
+                                    color="primary"
+                                    label
+                            >
+                                <v-icon left>mdi-book-open-variant</v-icon>
+                                {{p}}
+                            </v-chip>
 
-                       </v-col>
-                   </v-row>
-               </v-container>
-               <v-container v-else>
-                   <EmptyState icon="mdi-book-open-variant" title="no prerequisite needed!"/>
-               </v-container>
-           </v-card>
-       </v-row>
+                        </v-col>
+                    </v-row>
+                </v-container>
+                <v-container v-else>
+                    <EmptyState icon="mdi-book-open-variant" title="no prerequisite needed!"/>
+                </v-container>
+            </v-card>
+        </v-row>
     </div>
 </template>
 
@@ -109,34 +109,52 @@
     export default {
         name: "WorkshopDetailInfo",
         props: ["offeredWorkshop", "count", "wManager", "manager", "prerequsite"],
-        data(){
+        data() {
             return {
                 faildImage: false,
             }
         },
         methods: {
-            hasError(){
+            hasError() {
                 this.faildImage = true
             }
         },
         components: {EmptyState, PriceChip},
         computed: {
-            workshopImage: function () {
+            managerNames: function() {
+                let names = "";
+                if (this.manager.length === 1) {
+                    return this.manager[0].name;
+                }
+                for (let i = 0; i < this.manager.length; ++i) {
+                    if (i !== this.manager.length - 2) {
+                        names.concat(this.manager[i].name);
+                        names.concat(", ")
+                    } else if (i !== this.manager.length - 1) {
+                        names.concat(this.manager[i].name);
+                        names.concat(" and ")
+                    } else {
+                        names.concat(this.manager[i].name);
+                    }
+                }
+                return names;
+            },
+            workshopImage: function(){
                 return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + "/userDetails/pic/offeringWorkshop/" + this.offeredWorkshop.id
             },
-            startTime: function () {
+            startTime: function(){
                 return moment(this.offeredWorkshop.startTime).format("lll");
             },
-            endTime: function () {
+            endTime:function (){
                 return moment(this.offeredWorkshop.endTime).format("lll");
             },
-            passed: function () {
+            passed: function(){
                 let end = new Date(this.offeredWorkshop.endTime);
                 let dnow = new Date();
                 return end.valueOf() < dnow.valueOf();
 
             },
-            remainingTime: function () {
+            remainingTime: function(){
                 return moment(this.offeredWorkshop.startTime).fromNow();
             },
 
