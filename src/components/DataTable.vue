@@ -5,7 +5,6 @@
             :headers="headers"
             :items="items"
             :items-per-page="10"
-            item-key="username"
             class="elevation-1">
 
 

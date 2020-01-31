@@ -40,10 +40,10 @@
                                       class="form-input ma-4"
                             />
                         </template>
-                        <div v-else-if="showAnswers">
+                        <template v-else-if="showAnswers">
                             {{getAnswerFromId(question)}}
-                        </div>
-                        <div v-else>
+                        </template>
+                        <template v-else>
                             <v-select v-if="question.answerables.length > 0"
                                       :items="question.answerables"
                                       :item-value="question.answerables.id"
@@ -52,7 +52,7 @@
                                       label="Options"
                                       class="form-input ma-4"
                             />
-                        </div>
+                        </template>
 
                     </label>
                     <div>
@@ -91,8 +91,6 @@
 
                 });
             } else {
-                // eslint-disable-next-line no-console
-                console.log("else")
                 if (this.appType === "grader") {
                     axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
                         user = res.data;
@@ -136,6 +134,8 @@
                         user = res.data;
 
                         let attAppId = user.roles[0].attenderWorkshopConnection;
+                        // eslint-disable-next-line no-console
+                        console.log(attAppId)
 
 
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
@@ -144,6 +144,10 @@
                                 // eslint-disable-next-line no-console
                                 console.log(this.form.questions);
                                 this.form.questions.forEach((q) => {
+                                    // eslint-disable-next-line no-console
+                                    console.log("question")
+                                    // eslint-disable-next-line no-console
+                                    console.log(q)
                                     q.answers.forEach((a) => {
                                         // if (a.formApplicant === this.appId) {
                                         //     if ('formFiller' in a) {
@@ -157,7 +161,10 @@
                                         //
                                         //     }
                                         // }
-
+                                        // eslint-disable-next-line no-console
+                                        console.log("answer")
+                                        // eslint-disable-next-line no-console
+                                        console.log(a.formApplicant.workshopAttenderInfo.workshopAttender)
                                         if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id) {
                                             this.answers[q.id] = {
                                                 answer: a,
@@ -182,7 +189,6 @@
         },
         methods: {
             getAnswerFromId(question) {
-
 
                 if (Object.keys(this.answers).length === 0) {
                     return "No Answers Yet";
@@ -242,8 +248,6 @@
                     });
                     // }
                 }
-                // eslint-disable-next-line no-console
-                console.log(data)
                 if (this.type !== null) {
                     // eslint-disable-next-line no-debugger
                     if (this.type === 'grader') {
@@ -277,9 +281,9 @@
                             });
                         })
                     } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
-                        axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {
+                        axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.offId + "/info/" + this.appId).then((res) => {
 
-                            axios.post(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.form.offeredWorkshop.id + "/workshopForm/answer", {
+                            axios.post(this.$store.state.api + "/workshopGrader/offeringWorkshop/" + this.offId + "/workshopForm/answer", {
                                 formId: this.form.id,
                                 applicantId: res.data.id,
                                 answerQuestion: data

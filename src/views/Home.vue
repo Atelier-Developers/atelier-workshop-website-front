@@ -17,7 +17,7 @@
         </v-parallax>
         <v-container>
             <workshop-list :workshops="popularWorkshops" title="Popular Workshops"/>
-            <v-divider/>
+            <v-divider />
             <workshop-list :workshops="workshopOfDay" title="Workshop of Day"/>
             <v-divider/>
             <workshop-list :workshops="workshops" title="Offered Workshops"/>
