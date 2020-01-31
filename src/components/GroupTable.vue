@@ -29,7 +29,8 @@
                     </DataTable>
                 </v-tab-item>
                 <v-tab-item>
-                    <DataTable :items="group.attendees" :headers="headers" :action-function="actionFunctionAttendee"
+                    <DataTable :items="group.attendees" :headers="headers"
+                               :action-function="actionFunctionAttendee"
                                :action-function2="actionFunctionAttendee2"/>
                 </v-tab-item>
             </v-tabs>
@@ -57,7 +58,13 @@
                         text: "USERNAME",
                         value: "username",
                         sortable: false,
-                        align: 'left',
+                        align: 'center',
+                    },
+                    {
+                        text: "EMAIL",
+                        value: "email",
+                        sortable: false,
+                        align: 'center',
                     },
                     {text: 'Actions', value: 'action', sortable: false},]
             }

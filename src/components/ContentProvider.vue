@@ -115,18 +115,12 @@
         mounted() {
             if (this.type === "manager") {
                 axios.all([this.getGraderFiles(), this.getAttFiles()]).then((res) => {
-                    // eslint-disable-next-line no-console
-                    console.log(res)
                     this.graderFiles = res[0].data;
                     this.attFiles = res[1].data
-                    // eslint-disable-next-line no-console
-                    console.log(this.graderFiles)
-                    // eslint-disable-next-line no-console
-                    console.log(this.attFiles)
                 })
-            } else if (this.type === "atendee") {
+            } else if (this.type === "attendee") {
                 this.getAttFiles().then((res) => {
-                    this.attFiles = res.data
+                    this.attFiles = res.data;
                 })
             } else if (this.type === "grader") {
                 this.getGraderFiles().then((res) => {

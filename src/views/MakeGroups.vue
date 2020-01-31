@@ -127,7 +127,7 @@
                     + "/groups",
                     {groupId: this.groupId, gradersId: this.roles.selectedGrader, attendersId: this.roles.selectedAtt})
                     .then(() => {
-                        this.$router.replace({name: "Workshop", params: {id: this.id}})
+                        this.$router.replace({name: "Workshop", params: {wId: this.id}})
                     })
             }
         }

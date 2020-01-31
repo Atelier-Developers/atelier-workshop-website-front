@@ -191,6 +191,8 @@
                             req.requestId = res.data.id;
                             req.requestState = status;
                             req.userId = item.id;
+                            // eslint-disable-next-line no-console
+                            console.log(req)
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()
