@@ -34,6 +34,7 @@
                     :action-function-grader="actionFunctionGrader"
                     :action-function-grader2="actionFunctionGrader2"
                     :off-id="offId"
+                    view-type="manager"
             />
         </template>
         <EmptyState v-else title="No Group Available"  icon="mdi-book-open-variant"/>
@@ -47,7 +48,7 @@
     export default {
         name: "GroupGraderAtendee",
         components: {EmptyState, GroupTable},
-        props: ["groups", "isManager", "actionFunctionAttendee", "actionFunctionAttendee2", "actionFunctionGrader", "actionFunctionGrader2", "offId"],
+        props: ["groups", "isManager", "actionFunctionAttendee", "actionFunctionAttendee2", "actionFunctionGrader", "actionFunctionGrader2", "offId", "viewType"],
         data() {
             return {
                 activeGroup: 0,

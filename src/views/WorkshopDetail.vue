@@ -1,9 +1,6 @@
 <template>
 
-    <!--    TODO add upload file-->
     <!--    TODO add payment-->
-    <!--    TODO add register-->
-    <!--    TODO certificate-->
 
     <div v-if="!this.loading">
         <template>
@@ -19,6 +16,7 @@
 
             <v-container v-if="isManager">
                 <GroupGraderAtendee
+                        view-type="manager"
                         :groups="groups"
                         :isManager="true"
                         :off-id="this.wId"
@@ -110,10 +108,11 @@
             <v-container v-else-if="isGrader">
                 <GroupTable
                         v-if="graderGroup != null"
+                        view-type="grader"
                         :group="graderGroup"
                         :action-function-grader="null"
-                        :action-function-attendee="(id) => routeToWorkshopForm(true, 'graderWorkshopForm', id, 'att', false)"
-                        :action-function-attendee2="(id) => routeToWorkshopForm(false, 'graderWorkshopForm', id, 'att', true)"
+                        :action-function-attendee="(id) => routeToWorkshopForm(false, 'graderWorkshopForm', id, 'att', true)"
+                        :action-function-attendee2="(id) => routeToWorkshopForm(true, 'graderWorkshopForm', id, 'att', false)"
                 />
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show
@@ -202,11 +201,7 @@
             </v-container>
         </template>
     </div>
-    <!--    <v-progress-circular v-else-->
-    <!--            :size="50"-->
-    <!--            color="primary"-->
-    <!--            indeterminate-->
-    <!--    />-->
+    <LoadingCircular v-else/>
 </template>
 
 <script>
@@ -215,11 +210,12 @@
     import GroupGraderAtendee from "../components/GroupGraderAtendee";
     import GroupTable from "../components/GroupTable";
     import ContentProvider from "../components/ContentProvider";
+    import LoadingCircular from "../components/LoadingCircular";
     // import WorkshopChat from "../components/WorkshopChat";
 
     export default {
         name: "WorkshopDetail",
-        components: {ContentProvider, GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
+        components: {LoadingCircular, ContentProvider, GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
         props: ["wId"],
         data() {
             return {
@@ -348,6 +344,8 @@
 
                         } else if (this.isAttendee) {
                             this.getAttendeeGroup().then((res) => {
+                                // eslint-disable-next-line no-console
+                                console.log(res.data)
                                 this.groups = res.data;
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {

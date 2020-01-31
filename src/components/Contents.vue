@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row v-if="files.length > 0">
-            <v-col cols="12" md="2" v-for="file in files" :key="file.id">
+            <v-col cols="12" sm="4" md="3" lg="2" v-for="file in files" :key="file.id">
                 <v-card hover class="pb-1">
                     <v-card-title class="text-capitalize">
                         {{file.title}}

@@ -5,37 +5,31 @@
             :headers="headers"
             :items="items"
             :items-per-page="10"
+            item-key="username"
             class="elevation-1">
 
-        <template v-slot:item.action="{ item }" v-if="actionFunction != null">
-            <v-icon
-                    small
-                    class="mr-2"
-                    @click="() => actionFunction(item.id)"
-            >
-                fas fa-eye
-            </v-icon>
-            <v-icon
-                    small
-                    class="mr-2"
-                    @click="() => actionFunction2(item.id)"
-            >
-                fas fa-eye
-            </v-icon>
+
+        <template v-slot:item.action="{ item }">
+            <FormOptionIcon :items="menuOptions"
+                            :actions="[[() => actionFunction(item.id), () => actionFunction2(item.id)]]"/>
         </template>
     </v-data-table>
 </template>
 
 <script>
+    import FormOptionIcon from "./FormOptionIcon";
+
     export default {
         name: "DataTable",
+        components: {FormOptionIcon},
         props: [
             "items",
             "headers",
             'graderReqId',
             'actionFunction',
             "isManager",
-            "actionFunction2"
+            "actionFunction2",
+            "menuOptions"
         ],
         methods: {
             sendAppId(id) {

@@ -18,21 +18,76 @@
                     <v-icon left>mdi-school</v-icon>
                     Attendees
                 </v-tab>
-                <v-tab-item>
-                    <DataTable
-                            :items="group.graders"
-                            :headers="headers"
-                            :is-manager="isManager"
-                            :action-function="actionFunctionGrader"
-                            :action-function2="actionFunctionGrader2"
-                    >
-                    </DataTable>
-                </v-tab-item>
-                <v-tab-item>
-                    <DataTable :items="group.attendees" :headers="headers"
-                               :action-function="actionFunctionAttendee"
-                               :action-function2="actionFunctionAttendee2"/>
-                </v-tab-item>
+                <template v-if="viewType === 'manager'">
+                    <v-tab-item>
+                        <DataTable
+                                :items="group.graders"
+                                :headers="headerGrader"
+                                :menu-options="menuGraderOptions"
+                                :is-manager="isManager"
+                                :action-function="actionFunctionGrader"
+                                :action-function2="actionFunctionGrader2"
+                        >
+                        </DataTable>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <DataTable :items="group.attendees" :headers="headerAttendee"
+                                   :menu-options="menuAttendeeOption"
+                                   :action-function="actionFunctionAttendee"/>
+                    </v-tab-item>
+                </template>
+                <template v-if="viewType === 'manager'">
+                    <v-tab-item>
+                        <DataTable
+                                :items="group.graders"
+                                :headers="headerGrader"
+                                :menu-options="menuGraderOptions"
+                                :is-manager="isManager"
+                                :action-function="actionFunctionGrader"
+                                :action-function2="actionFunctionGrader2"
+                        >
+                        </DataTable>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <DataTable :items="group.attendees" :headers="headerAttendee"
+                                   :menu-options="menuAttendeeOption"
+                                   :action-function="actionFunctionAttendee"/>
+                    </v-tab-item>
+                </template>
+                <template v-else-if="viewType === 'grader'">
+                    <v-tab-item>
+                        <DataTable
+                                :items="group.graders"
+                                :headers="headerGrader"
+                                :menu-options="menuGraderOptions"
+                                :is-manager="isManager"
+                        >
+                        </DataTable>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <DataTable :items="group.attendees" :headers="headerAttendee"
+                                   :menu-options="menuAttendeeOption"
+                                   :action-function="actionFunctionAttendee"
+                                   :action-function2="actionFunctionAttendee2"/>
+                    </v-tab-item>
+                </template>
+                <template v-else-if="viewType === 'attendee'">
+                    <v-tab-item>
+                        <DataTable
+                                :items="group.graders"
+                                :headers="headerGrader"
+                                :menu-options="menuGraderOptions"
+                                :is-manager="isManager"
+                        >
+                        </DataTable>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <DataTable :items="group.attendees" :headers="headerAttendee"
+                                   :menu-options="menuAttendeeOption"
+                        />
+                    </v-tab-item>
+                </template>
+
             </v-tabs>
         </v-card>
     </v-row>
@@ -44,14 +99,18 @@
     export default {
         name: "GroupTable",
         components: {DataTable},
-        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2", "offId"],
+        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2", "offId", "viewType"],
 
         data() {
-            return {
-                headers: [{
+            return {}
+
+        },
+        computed: {
+            headerGrader() {
+                let header = [{
                     text: "NAME",
                     value: "name",
-                    sortable: false,
+                    sortable: true,
                     align: 'left',
                 },
                     {
@@ -65,10 +124,87 @@
                         value: "email",
                         sortable: false,
                         align: 'center',
+                    },];
+                if (this.viewType === "manager") {
+                    header.push(...[{text: 'Action', value: 'action', sortable: false, align: 'center'}])
+                }
+                return header;
+            },
+            headerAttendee() {
+                let header = [{
+                    text: "NAME",
+                    value: "name",
+                    sortable: true,
+                    align: 'left',
+                },
+                    {
+                        text: "USERNAME",
+                        value: "username",
+                        sortable: false,
+                        align: 'center',
                     },
-                    {text: 'Actions', value: 'action', sortable: false},]
+                    {
+                        text: "EMAIL",
+                        value: "email",
+                        sortable: false,
+                        align: 'center',
+                    },];
+                if (this.viewType === "manager") {
+                    header.push(...[{text: 'Action', value: 'action', sortable: false, align: 'center'}])
+                } else if (this.viewType === "grader") {
+                    header.push(...[{text: 'Action', value: 'action', sortable: false, align: 'center'}])
+                }
+                return header;
+            },
+            menuGraderOptions: function () {
+                if (this.viewType === "manager") {
+                    return [
+                        {
+                            title: "Assistant Evaluation Form",
+                            items: [
+                                {
+                                    title: "Show Form",
+                                }
+                                ,
+                                {
+                                    title: "Answer Form",
+                                }
+                            ]
+                        }
+                    ]
+                }
+                return null;
+            },
+            menuAttendeeOption: function () {
+                if (this.viewType === "manager") {
+                    return [
+                        {
+                            title: "Workshop Forms",
+                            items: [
+                                {
+                                    title: "Show Forms",
+                                }
+                            ]
+                        }
+                    ]
+                } else if (this.viewType === "grader") {
+                    return [
+                        {
+                            title: "Workshop Forms",
+                            items: [
+                                {
+                                    title: "Show Forms",
+                                }
+                                ,
+                                {
+                                    title: "Answer Forms",
+                                }
+                            ]
+                        }
+                    ]
+                }
+                return null
             }
-
         },
         methods: {
             routeToGroupEdit() {

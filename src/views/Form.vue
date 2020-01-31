@@ -13,6 +13,7 @@
             >
                 <v-form
                         class="form"
+                        v-model="isValid"
                         ref="form"
                 >
                     <div class="form-header text-capitalize">
@@ -24,8 +25,9 @@
                             <v-text-field
                                     v-if="!question.choicable"
                                     outlined
+                                    :rules="[v => !!v || 'Must be filled']"
                                     :disabled="!isAnswer"
-                                    class="form-input"
+                                    class="mt-4"
                             >
                             </v-text-field>
                             <v-select v-if="question.answerables.length > 0"
@@ -46,7 +48,7 @@
                                       :items="question.answerables"
                                       :item-value="question.answerables.id"
                                       :item-text="question.answerables.text"
-                                      :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
+                                      :rules="!isAnswer ? [v => !!v || 'option is required'] : []"
                                       label="Options"
                                       class="form-input ma-4"
                             />
@@ -54,7 +56,9 @@
 
                     </label>
                     <div>
-                        <v-btn color="primary" @click="sendForm" v-if="isAnswer" class="ma-3">Submit</v-btn>
+                        <v-btn color="primary" @click="sendForm" v-if="isAnswer" :disabled="!isValid" class="ma-3">
+                            Submit
+                        </v-btn>
                     </div>
                 </v-form>
             </v-card>
@@ -71,28 +75,31 @@
         data() {
             return {
                 form: null,
-                answers: {}
+                answers: {},
+                isValid: false,
             }
         },
         mounted() {
             let graderAppId;
             let user = {};
 
-            if ( this.appId === false || this.appId === undefined){
+            if (this.appId === false || this.appId === undefined) {
+                // eslint-disable-next-line no-console
+                console.log("if")
                 axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                     this.form = res.data;
-                });
-            }
-            else  {
 
-                if ( this.appType === "grader"){
+                });
+            } else {
+                // eslint-disable-next-line no-console
+                console.log("else")
+                if (this.appType === "grader") {
                     axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
                         user = res.data;
 
                         graderAppId = user.roles[1].graderWorkshopConnection;
 
 
-
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
                             if (this.type != null) {
@@ -113,7 +120,7 @@
                                         //     }
                                         // }
 
-                                        if (a.formApplicant.workshopGraderInfo.workshopGrader.id === graderAppId.id){
+                                        if (a.formApplicant.workshopGraderInfo.workshopGrader.id === graderAppId.id) {
                                             this.answers[q.id] = {
                                                 answer: a,
                                                 type: 'choice' in a ? 'choice' : 'text'
@@ -124,16 +131,13 @@
                             }
                         })
                     })
-                }
-
-                else if (this.appType === "att") {
+                } else if (this.appType === "att") {
                     axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
                         user = res.data;
 
                         let attAppId = user.roles[0].attenderWorkshopConnection;
 
 
-
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
                             if (this.type != null) {
@@ -154,7 +158,7 @@
                                         //     }
                                         // }
 
-                                        if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id){
+                                        if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id) {
                                             this.answers[q.id] = {
                                                 answer: a,
                                                 type: 'choice' in a ? 'choice' : 'text'
@@ -165,10 +169,14 @@
                             }
                         })
                     })
+                } else {
+                    axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
+                        this.form = res.data;
+
+                    });
                 }
 
             }
-
 
 
         },
@@ -176,7 +184,7 @@
             getAnswerFromId(question) {
 
 
-                if ( Object.keys(this.answers).length === 0 ){
+                if (Object.keys(this.answers).length === 0) {
                     return "No Answers Yet";
                 }
                 let ans = this.answers[question.id];
@@ -185,13 +193,12 @@
                 console.log(ans);
 
                 if (ans === null) {
-                    return ;
+                    return;
                 }
 
-                if (ans.type === 'text'){
+                if (ans.type === 'text') {
                     return ans.answer.answerData[0].text;
-                }
-                else if (ans.type === 'choice'){
+                } else if (ans.type === 'choice') {
                     let able = question.answerables;
                     return able[ans.answer.answerData[0].choice];
                 }
@@ -213,21 +220,19 @@
                     //     }
                     // } else {
                     let answerDat = {}
-                    if ( this.form.questions[i].choicable ){
+                    if (this.form.questions[i].choicable) {
                         let index;
-                        for ( let j = 0 ; j < this.form.questions[i].answerables.length ; ++j ){
-                            if (inputs[i].internalValue === this.form.questions[i].answerables[j].text){
+                        for (let j = 0; j < this.form.questions[i].answerables.length; ++j) {
+                            if (inputs[i].internalValue === this.form.questions[i].answerables[j].text) {
                                 index = j;
                             }
                         }
                         answerDat = {
-                            "choice" : index
+                            "choice": index
                         }
-                    }
-
-                    else{
+                    } else {
                         answerDat = {
-                            "text" : inputs[i].internalValue
+                            "text": inputs[i].internalValue
                         }
                     }
                     data.push({
@@ -243,7 +248,7 @@
                     // eslint-disable-next-line no-debugger
                     if (this.type === 'grader') {
                         let attData = {
-                            "answerQuestionContexts" : data
+                            "answerQuestionContexts": data
                         };
                         axios.post(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.offId + "/answer", attData).then(() => {
                             this.$router.back();
@@ -251,7 +256,7 @@
 
                     } else if (this.type === 'att') {
                         let attData = {
-                            "answerQuestionContexts" : data
+                            "answerQuestionContexts": data
                         };
                         // eslint-disable-next-line no-console
                         console.log(attData);
@@ -262,24 +267,14 @@
 
                         }).catch()
                     } else if (this.type === 'manager' && this.isAnswer) {
-                        axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {
-                            // eslint-disable-next-line no-console
-                            console.log("jlfak");
-                            // eslint-disable-next-line no-console
-                            console.log({
-                                formId: this.form.id,
-                                applicantId: res.data.id,
-                                answerQuestion: data
-                            });
-                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.form.offeredWorkshop.id + "/graderEvaluationForm/answer", {
+                        axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.offId + "/info/" + this.appId).then((res) => {
+                            axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + "/graderEvaluationForm/answer", {
                                 formId: this.form.id,
                                 applicantId: res.data.id,
                                 answerQuestion: data
                             }).then(() => {
                                 this.$router.back();
                             });
-                            // eslint-disable-next-line no-console
-                            console.log(res);
                         })
                     } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
                         axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.form.offeredWorkshop.id + "/info/" + this.appId).then((res) => {

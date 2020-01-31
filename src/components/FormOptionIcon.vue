@@ -1,8 +1,7 @@
 <template>
-    <v-menu :close-on-content-click="false" open-on-hover bottom offset-y>
+    <v-menu :close-on-content-click="false" open-on-hover bottom offset-x>
         <template v-slot:activator="{ on }">
             <v-btn
-                    dark
                     icon
                     v-on="on"
             >
@@ -10,12 +9,10 @@
             </v-btn>
         </template>
 
-        <v-list>
+        <v-list dense rounded>
             <v-list-group
-                    v-for="item in items"
+                    v-for="(item, i) in items"
                     :key="item.title"
-                    v-model="item.active"
-                    :prepend-icon="item.action"
                     no-action
             >
                 <template v-slot:activator>
@@ -27,9 +24,9 @@
                 </template>
 
                 <v-list-item
-                        v-for="subItem in item.items"
+                        v-for="(subItem, j) in item.items"
                         :key="subItem.title"
-                        @click=""
+                        @click="actions[i][j]"
                 >
                     <v-list-item-content>
                         <v-list-item-title>{{ subItem.title }}</v-list-item-title>
@@ -44,26 +41,9 @@
 <script>
     export default {
         name: "FormOptionIcon",
-        data(){
-            return {
-                items: [
-                    {
-                        title: 'Attractions',
-                        items: [
-                            { title: 'List Item' }
-                        ]
-                    },
-                    {
-                        title: 'Dining',
-                        active: true,
-                        items: [
-                            { title: 'Breakfast & brunch' },
-                            { title: 'New American' },
-                            { title: 'Sushi' }
-                        ]
-                    }
-                ]
-            }
+        props: ['items', 'actions'],
+        data() {
+            return {}
         }
     }
 </script>

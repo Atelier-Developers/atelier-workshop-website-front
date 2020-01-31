@@ -68,7 +68,7 @@
                     name: "",
                     id: ""
                 },
-                selectedGroup : {},
+                selectedGroup: {},
                 roles: {
                     att: [],
                     selectedAtt: [],
@@ -94,7 +94,7 @@
                 + "/workshopManagers/offeringWorkshop/"
                 + this.id
                 + "/groupless/attendeeInfos").then((res) => {
-                this.roles.att = res.data; // TODO these are just ids..., we need names. its bad to request for everybody's name
+                this.roles.att = res.data;
             });
             axios.get(this.$store.state.api
                 + "/workshopManagers/offeringWorkshop/"
@@ -104,7 +104,7 @@
             })
         },
         methods: {
-            getItemName(item){
+            getItemName(item) {
                 return item.user.name;
             },
             addGroup() {
@@ -113,14 +113,12 @@
                 + this.id
                 + "/groups",
                     [{name: this.newGroup.name, gradersId: this.roles.selectedGrader, attendersId: this.roles.selectedAtt}])
-                    .then((res) => {
-                        // eslint-disable-next-line no-console
-                        console.log(res)
+                    .then(() => {
                         this.$router.replace({name: "Workshop", params: {wId: this.id}})
                     })
 
             },
-            editGroup(){
+            editGroup() {
                 this.loading = true;
                 axios.put(this.$store.state.api + "/workshopManagers/offeringWorkshop/"
                     + this.id
