@@ -32,7 +32,7 @@
 
                     <v-col cols="12" sm="5" class="mt-4">
                         <v-row justify="center" align="center" class="fill-height">
-                            <v-col cols="6" v-if="!passed">
+                            <v-col cols="6" v-if="notStarted">
                                 <v-card outlined style="border: none">
                                     <div class="text-center">
                                         <v-icon class="mb-4" large>fas fa-user</v-icon>
@@ -127,15 +127,14 @@
                     return this.manager[0].name;
                 }
                 for (let i = 0; i < this.manager.length; ++i) {
-                    if (i !== this.manager.length - 2) {
-                        names.concat(this.manager[i].name);
-                        names.concat(", ")
-                    } else if (i !== this.manager.length - 1) {
-                        names.concat(this.manager[i].name);
-                        names.concat(" and ")
-                    } else {
-                        names.concat(this.manager[i].name);
+                    names = names.concat(this.manager[i].name);
+                    if (i === this.manager.length - 2) {
+                        names = names.concat(" and ")
+                    } else if (i < this.manager.length - 2) {
+                        names = names.concat(", ")
                     }
+                    // eslint-disable-next-line no-console
+                    console.log(names);
                 }
                 return names;
             },
@@ -152,7 +151,11 @@
                 let end = new Date(this.offeredWorkshop.endTime);
                 let dnow = new Date();
                 return end.valueOf() < dnow.valueOf();
-
+            },
+            notStarted: function () {
+                let start = new Date(this.offeredWorkshop.startTime);
+                let dnow = new Date();
+                return start.valueOf() > dnow.valueOf();
             },
             remainingTime: function(){
                 return moment(this.offeredWorkshop.startTime).fromNow();

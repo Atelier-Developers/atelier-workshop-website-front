@@ -145,7 +145,6 @@
                     </div>
                 </div>
                 <div class="my-5">
-
                     <ContentProvider type="grader" :w-id="wId"/>
                 </div>
 
@@ -159,11 +158,11 @@
                         :action-function-attendee="null"
                 />
                 <div v-if="passed">
-                    <v-btn @click="() => this.$router.push({name: 'certificate', params: {
+                    <!--                    <v-btn @click="() => this.$router.push({name: 'certificate', params: {-->
 
-                    }})">
-                        Show certificate
-                    </v-btn>
+                    <!--                    }})">-->
+                    <!--                        Show certificate-->
+                    <!--                    </v-btn>-->
                 </div>
                 <div v-else-if="isHolding">
                     <!--                chat for participants and graders of this -->
@@ -293,8 +292,8 @@
                 if (!this.$store.getters.isLoggedIn) {
                     return false;
                 }
-                for(let i = 0; i < this.manager.length; ++i){
-                    if(this.manager[i].id === this.user.id){
+                for (let i = 0; i < this.manager.length; ++i) {
+                    if (this.manager[i].id === this.user.id) {
                         return true;
                     }
                 }

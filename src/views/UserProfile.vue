@@ -44,24 +44,23 @@
         </v-card>
         <v-container>
             <WorkshopList :workshops="attendedList" title="Attended Workshops"/>
+            <v-divider/>
             <WorkshopList :workshops="gradedList" title="Assisted Workshops"/>
+            <v-divider/>
             <WorkshopList :workshops="managedList" title="Presented Workshops"/>
         </v-container>
     </v-container>
-    <div class="fill-height" v-else>
-        <v-row class="fill-height" justify="center" align="center">
-            <v-progress-circular indeterminate color="blue" size="60"/>
-        </v-row>
-    </div>
+    <LoadingCircular v-else/>
 </template>
 
 <script>
     import axios from "axios"
     import WorkshopList from "../components/WorkshopList";
+    import LoadingCircular from "../components/LoadingCircular";
 
     export default {
         name: "User",
-        components: {WorkshopList},
+        components: {LoadingCircular, WorkshopList},
         props: ['id'],
         computed: {
             userImage: function () {

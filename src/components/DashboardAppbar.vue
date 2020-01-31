@@ -16,7 +16,8 @@
 
 
         <v-btn v-if="!this.$store.getters.isLoggedIn" color="white" class="indigo--text" to="/login">
-            Login <v-icon right>mdi-account</v-icon>
+            Login
+            <v-icon right>mdi-account</v-icon>
         </v-btn>
         <div class="text-center" v-else>
             <v-menu offset-y>
@@ -68,7 +69,11 @@
                         onClick: () => {
                             this.$store.commit('logout');
                             localStorage.removeItem('token');
+                            this.$store.commit('auth_success', null);
                             localStorage.removeItem('userId');
+                            this.$store.commit('auth_user_id', -1);
+                            localStorage.removeItem('isAdmin');
+                            this.$store.commit('setAdmin', false);
                             delete axios.defaults.headers.common['Authorization'];
                             if (this.$route.path !== "/") {
                                 this.$router.push({path: "/"});
@@ -81,7 +86,7 @@
         computed: {
             userImage: function () {
                 return this.faildImage ? "https://winaero.com/blog/wp-content/uploads/2015/05/user-200.png" :
-                    this.$store.state.api + '/userDetails/profilePic/user/' +  this.$store.state.userId
+                    this.$store.state.api + '/userDetails/profilePic/user/' + this.$store.state.userId
             },
             title() {
                 return this.$route.name;

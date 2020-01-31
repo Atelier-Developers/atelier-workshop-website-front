@@ -1,54 +1,58 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col cols="12" md="4">
-                <!--                ATTENDEES-->
-                <v-select
-                        v-model="roles.selectedAtt"
-                        :items="this.roles.att"
-                        :item-text="getItemName"
-                        item-value="infoId"
-                        label="Attendees"
-                        solo
-                        multiple
-                />
-            </v-col>
-            <v-col cols="12" md="4">
-                <!--                GRADERS-->
-                <v-select
-                        v-model="roles.selectedGrader"
-                        :items="this.roles.graders"
-                        label="Assistants"
-                        solo
-                        :item-text="getItemName"
-                        item-value="infoId"
-                        multiple
-                />
-            </v-col>
-        </v-row>
-        <v-row justify="center">
-            <template v-if="editMode">
+    <v-form v-model="isValid">
+        <v-container>
+            <v-row>
                 <v-col cols="12" md="4">
-                    <v-btn @click="editGroup" :loading="loading">edit Group</v-btn>
-                </v-col>
-            </template>
-            <template v-else>
-                <v-col cols="12" md="4">
-                    <v-form>
-                        <v-text-field
-                                label="Group Name"
-                                v-model="newGroup.name"
-                                validate-on-blur
-                                :rules="[v => !!v ||'name is required!']"
-                        />
-                    </v-form>
+                    <!--                ATTENDEES-->
+                    <v-select
+                            v-model="roles.selectedAtt"
+                            :items="this.roles.att"
+                            :item-text="getItemName"
+                            item-value="infoId"
+                            label="Attendees"
+                            :rules="[v => !!v || 'Attendee is required']"
+                            solo
+                            multiple
+                    />
                 </v-col>
                 <v-col cols="12" md="4">
-                    <v-btn @click="addGroup" :loading="loading">Make Group</v-btn>
+                    <!--                GRADERS-->
+                    <v-select
+                            v-model="roles.selectedGrader"
+                            :items="this.roles.graders"
+                            label="Assistants"
+                            solo
+                            :rules="[v => !!v || 'Assistant is required']"
+                            :item-text="getItemName"
+                            item-value="infoId"
+                            multiple
+                    />
                 </v-col>
-            </template>
-        </v-row>
-    </v-container>
+            </v-row>
+            <v-row justify="center">
+                <template v-if="editMode">
+                    <v-col cols="12" md="4">
+                        <v-btn @click="editGroup" :loading="loading">edit Group</v-btn>
+                    </v-col>
+                </template>
+                <template v-else>
+                    <v-col cols="12" md="4">
+                        <v-form>
+                            <v-text-field
+                                    label="Group Name"
+                                    v-model="newGroup.name"
+                                    validate-on-blur
+                                    :rules="[v => !!v ||'name is required!']"
+                            />
+                        </v-form>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-btn @click="addGroup" :loading="loading" :disabled="!isValid">Make Group</v-btn>
+                    </v-col>
+                </template>
+            </v-row>
+        </v-container>
+    </v-form>
 </template>
 
 <script>
@@ -71,7 +75,8 @@
                     graders: [],
                     selectedGrader: [],
                 },
-                loading: false
+                loading: false,
+                isValid: false,
             }
         },
         mounted() {

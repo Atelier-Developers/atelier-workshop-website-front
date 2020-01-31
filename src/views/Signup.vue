@@ -29,7 +29,7 @@
                         </v-col>
                         <v-col cols="11">
                             <v-text-field v-model="user.email" label="Email" outlined
-                                          validate-on-blur
+
                                           :rules="[this.requiredRule('Email'),  v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid']"
                                           prepend-icon="mdi-mail"/>
                         </v-col>

@@ -17,25 +17,24 @@
         </v-parallax>
         <v-container>
             <workshop-list :workshops="popularWorkshops" title="Popular Workshops"/>
+            <v-divider/>
             <workshop-list :workshops="workshopOfDay" title="Workshop of Day"/>
+            <v-divider/>
             <workshop-list :workshops="workshops" title="Offered Workshops"/>
         </v-container>
     </div>
-    <div class="fill-height" v-else>
-        <v-row class="fill-height" justify="center" align="center">
-            <v-progress-circular indeterminate color="blue" size="60"/>
-        </v-row>
-    </div>
+    <LoadingCircular v-else/>
 
 </template>
 
 <script>
     import axios from "axios"
     import WorkshopList from "../components/WorkshopList";
+    import LoadingCircular from "../components/LoadingCircular";
 
     export default {
         name: "Home",
-        components: {WorkshopList},
+        components: {LoadingCircular, WorkshopList},
         data() {
             return {
                 workshops: [],

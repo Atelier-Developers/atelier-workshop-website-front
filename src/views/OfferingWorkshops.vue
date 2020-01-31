@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container v-if="!initialLoading">
         <template v-if="isAdmin">
             <v-btn
                     class="mb-5 mr-5"
@@ -203,15 +203,17 @@
         </template>
         <workshop-list :workshops="offeringWorkshops" title="Offered Workshops"/>
     </v-container>
+    <LoadingCircular v-else/>
 </template>
 
 <script>
     import axios from 'axios';
     import WorkshopList from "../components/WorkshopList";
+    import LoadingCircular from "../components/LoadingCircular";
 
     export default {
         name: "OfferingWorkshops",
-        components: {WorkshopList},
+        components: {LoadingCircular, WorkshopList},
         props: ["id"],
         computed: {
             isAdmin() {
@@ -248,10 +250,12 @@
                 modal3: false,
                 modal4: false,
                 loading: false,
+                initialLoading: false,
                 error: false,
             }
         },
         mounted() {
+            this.initialLoading = true;
             axios.all([axios.get(this.$store.state.api + `/workshop/workshops/${this.id}/offeringWorkshop`),
             ]).then((res) => {
                 this.offeringWorkshops = res[0].data;
@@ -259,10 +263,12 @@
                     axios.all([axios.get(this.$store.state.api + `/workshop/workshops`),
                         axios.get(this.$store.state.api + '/users/allUsers')]).then((r) => {
                         this.workshops = r[0].data;
-                        // eslint-disable-next-line no-console
-                        console.log(r[1].data);
                         this.users = r[1].data;
+                        this.initialLoading = false
                     })
+                }
+                else {
+                    this.initialLoading = false
                 }
             });
         },
