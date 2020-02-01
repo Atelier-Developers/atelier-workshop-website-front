@@ -1,161 +1,162 @@
 <template>
-<!--    TODO fix offering workshop add -->
+    <!--    TODO fix offering workshop add -->
     <div>
-<!--        <v-dialog v-model="dialogs" max-width="500px">-->
-<!--            <v-card class="py-3 px-3">-->
-<!--                <v-card-text>-->
-<!--                    <v-form>-->
-<!--                        <v-row>-->
-<!--                            <v-col cols="12">-->
-<!--                                <v-text-field-->
-<!--                                        label="Offering Workshop Name"-->
-<!--                                        v-model="offeredWorkshop.name"-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
-<!--                        <v-row>-->
-<!--                            <v-col cols="12" md="6">-->
-<!--                                <v-dialog-->
-<!--                                        ref="dialog"-->
-<!--                                        v-model="modal"-->
-<!--                                        :return-value.sync="startDate"-->
-<!--                                        persistent-->
-<!--                                        width="290px"-->
-<!--                                >-->
-<!--                                    <template v-slot:activator="{ on }">-->
-<!--                                        <v-text-field-->
-<!--                                                v-model="startDate"-->
-<!--                                                label="Start Date"-->
-<!--                                                readonly-->
-<!--                                                v-on="on"-->
-<!--                                        />-->
-<!--                                    </template>-->
-<!--                                    <v-date-picker v-model="startDate" scrollable>-->
-<!--                                        <v-spacer/>-->
-<!--                                        <v-btn color="primary" @click="modal = false">Cancel</v-btn>-->
-<!--                                        <v-btn color="primary" @click="$refs.dialog.save(startDate)">OK</v-btn>-->
-<!--                                    </v-date-picker>-->
-<!--                                </v-dialog>-->
-<!--                            </v-col>-->
-<!--                            <v-col cols="12" md="6">-->
-<!--                                <v-dialog-->
-<!--                                        ref="dialog3"-->
-<!--                                        v-model="modal3"-->
-<!--                                        :return-value.sync="startTime"-->
-<!--                                        persistent-->
-<!--                                        width="290px"-->
-<!--                                >-->
-<!--                                    <template v-slot:activator="{ on }">-->
-<!--                                        <v-text-field-->
-<!--                                                v-model="startTime"-->
-<!--                                                label="Start Time"-->
-<!--                                                readonly-->
-<!--                                                v-on="on"-->
-<!--                                        />-->
-<!--                                    </template>-->
-<!--                                    <v-time-picker-->
-<!--                                            v-if="modal3"-->
-<!--                                            v-model="startTime"-->
-<!--                                            format="24h"-->
-<!--                                            full-width-->
-<!--                                    >-->
-<!--                                        <v-spacer/>-->
-<!--                                        <v-btn  color="primary" @click="modal3=false">Cancel</v-btn>-->
-<!--                                        <v-btn  color="primary" @click="$refs.dialog3.save(startTime)">OK-->
-<!--                                        </v-btn>-->
-<!--                                    </v-time-picker>-->
-<!--                                </v-dialog>-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
-<!--                        <v-row>-->
-<!--                            <v-col cols="12" md="6">-->
-<!--                                <v-dialog-->
-<!--                                        ref="dialog2"-->
-<!--                                        v-model="modal2"-->
-<!--                                        :return-value.sync="endDate"-->
-<!--                                        persistent-->
-<!--                                        width="290px"-->
-<!--                                >-->
-<!--                                    <template v-slot:activator="{ on }">-->
-<!--                                        <v-text-field-->
-<!--                                                v-model="endDate"-->
-<!--                                                label="End Date"-->
-<!--                                                readonly-->
-<!--                                                v-on="on"-->
-<!--                                        />-->
-<!--                                    </template>-->
-<!--                                    <v-date-picker v-model="endDate" scrollable>-->
-<!--                                        <v-spacer/>-->
-<!--                                        <v-btn  color="primary" @click="modal2 = false">Cancel</v-btn>-->
-<!--                                        <v-btn  color="primary" @click="$refs.dialog2.save(endDate)">OK</v-btn>-->
-<!--                                    </v-date-picker>-->
-<!--                                </v-dialog>-->
-<!--                            </v-col>-->
-<!--                            <v-col cols="12" md="6">-->
-<!--                                <v-dialog-->
-<!--                                        ref="dialog4"-->
-<!--                                        v-model="modal4"-->
-<!--                                        :return-value.sync="endTime"-->
-<!--                                        persistent-->
-<!--                                        width="290px"-->
-<!--                                >-->
-<!--                                    <template v-slot:activator="{ on }">-->
-<!--                                        <v-text-field-->
-<!--                                                v-model="endTime"-->
-<!--                                                label="End Time"-->
-<!--                                                readonly-->
-<!--                                                v-on="on"-->
-<!--                                        />-->
-<!--                                    </template>-->
-<!--                                    <v-time-picker-->
-<!--                                            v-if="modal4"-->
-<!--                                            v-model="endTime"-->
-<!--                                            format="24h"-->
-<!--                                            full-width-->
-<!--                                    >-->
-<!--                                        <v-spacer/>-->
-<!--                                        <v-btn  color="primary" @click="modal4 = false">Cancel</v-btn>-->
-<!--                                        <v-btn  color="primary" @click="$refs.dialog4.save(endTime)">OK</v-btn>-->
-<!--                                    </v-time-picker>-->
-<!--                                </v-dialog>-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
-<!--                        <v-row>-->
-<!--                            <v-col cols="12">-->
-<!--                                <v-text-field-->
-<!--                                        label="Price"-->
-<!--                                        v-model="offeredWorkshop.price"-->
-<!--                                        :rules="[checkPrice]"-->
-<!--                                        required-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
-<!--                        <v-row>-->
-<!--                            <v-col cols="12">-->
-<!--                                <v-text-field-->
-<!--                                        label="Description"-->
-<!--                                        v-model="offeredWorkshop.description"-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
-<!--                        <v-row>-->
-<!--                            <v-col cols="12">-->
-<!--                                <v-file-input-->
-<!--                                        label="Image"-->
-<!--                                        v-model="file"-->
-<!--                                        prepend-icon="mdi-camera"-->
-<!--                                        accept="image/*"-->
-<!--                                />-->
-<!--                            </v-col>-->
-<!--                        </v-row>-->
-<!--                    </v-form>-->
-<!--                </v-card-text>-->
-<!--                <v-card-actions>-->
-<!--                    <v-spacer/>-->
-<!--                    <v-btn color="primary" @click="addOfferingWorkshop">Submit</v-btn>-->
-<!--                </v-card-actions>-->
-<!--            </v-card>-->
-<!--        </v-dialog>-->
+        <v-dialog v-model="dialogs" max-width="500px">
+            <v-card class="py-3 px-3">
+                <v-card-text>
+                    <v-form>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field
+                                        label="Offering Workshop Name"
+                                        v-model="offeredWorkshop.name"
+                                />
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-dialog
+                                        ref="dialog"
+                                        v-model="modal"
+                                        :return-value.sync="startDate"
+                                        persistent
+                                        width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                                v-model="startDate"
+                                                label="Start Date"
+                                                readonly
+                                                v-on="on"
+                                        />
+                                    </template>
+                                    <v-date-picker v-model="startDate" scrollable>
+                                        <v-spacer/>
+                                        <v-btn color="primary" @click="modal = false">Cancel</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog.save(startDate)">OK</v-btn>
+                                    </v-date-picker>
+                                </v-dialog>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-dialog
+                                        ref="dialog3"
+                                        v-model="modal3"
+                                        :return-value.sync="startTime"
+                                        persistent
+                                        width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                                v-model="startTime"
+                                                label="Start Time"
+                                                readonly
+                                                v-on="on"
+                                        />
+                                    </template>
+                                    <v-time-picker
+                                            v-if="modal3"
+                                            v-model="startTime"
+                                            format="24h"
+                                            full-width
+                                    >
+                                        <v-spacer/>
+                                        <v-btn color="primary" @click="modal3=false">Cancel</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog3.save(startTime)">OK
+                                        </v-btn>
+                                    </v-time-picker>
+                                </v-dialog>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-dialog
+                                        ref="dialog2"
+                                        v-model="modal2"
+                                        :return-value.sync="endDate"
+                                        persistent
+                                        width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                                v-model="endDate"
+                                                label="End Date"
+                                                readonly
+                                                v-on="on"
+                                        />
+                                    </template>
+                                    <v-date-picker v-model="endDate" scrollable>
+                                        <v-spacer/>
+                                        <v-btn color="primary" @click="modal2 = false">Cancel</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog2.save(endDate)">OK</v-btn>
+                                    </v-date-picker>
+                                </v-dialog>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-dialog
+                                        ref="dialog4"
+                                        v-model="modal4"
+                                        :return-value.sync="endTime"
+                                        persistent
+                                        width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                                v-model="endTime"
+                                                label="End Time"
+                                                readonly
+                                                v-on="on"
+                                        />
+                                    </template>
+                                    <v-time-picker
+                                            v-if="modal4"
+                                            v-model="endTime"
+                                            format="24h"
+                                            full-width
+                                    >
+                                        <v-spacer/>
+                                        <v-btn color="primary" @click="modal4 = false">Cancel</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog4.save(endTime)">OK</v-btn>
+                                    </v-time-picker>
+                                </v-dialog>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field
+                                        label="Price"
+                                        v-model="offeredWorkshop.price"
+                                        :rules="[checkPrice]"
+                                        required
+                                        prefix="$"
+                                />
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field
+                                        label="Description"
+                                        v-model="offeredWorkshop.description"
+                                />
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-file-input
+                                        label="Image"
+                                        v-model="file"
+                                        prepend-icon="mdi-camera"
+                                        accept="image/*"
+                                />
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn color="primary" @click="addOfferingWorkshop">Submit</v-btn> <!--TODO click send edit -->
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-card
                 class="mx-auto"
                 color="grey lighten-4"
@@ -192,14 +193,14 @@
 
                 <v-row>
                     <v-col cols="9">
-                            <v-row justify="start" align="center" class="mr-1" v-if="isAdmin">
-                                <v-btn icon color="warning" @click.stop="() => goForEdit()">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn icon color="error" @click.stop="() => deleteOfferedWorkshop(workshop.id)">
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-btn>
-                            </v-row>
+                        <v-row justify="start" align="center" class="mr-1" v-if="isAdmin">
+                            <v-btn icon color="warning" @click.stop="() => goForEdit()">
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn icon color="error" @click.stop="() => deleteOfferedWorkshop(workshop.id)">
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                        </v-row>
                     </v-col>
                     <v-col cols="3">
                         <v-row class="font-weight-bold title mr-2" justify="end">
@@ -216,7 +217,7 @@
 </template>
 
 <script>
-    import moment from "moment"
+    // import moment from "moment"
     import axios from "axios";
 
     export default {
@@ -226,9 +227,17 @@
             return {
                 faildImage: false,
                 dialogs: false,
+                modal: false,
+                modal2: false,
+                modal3: false,
+                modal4: false,
                 edit_mode: false,
                 offeredWorkshop: {},
-                workshops: []
+                workshops: [],
+                startDate: null,
+                endDate: null,
+                startTime: null,
+                endTime: null,
             }
         },
         methods: {
@@ -251,15 +260,25 @@
             navigateToWorkshop() {
                 return this.$router.push({path: `/workshop/${this.workshop.id}`});
             },
-            hasError(){
+            hasError() {
                 this.faildImage = true
             },
             goForEdit() {
                 this.dialogs = !this.dialogs;
                 this.edit_mode = true;
-                this.offeredWorkshop = {...this.workshop}
+                // eslint-disable-next-line no-console
+                console.log("*****************************************");
+                // eslint-disable-next-line no-console
+                console.log(this.workshop);
+                this.offeredWorkshop = {...this.workshop};
+                let t = new Date(this.workshop.startTime);
+                this.startDate = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate();
+                this.startTime = t.getHours() + ":" + t.getMinutes();
+                let t2 = new Date(this.workshop.endTime);
+                this.endDate = t2.getFullYear() + "-" + t2.getMonth() + "-" + t2.getDate();
+                this.endTime = t2.getHours() + ":" + t2.getMinutes();
             },
-            deleteOfferedWorkshop(id){
+            deleteOfferedWorkshop(id) {
                 axios.delete(this.$store.state.api + "/admin/offeringWorkshop/" + id).then(() => {
                     this.$router.go(0);
                 })
@@ -272,12 +291,12 @@
             workshopImage: function () {
                 return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + '/userDetails/pic/offeringWorkshop/' + this.workshop.id
             },
-            startTime: function () {
-                return moment(this.workshop.startTime).format("lll");
-            },
-            endTime: function () {
-                return moment(this.workshop.endTime).format("lll")
-            },
+            // startTime: function () {
+            //     return moment(this.workshop.startTime).format("lll");
+            // },
+            // endTime: function () {
+            //     return moment(this.workshop.endTime).format("lll")
+            // },
 
         }
     }

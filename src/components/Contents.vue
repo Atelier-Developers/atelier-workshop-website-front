@@ -3,6 +3,9 @@
         <v-row v-if="files.length > 0">
             <v-col cols="12" sm="4" md="3" lg="2" v-for="file in files" :key="file.id">
                 <v-card hover class="pb-1">
+                    <v-row>
+                            <v-icon class="ml-auto mr-4 mt-2" @click="removeFile">mdi-close</v-icon>
+                    </v-row>
                     <v-card-title class="text-capitalize">
                         {{file.title}}
                     </v-card-title>
@@ -24,10 +27,16 @@
 
 <script>
     import EmptyState from "./EmptyState";
+
     export default {
         name: "Contents",
         components: {EmptyState},
         props: ["files"],
+        methods:{
+            removeFile(){
+                //TODO
+            }
+        }
     }
 </script>
 

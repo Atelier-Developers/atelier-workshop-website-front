@@ -1,5 +1,5 @@
 <template>
-    <v-row class="my-7">
+    <v-row class="my-7" style="background-color: #fafafa">
         <v-col cols="12" class="text-center">
             <v-icon size="150" disabled>{{icon}}</v-icon>
         </v-col>

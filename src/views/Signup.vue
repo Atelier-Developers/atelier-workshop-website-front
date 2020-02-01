@@ -45,7 +45,7 @@
                                 @click="signup"
                                 to="/login"
                         >
-                            Sign in instead
+                            Sign in
                         </v-btn>
                         <v-btn
                                 class="ma-2"

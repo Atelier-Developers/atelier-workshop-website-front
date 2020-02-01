@@ -12,6 +12,9 @@
                             <v-text-field v-model="user.password" label="password" outlined
                                           type="password"
                                           :rules="[this.requiredRule('password')]" prepend-icon="mdi-lock"/>
+                            <div class="forgot">
+                                <a>forgot password?</a> <!-- TODO LINK -->
+                            </div>
                         </v-col>
                     </v-row>
 
@@ -36,8 +39,8 @@
                         </v-btn>
                     </v-row>
                     <div class="text-center error--text font-weight-regular text-uppercase mt-4" v-if="error">
-                            <v-icon class="mr-3" color="error">mdi-alert</v-icon>
-                            username or password is wrong
+                        <v-icon class="mr-3" color="error">mdi-alert</v-icon>
+                        username or password is wrong
                     </div>
                 </v-container>
 
@@ -73,7 +76,7 @@
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
 
-                }
+                };
                 axios.post(apiUrl + '\\login', this.user, {
                     headers: header
                 }).then((resp) => {
@@ -112,5 +115,12 @@
 
     .fill-height2 {
         height: 100%;
+    }
+
+    .forgot {
+        color: #1976d2;
+        font-size: 12px;
+        margin-left: 40px;
+        margin-top: -23px;
     }
 </style>

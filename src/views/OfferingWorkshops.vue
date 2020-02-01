@@ -140,6 +140,7 @@
                                             v-model="workshop.offeredWorkshop.price"
                                             :rules="[checkPrice]"
                                             required
+                                            prefix="$"
                                     />
                                 </v-col>
                             </v-row>

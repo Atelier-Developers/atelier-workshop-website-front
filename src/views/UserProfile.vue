@@ -18,7 +18,7 @@
                 </v-form>
             </v-card>
         </v-dialog>
-        <v-card outlined style="border: none;">
+        <v-card outlined style="border: none;background-color: #fafafa">
             <v-container>
                 <v-row>
                     <v-col cols="12" md="2">
