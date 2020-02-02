@@ -20,6 +20,7 @@
             </v-card>
         </v-dialog>
         <v-row justify="center" align="center" class="mt-12">
+            <p style="width: 100%" class="text-center mb-8 grey--text darken-4">Tap on the row to show requester form</p>
             <v-card max-width="900">
                 <v-tabs vertical>
                     <v-tab>

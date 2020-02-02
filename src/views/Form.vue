@@ -37,6 +37,7 @@
                                       :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
                                       label="Options"
                                       required
+                                      outlined
                                       class="form-input ma-4"
                             />
                         </template>

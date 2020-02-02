@@ -6,29 +6,29 @@
                 <v-container>
                     <v-row justify="center" dense no-gutters>
                         <v-col cols="11">
-                            <v-text-field v-model="user.name" label="Name" outlined
+                            <v-text-field v-model="user.name" label="Name *" outlined
                                           :rules="[this.requiredRule('name')]" prepend-icon="mdi-account-card-details"/>
                         </v-col>
                         <v-col cols="11">
-                            <v-text-field v-model="user.username" label="Username" outlined
+                            <v-text-field v-model="user.username" label="Username *" outlined
                                           :rules="[this.requiredRule('username'), v => v.length > 6 || 'At least 6 characters']"
                                           prepend-icon="mdi-account"/>
                         </v-col>
                         <v-col cols="11">
-                            <v-text-field v-model="user.password" label="Password" outlined
+                            <v-text-field v-model="user.password" label="Password *" outlined
                                           validate-on-blur
                                           :rules="[this.requiredRule('password'),  v => v.length >= 8 || 'At least 8 characters']"
                                           type="password"
                                           prepend-icon="mdi-lock"/>
                         </v-col>
                         <v-col cols="11">
-                            <v-text-field v-model="user.rePassword" label="Confirm Password" outlined
+                            <v-text-field v-model="user.rePassword" label="Confirm Password *" outlined
                                           validate-on-blur
                                           :rules="[passwordConfirmationRule]" type="password"
                                           prepend-icon="mdi-lock"/>
                         </v-col>
                         <v-col cols="11">
-                            <v-text-field v-model="user.email" label="Email" outlined
+                            <v-text-field v-model="user.email" label="Email *" outlined
 
                                           :rules="[this.requiredRule('Email'),  v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid']"
                                           prepend-icon="mdi-mail"/>
