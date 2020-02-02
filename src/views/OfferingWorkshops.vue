@@ -21,7 +21,9 @@
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field
-                                            label="Offering Workshop Name"
+                                            outlined
+                                            :rules="[v => !!v || 'This field is required']"
+                                            label="Offering Workshop Name *"
                                             v-model="workshop.offeredWorkshop.name"
                                     />
                                 </v-col>
@@ -37,8 +39,11 @@
                                     >
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
+                                                    outlined
+
+                                                    :rules="[v => !!v || 'This field is required']"
                                                     v-model="startDate"
-                                                    label="Start Date"
+                                                    label="Start Date *"
                                                     readonly
                                                     v-on="on"
                                             />
@@ -55,13 +60,15 @@
                                             ref="dialog3"
                                             v-model="modal3"
                                             :return-value.sync="startTime"
+                                            :rules="[v => !!v || 'This field is required']"
                                             persistent
                                             width="290px"
                                     >
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
                                                     v-model="startTime"
-                                                    label="Start Time"
+                                                    label="Start Time *"
+                                                    outlined
                                                     readonly
                                                     v-on="on"
                                             />
@@ -91,8 +98,10 @@
                                     >
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
+                                                    outlined
                                                     v-model="endDate"
-                                                    label="End Date"
+                                                    :rules="[v => !!v || 'This field is required']"
+                                                    label="End Date *"
                                                     readonly
                                                     v-on="on"
                                             />
@@ -114,8 +123,11 @@
                                     >
                                         <template v-slot:activator="{ on }">
                                             <v-text-field
+                                                    outlined
+
                                                     v-model="endTime"
-                                                    label="End Time"
+                                                    :rules="[v => !!v || 'This field is required']"
+                                                    label="End Time *"
                                                     readonly
                                                     v-on="on"
                                             />
@@ -136,9 +148,11 @@
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field
-                                            label="Price"
+                                            outlined
+
+                                            label="Price *"
                                             v-model="workshop.offeredWorkshop.price"
-                                            :rules="[checkPrice]"
+                                            :rules="[checkPrice, v => !!v || 'This field is required']"
                                             required
                                             prefix="$"
                                     />
@@ -147,6 +161,7 @@
                             <v-row>
                                 <v-col cols="12">
                                     <v-text-field
+                                            outlined
                                             label="Description"
                                             v-model="workshop.offeredWorkshop.description"
                                     />
@@ -155,6 +170,7 @@
                             <v-row>
                                 <v-col cols="12">
                                     <v-select
+                                            outlined
                                             label="Prerequisites workshops"
                                             v-model="workshop.preRequisiteId"
                                             :items="workshops"
@@ -167,10 +183,12 @@
                             <v-row>
                                 <v-col cols="12">
                                     <v-combobox
-                                            label="Workshop Managers"
+                                            outlined
+                                            :rules="[v => !!v || 'This field is required']"
+                                            label="Workshop Managers *"
                                             v-model="workshop.userManagerId"
                                             :items="users"
-                                            item-text="name"
+                                            :item-text="(val) => val.name"
                                             multiple
                                             chips
                                     />
@@ -179,6 +197,7 @@
                             <v-row>
                                 <v-col cols="12">
                                     <v-file-input
+                                            outlined
                                             label="Image"
                                             v-model="file"
                                             prepend-icon="mdi-camera"
@@ -230,7 +249,7 @@
                     offeredWorkshop: {
                         name: "",
                         description: "",
-                        price: 0,
+                        price: null,
                     },
                     preRequisiteId: [],
                     startTime: null,
@@ -252,6 +271,7 @@
                 modal4: false,
                 loading: false,
                 initialLoading: false,
+                editMode: false,
                 error: false,
             }
         },
@@ -265,6 +285,8 @@
                         axios.get(this.$store.state.api + '/users/allUsers')]).then((r) => {
                         this.workshops = r[0].data;
                         this.users = r[1].data;
+                        // eslint-disable-next-line no-console
+                        console.log(r[1])
                         this.initialLoading = false
                     })
                 }
@@ -285,7 +307,7 @@
                     this.errorMsg = "start date should be before end date";
                     return;
                 }
-                else if(sdate < Date.now()){
+                else if(sdate < Date.now() && !this.editMode){
                     this.error = true;
                     this.errorMsg = "You should choose a time in future";
                     return

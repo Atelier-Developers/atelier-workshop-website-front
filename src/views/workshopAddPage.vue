@@ -15,20 +15,25 @@
                 <v-icon size="30">mdi-plus</v-icon>
             </v-btn>
             <v-dialog v-model="dialog" max-width="500px">
-                <v-card class="py-3 px-3">
-                    <v-card-text>
-                        <v-text-field
-                                label="Workshop Name"
-                                v-model="new_WorkshopName"
-                        />
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer/>
-                        <v-btn color="primary" @click="submitFunction"
-                               :loading="isLoading">Submit
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
+                <v-form v-model="isValid">
+                    <v-card>
+                        <v-card-text class="py-5">
+                            <v-text-field
+                                    outlined
+                                    :rules="[v => !!v || 'This field is required']"
+                                    label="Workshop Name"
+                                    v-model="new_WorkshopName"
+                            />
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer/>
+                            <v-btn color="primary" @click="submitFunction"
+                                   :loading="isLoading" :disabled="!isValid">Submit
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+
+                </v-form>
             </v-dialog>
         </template>
         <template>
@@ -84,7 +89,8 @@
                 edit_mode: false,
                 new_WorkshopName: "",
                 workshop_id: null,
-                isLoading: false
+                isLoading: false,
+                isValid: false,
             }
         },
         mounted() {

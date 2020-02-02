@@ -19,7 +19,7 @@
                     <div class="form-header text-capitalize">
                         {{this.form.name}}
                     </div>
-                    <label class="question" v-for="(question, i) in this.form.questions" :key="question.id">
+                    <div class="question my-5" v-for="(question, i) in this.form.questions" :key="question.id">
                         {{i + 1}}) {{question.text}}
                         <template v-if="isAnswer">
                             <v-text-field
@@ -37,6 +37,7 @@
                                       :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
                                       label="Options"
                                       required
+                                      outlined
                                       class="form-input ma-4"
                             />
                         </template>
@@ -53,8 +54,11 @@
                                       class="form-input ma-4"
                             />
                         </template>
-
-                    </label>
+                        <v-divider class="mt-5"/>
+                    </div>
+                    <div>
+                        <DeleteAcceptIcon :on-accept="deleteForm"/>
+                    </div>
                     <div>
                         <v-btn color="primary" @click="sendForm" v-if="isAnswer" :disabled="!isValid" class="ma-3">
                             Submit
@@ -68,9 +72,11 @@
 
 <script>
     import axios from 'axios'
+    import DeleteAcceptIcon from "../components/DeleteAcceptIcon";
 
     export default {
         name: "Form",
+        components: {DeleteAcceptIcon},
         props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers', "offId", "appType"],
         data() {
             return {
@@ -188,6 +194,11 @@
 
         },
         methods: {
+            deleteForm(){
+                axios.delete(this.$store.state.api + "/forms/form/" + this.formId).then(() => {
+                    this.$router.back();
+                })
+            },
             getAnswerFromId(question) {
 
                 if (Object.keys(this.answers).length === 0) {

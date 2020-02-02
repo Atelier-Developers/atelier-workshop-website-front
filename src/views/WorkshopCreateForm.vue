@@ -12,7 +12,7 @@
                     width="80%"
             >
                 <v-container class="questions">
-                    <v-text-field label="Form Name" v-model="name"/>
+                    <v-text-field label="Form Name" v-model="name" outlined rounded/>
                     <v-row class="question-header" v-if="this.questions.length > 0">
                         <v-col cols="6" class="font-weight-bold">Question</v-col>
                         <v-col cols="6" class="font-weight-bold">Header</v-col>
@@ -67,7 +67,8 @@
                                             v-model="question.text"
                                             label="Question"
                                             required
-                                    ></v-text-field>
+                                            outlined
+                                    />
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -77,8 +78,9 @@
                                               :rules="[v => !!v || 'Item is required']"
                                               label="Item"
                                               required
+                                              outlined
                                               class="form-input"
-                                    ></v-select>
+                                    />
                                 </v-col>
                                 <v-col cols="6" v-if="question.type === 'Option'">
                                     <v-form
