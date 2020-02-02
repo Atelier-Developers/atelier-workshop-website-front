@@ -24,7 +24,9 @@
                         :action-function-grader2="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id, true, 'grader')"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
                 />
-                <v-btn @click="routeToMakeGroup" color="primary">make group</v-btn>
+                <v-row justify="center">
+                    <v-btn @click="routeToMakeGroup" color="primary">make group</v-btn>
+                </v-row>
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">

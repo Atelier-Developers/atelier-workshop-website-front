@@ -46,6 +46,7 @@
                                 class="d-flex flex-column px-12"
                         >
                             <v-text-field
+                                    type="number"
                                     v-model="installment.values[i]"
                                     :label="i + ') Value'"
                             ></v-text-field>
@@ -60,13 +61,13 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <v-col cols="6" sm="4" md="3">
+                    <v-col class="d-flex align-center" cols="12">
                         Sum of Pays: {{this.paySum}}
-                    </v-col>
-                    <v-col cols="6" sm="4" md="3">
                         <v-btn
+                                class="mx-10"
                                 color="primary"
                                 @click="sendForm"
+                                :disabled="+this.paySum !== +this.cost"
                         >Pay
                         </v-btn>
                     </v-col>
@@ -93,10 +94,21 @@
         },
         computed: {
             paySum() {
+                if (this.payType === "Cash")
+                    return this.cost;
+                // eslint-disable-next-line no-console
+                console.log("FUUUUUUUUUUUUUUUUCKKKK");
                 let sum = 0;
-                for (let i = 0; i <= this.payN; i++)
-                    if (typeof (this.installment.values[i]) === "number")
-                        sum += +this.installment.values[i];
+                for (let i = 1; i <= this.payN; i++) {
+                    sum += parseInt(this.installment.values[i]);
+                    // eslint-disable-next-line no-console
+                    console.log({
+                        sum: sum,
+                        it: this.installment.values[i],
+                    });
+                }
+                if (isNaN(sum))
+                    sum = "input Values";
                 return sum;
             }
         },
@@ -116,7 +128,10 @@
                 this.payN = parseInt(this.payN, 10) - 1;
                 if (this.payN < 2)
                     this.payN = 2;
-                this.dates = new Array(this.payN);
+                this.installment = {
+                    dates: new Array(this.payN),
+                    values: new Array(this.payN)
+                };
             }
         }
     }

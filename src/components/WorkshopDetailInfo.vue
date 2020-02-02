@@ -35,8 +35,8 @@
                             <v-col cols="6" v-if="notStarted">
                                 <v-card outlined style="border: none">
                                     <div class="text-center">
-                                        <v-icon class="mb-4" large>fas fa-user</v-icon>
-                                        <p class="display-1">{{remainingTime}}</p>
+                                        <v-icon class="mb-4" large>mdi-clock</v-icon>
+                                        <p class="display-1 text-capitalize">{{remainingTime}}</p>
                                         <p class="body-1">Remaining</p>
                                     </div>
                                 </v-card>

@@ -1,18 +1,18 @@
 <template>
     <v-container fluid class="fill-height image_background">
-        <v-card max-width="550" class="my-auto mx-auto py-3 ima round-card" raised>
+        <v-card max-width="550" class="my-auto mx-auto py-3 ima round-card pt-8" raised>
             <v-form v-model="isValid">
                 <v-container>
                     <v-row justify="center" dense>
                         <v-col cols="11">
-                            <v-text-field v-model="user.username" label="username" outlined
+                            <v-text-field v-model="user.username" label="username" outlined class="text-capitalize"
                                           :rules="[this.requiredRule('username')]" prepend-icon="mdi-account"/>
                         </v-col>
                         <v-col cols="11">
-                            <v-text-field v-model="user.password" label="password" outlined
+                            <v-text-field v-model="user.password" label="password" outlined class="text-capitalize"
                                           type="password"
                                           :rules="[this.requiredRule('password')]" prepend-icon="mdi-lock"/>
-                            <div class="forgot">
+                            <div class="forgot text-capitalize">
                                 <a>forgot password?</a> <!-- TODO LINK -->
                             </div>
                         </v-col>

@@ -32,7 +32,8 @@
             <v-row justify="center">
                 <template v-if="editMode">
                     <v-col cols="12" md="4">
-                        <v-btn @click="editGroup" :loading="loading">edit Group</v-btn>
+                        <v-btn @click="editGroup" class="mx-5" :loading="loading">Edit Group</v-btn>
+                        <v-btn @click="deleteGroup" class="mx-5" color="error" :loading="loading">Delete Group</v-btn>
                     </v-col>
                 </template>
                 <template v-else>
@@ -110,9 +111,13 @@
             addGroup() {
                 this.loading = true;
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/"
-                + this.id
-                + "/groups",
-                    [{name: this.newGroup.name, gradersId: this.roles.selectedGrader, attendersId: this.roles.selectedAtt}])
+                    + this.id
+                    + "/groups",
+                    [{
+                        name: this.newGroup.name,
+                        gradersId: this.roles.selectedGrader,
+                        attendersId: this.roles.selectedAtt
+                    }])
                     .then(() => {
                         this.$router.replace({name: "Workshop", params: {wId: this.id}})
                     })
@@ -127,6 +132,12 @@
                     .then(() => {
                         this.$router.replace({name: "Workshop", params: {wId: this.id}})
                     })
+            },
+            deleteGroup() {
+                axios.delete(this.$store.state.api + "/workshopManagers/offeringWorkshop/group/" + this.groupId)
+                    .then(() => {
+                        this.$router.replace({name: "Workshop", params: {wId: this.id}});
+                    });
             }
         }
     }
