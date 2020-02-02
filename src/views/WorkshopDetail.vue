@@ -179,11 +179,11 @@
                 <template v-if="notStarted">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                     <div v-if="this.$store.getters.isLoggedIn" class="text-center">
-                        <v-btn color="primary" :disabled="this.attReqForm === null"
+                        <v-btn color="primary" :disabled="this.attReqForm === null || this.attReqStatus"
                                class="ma-2"
                                @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
                         </v-btn>
-                        <v-btn color="primary" :disabled="this.graderReqForm === null"
+                        <v-btn color="primary" :disabled="this.graderReqForm === null || this.gradReqStatus"
                                class="ma-2"
                                @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a assistant
                         </v-btn>
@@ -231,6 +231,8 @@
                 attReqForm: null,
                 user: null,
                 prereq: [],
+                gradReqStatus: false,
+                attReqStatus: false,
                 loading: true,
                 offImg: "",
             }
@@ -359,12 +361,18 @@
                             });
                         } else {
                             this.loading = false;
-                            axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
+                            axios.all([this.getAttReqForm(), this.getGraderReqForm(), this.getRequestStatus()]).then((res) => {
                                 if (res[0].status !== 204) {
                                     this.attReqForm = res[0].data;
                                 }
                                 if (res[1].status !== 204) {
                                     this.graderReqForm = res[1].data;
+                                }
+                                if(res[2].data.attReq != null && res[2].data.attReq.state === "Pending"){
+                                    this.attReqStatus = true
+                                }
+                                if(res[2].data.graderReq != null && res[2].data.graderReq.state === "Pending"){
+                                    this.gradReqStatus = true
                                 }
                             })
                         }
@@ -453,7 +461,9 @@
             },
             getGraderReqForm() {
                 return axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.wId + "/graderRequestForm");
-
+            },
+            getRequestStatus() {
+                return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/requestStatus/" + this.user.id)
             }
 
         }

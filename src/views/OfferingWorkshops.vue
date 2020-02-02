@@ -170,7 +170,7 @@
                                             label="Workshop Managers"
                                             v-model="workshop.userManagerId"
                                             :items="users"
-                                            item-text="name"
+                                            :item-text="(val) => val.name"
                                             multiple
                                             chips
                                     />
@@ -252,6 +252,7 @@
                 modal4: false,
                 loading: false,
                 initialLoading: false,
+                editMode: false,
                 error: false,
             }
         },
@@ -265,6 +266,8 @@
                         axios.get(this.$store.state.api + '/users/allUsers')]).then((r) => {
                         this.workshops = r[0].data;
                         this.users = r[1].data;
+                        // eslint-disable-next-line no-console
+                        console.log(r[1])
                         this.initialLoading = false
                     })
                 }
@@ -285,7 +288,7 @@
                     this.errorMsg = "start date should be before end date";
                     return;
                 }
-                else if(sdate < Date.now()){
+                else if(sdate < Date.now() && !this.editMode){
                     this.error = true;
                     this.errorMsg = "You should choose a time in future";
                     return

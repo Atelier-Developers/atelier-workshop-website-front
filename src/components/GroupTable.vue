@@ -4,10 +4,15 @@
             <v-toolbar flat color="primary" dark>
                 <v-toolbar-title class="text-capitalize">{{group.groupName}}</v-toolbar-title>
                 <v-spacer/>
+                <template  v-if="isManager">
+                    <v-btn icon @click="routeToGroupEdit">
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="() => deleteGroup(group.groupId)">
+                        <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                </template>
 
-                <v-btn icon @click="routeToGroupEdit" v-if="isManager">
-                    <v-icon>mdi-pencil</v-icon>
-                </v-btn>
             </v-toolbar>
             <v-tabs vertical>
                 <v-tab>
@@ -95,7 +100,7 @@
 
 <script>
     import DataTable from "./DataTable";
-
+    import axios from 'axios'
     export default {
         name: "GroupTable",
         components: {DataTable},
@@ -207,6 +212,13 @@
             }
         },
         methods: {
+            deleteGroup(id){
+                // eslint-disable-next-line no-console
+                console.log(id)
+                axios.delete(this.$store.state.api + "/workshopManagers/offeringWorkshop/group/" + id).then(() => {
+                        this.$router.go(0)
+                })
+            },
             routeToGroupEdit() {
                 // eslint-disable-next-line no-console
                 console.log("group");

@@ -153,7 +153,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer/>
-                    <v-btn color="primary" @click="addOfferingWorkshop">Submit</v-btn> <!--TODO click send edit -->
+                    <v-btn color="primary" @click="editWorkshop">Submit</v-btn> <!--TODO click send edit -->
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -217,7 +217,7 @@
 </template>
 
 <script>
-    // import moment from "moment"
+    import moment from "moment"
     import axios from "axios";
 
     export default {
@@ -238,6 +238,7 @@
                 endDate: null,
                 startTime: null,
                 endTime: null,
+                file: null
             }
         },
         methods: {
@@ -266,10 +267,6 @@
             goForEdit() {
                 this.dialogs = !this.dialogs;
                 this.edit_mode = true;
-                // eslint-disable-next-line no-console
-                console.log("*****************************************");
-                // eslint-disable-next-line no-console
-                console.log(this.workshop);
                 this.offeredWorkshop = {...this.workshop};
                 let t = new Date(this.workshop.startTime);
                 this.startDate = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate();
@@ -278,11 +275,18 @@
                 this.endDate = t2.getFullYear() + "-" + t2.getMonth() + "-" + t2.getDate();
                 this.endTime = t2.getHours() + ":" + t2.getMinutes();
             },
+            editWorkshop(){
+
+            },
             deleteOfferedWorkshop(id) {
                 axios.delete(this.$store.state.api + "/admin/offeringWorkshop/" + id).then(() => {
                     this.$router.go(0);
                 })
             }
+        },
+        mounted() {
+            this.startTime = moment(this.workshop.startTime).format("lll");
+            this.endTime = moment(this.workshop.endTime).format("lll");
         },
         computed: {
             isAdmin() {
@@ -291,12 +295,6 @@
             workshopImage: function () {
                 return this.faildImage ? "http://transat-h2020.eu/wp-content/uploads/2019/08/5d6395a3b682771d3d22445a.png" : this.$store.state.api + '/userDetails/pic/offeringWorkshop/' + this.workshop.id
             },
-            // startTime: function () {
-            //     return moment(this.workshop.startTime).format("lll");
-            // },
-            // endTime: function () {
-            //     return moment(this.workshop.endTime).format("lll")
-            // },
 
         }
     }
