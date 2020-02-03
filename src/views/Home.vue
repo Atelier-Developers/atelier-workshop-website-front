@@ -52,6 +52,8 @@
             }
         },
         mounted() {
+            // eslint-disable-next-line no-console
+            console.log("home")
             axios.all([this.getOfferingWorkshops(), this.getPopularWorkshop()])
                 .then((res) => {
                     // eslint-disable-next-line no-console

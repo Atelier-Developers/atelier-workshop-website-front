@@ -90,6 +90,8 @@
                             localStorage.setItem('isAdmin', res.data.username === "admin" ? "admin" : "");
                             this.$store.commit('setAdmin', res.data.username === "admin");
                             this.loading = false;
+                            // eslint-disable-next-line no-console
+                            console.log(this.$store.state.userId)
                             this.$router.push("/");
                         })
 

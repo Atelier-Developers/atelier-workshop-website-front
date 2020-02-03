@@ -84,9 +84,12 @@
             }
         },
         computed: {
+            userId: function(){
+              return this.$store.state.userId
+            },
             userImage: function () {
                 return this.faildImage ? "https://winaero.com/blog/wp-content/uploads/2015/05/user-200.png" :
-                    this.$store.state.api + '/userDetails/profilePic/user/' + this.$store.state.userId
+                    this.$store.state.api + '/userDetails/profilePic/user/' + this.userId
             },
             title() {
                 return this.$route.name;
