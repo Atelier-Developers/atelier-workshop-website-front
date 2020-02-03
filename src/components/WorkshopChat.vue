@@ -1,20 +1,19 @@
 <template>
     <v-container>
-        <v-card outlined>
-            <Chat
-                    :participants="partNames"
-                    :myself="myself"
-                    :messages="messages"
-                    :onMessageSubmit="onMessageSubmit"
-                    :chatTitle="chatroom.name"
-                    :placeholder="placeholder"
-                    :colors="colors"
-                    :borderStyle="borderStyle"
-                    :hideCloseButton="true"
-                    :submitIconSize="submitIconSize"
-                    :scroll-bottom="scrollBottom">
-            </Chat>
-        </v-card>
+        <Chat
+                style="height: 620px"
+                :participants="partNames"
+                :myself="myself"
+                :messages="messages"
+                :onMessageSubmit="onMessageSubmit"
+                :chatTitle="chatroom.name"
+                :placeholder="placeholder"
+                :colors="colors"
+                :borderStyle="borderStyle"
+                :hideCloseButton="true"
+                :submitIconSize="submitIconSize"
+                :scroll-bottom="scrollBottom">
+        </Chat>
     </v-container>
 </template>
 
@@ -49,12 +48,9 @@
             return {
                 chatColor: "#2196F3",
                 visible: true,
-                participants: [
-                ],
-                myself: {
-                },
-                messages: [
-                ],
+                participants: [],
+                myself: {},
+                messages: [],
                 placeholder: 'send your message',
                 borderStyle: {
                     topLeft: "10px",
@@ -96,7 +92,7 @@
             partNames: function () {
                 let users = [];
                 this.participants.forEach((par) => {
-                    if(par.id !== this.myself.id){
+                    if (par.id !== this.myself.id) {
                         users.push(par);
                     }
                 })
@@ -105,12 +101,12 @@
         },
         methods: {
             onMessageSubmit: function (message) {
-               axios.post(this.$store.state.api + "/chats/chat/" + this.chatroom.id + "/message", {
-                   text: message.content
-               })
+                axios.post(this.$store.state.api + "/chats/chat/" + this.chatroom.id + "/message", {
+                    text: message.content
+                })
             },
             loadMoreMessages() {
-               // TODO add live message
+                // TODO add live message
             },
         }
     }

@@ -13,11 +13,19 @@
             <!--            go to chatroom-->
             <!--        </v-btn>-->
             <!--        <WorkshopChat/>-->
-            <v-btn @click="() => this.$router.push({name: 'Messaging', params: {
-                offId: this.wId, user: this.user
-            }})">Messaging
-            </v-btn>
+
             <v-container v-if="isManager">
+                <v-btn  fab
+                        color="primary"
+                        bottom
+                        right
+                        fixed
+                        elevation="5"
+                        @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user
+            }})">
+                    <v-icon>mdi-message-text</v-icon>
+                </v-btn>
                 <GroupGraderAtendee
                         view-type="manager"
                         :groups="groups"
@@ -111,6 +119,17 @@
             </v-container>
 
             <v-container v-else-if="isGrader">
+                <v-btn  fab
+                        color="primary"
+                        bottom
+                        right
+                        fixed
+                        elevation="5"
+                        @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user
+            }})">
+                    <v-icon>mdi-message-text</v-icon>
+                </v-btn>
                 <GroupTable
                         v-if="graderGroup != null"
                         view-type="grader"
@@ -156,6 +175,17 @@
             </v-container>
 
             <v-container v-else-if="isAttendee">
+                <v-btn  fab
+                        color="primary"
+                        bottom
+                        right
+                        fixed
+                        elevation="5"
+                        @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user
+            }})">
+                    <v-icon>mdi-message-text</v-icon>
+                </v-btn>
                 <GroupTable
                         v-if="attendeeGroup != null"
                         :group="attendeeGroup"
