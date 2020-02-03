@@ -15,14 +15,14 @@
             <!--        <WorkshopChat/>-->
 
             <v-container v-if="isManager">
-                <v-btn  fab
-                        color="primary"
-                        bottom
-                        right
-                        fixed
-                        elevation="5"
-                        @click="() => this.$router.push({name: 'Messaging', params: {
-                offId: this.wId, user: this.user
+                <v-btn fab
+                       color="primary"
+                       bottom
+                       right
+                       fixed
+                       elevation="5"
+                       @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user, type:'Manager'
             }})">
                     <v-icon>mdi-message-text</v-icon>
                 </v-btn>
@@ -119,14 +119,14 @@
             </v-container>
 
             <v-container v-else-if="isGrader">
-                <v-btn  fab
-                        color="primary"
-                        bottom
-                        right
-                        fixed
-                        elevation="5"
-                        @click="() => this.$router.push({name: 'Messaging', params: {
-                offId: this.wId, user: this.user
+                <v-btn fab
+                       color="primary"
+                       bottom
+                       right
+                       fixed
+                       elevation="5"
+                       @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user, type:'Grader'
             }})">
                     <v-icon>mdi-message-text</v-icon>
                 </v-btn>
@@ -175,14 +175,14 @@
             </v-container>
 
             <v-container v-else-if="isAttendee">
-                <v-btn  fab
-                        color="primary"
-                        bottom
-                        right
-                        fixed
-                        elevation="5"
-                        @click="() => this.$router.push({name: 'Messaging', params: {
-                offId: this.wId, user: this.user
+                <v-btn fab
+                       color="primary"
+                       bottom
+                       right
+                       fixed
+                       elevation="5"
+                       @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user, type:'Attendee'
             }})">
                     <v-icon>mdi-message-text</v-icon>
                 </v-btn>
@@ -370,7 +370,7 @@
                         } else if (this.isGrader) {
 
                             this.getGraderGroup().then((res) => {
-                                if (res.status !== 204){
+                                if (res.status !== 204) {
                                     this.groups = res.data;
                                 }
                                 this.loading = false;
@@ -389,7 +389,7 @@
                             this.getAttendeeGroup().then((res) => {
                                 // eslint-disable-next-line no-console
                                 console.log(res.data)
-                                if (res.status !== 204){
+                                if (res.status !== 204) {
                                     this.groups = res.data;
                                 }
 
