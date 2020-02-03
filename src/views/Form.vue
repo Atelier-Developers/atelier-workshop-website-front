@@ -1,88 +1,127 @@
 <template>
-    <v-container class="fill-height">
-        <v-row
-                class="fill-height"
-                align="center"
-                justify="center"
-        >
-            <v-card
-                    class="form-card px-10 pb-5 pt-3"
-                    raised
-                    max-width="800"
-                    width="80%"
+    <div>
+        <v-container class="fill-height">
+            <v-row
+                    class="fill-height"
+                    align="center"
+                    justify="center"
             >
-                <v-form
-                        class="form"
-                        v-model="isValid"
-                        ref="form"
+                <v-card
+                        class="form-card px-10 pb-5 pt-3"
+                        raised
+                        max-width="800"
+                        width="90%"
                 >
-                    <div class="form-header text-capitalize">
-                        {{this.form.name}}
+                    <v-form
+                            class="form"
+                            v-model="isValid"
+                            ref="form"
+                    >
+                        <div class="form-header text-capitalize">
+                            {{this.form.name}}
+                        </div>
+                        <div class="question my-5" v-for="(question, i) in this.form.questions" :key="question.id">
+                            {{i + 1}}) {{question.text}}
+                            <template v-if="isAnswer">
+                                <v-text-field
+                                        v-if="!question.choicable"
+                                        outlined
+                                        :rules="[v => !!v || 'Must be filled']"
+                                        :disabled="!isAnswer"
+                                        class="mt-4"
+                                >
+                                </v-text-field>
+                                <v-select v-if="question.answerables.length > 0"
+                                          :items="question.answerables"
+                                          :item-value="question.answerables.id"
+                                          :item-text="question.answerables.text"
+                                          :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
+                                          label="Options"
+                                          required
+                                          outlined
+                                          class="form-input ma-4"
+                                />
+                            </template>
+                            <template v-else-if="showAnswers">
+                                {{getAnswerFromId(question)}}
+                            </template>
+                            <template v-else>
+                                <v-select v-if="question.answerables.length > 0"
+                                          :items="question.answerables"
+                                          :item-value="question.answerables.id"
+                                          :item-text="question.answerables.text"
+                                          :rules="!isAnswer ? [v => !!v || 'option is required'] : []"
+                                          label="Options"
+                                          class="form-input ma-4"
+                                />
+                            </template>
+                            <v-divider class="mt-5"/>
+                        </div>
+                        <div>
+                            <DeleteAcceptIcon v-if="!isAnswer" :on-accept="deleteForm"/>
+                        </div>
+                    </v-form>
+                </v-card>
+            </v-row>
+        </v-container>
+        <Payment
+                v-if="type === 'att' && isAnswer"
+                :cost="this.cost"
+                :set-valid="setPayStatus"
+                :set-data="setPayData"
+        ></Payment>
+        <v-container class="fill-height">
+            <v-row justify="center" align="center" class="fill-height">
+                <v-card
+                        class="form-card px-10 py-5 d-flex"
+                        raised
+                        max-width="800"
+                        width="90%"
+                >
+                    <div
+                            v-if="type === 'att' && isAnswer"
+                            class="form-status"
+                    >Status: {{formStatus}}
                     </div>
-                    <div class="question my-5" v-for="(question, i) in this.form.questions" :key="question.id">
-                        {{i + 1}}) {{question.text}}
-                        <template v-if="isAnswer">
-                            <v-text-field
-                                    v-if="!question.choicable"
-                                    outlined
-                                    :rules="[v => !!v || 'Must be filled']"
-                                    :disabled="!isAnswer"
-                                    class="mt-4"
-                            >
-                            </v-text-field>
-                            <v-select v-if="question.answerables.length > 0"
-                                      :items="question.answerables"
-                                      :item-value="question.answerables.id"
-                                      :item-text="question.answerables.text"
-                                      :rules="!isAnswer ? [v => !!v || 'Item is required'] : []"
-                                      label="Options"
-                                      required
-                                      outlined
-                                      class="form-input ma-4"
-                            />
-                        </template>
-                        <template v-else-if="showAnswers">
-                            {{getAnswerFromId(question)}}
-                        </template>
-                        <template v-else>
-                            <v-select v-if="question.answerables.length > 0"
-                                      :items="question.answerables"
-                                      :item-value="question.answerables.id"
-                                      :item-text="question.answerables.text"
-                                      :rules="!isAnswer ? [v => !!v || 'option is required'] : []"
-                                      label="Options"
-                                      class="form-input ma-4"
-                            />
-                        </template>
-                        <v-divider class="mt-5"/>
-                    </div>
-                    <div>
-                        <DeleteAcceptIcon :on-accept="deleteForm"/>
-                    </div>
-                    <div>
-                        <v-btn color="primary" @click="sendForm" v-if="isAnswer" :disabled="!isValid" class="ma-3">
-                            Submit
-                        </v-btn>
-                    </div>
-                </v-form>
-            </v-card>
-        </v-row>
-    </v-container>
+                    <v-btn
+                            color="success"
+                            @click="submitAll"
+                            :disabled="!formValidate"
+                            class="ml-auto"
+                    >Submit
+                    </v-btn>
+                </v-card>
+            </v-row>
+        </v-container>
+    </div>
 </template>
 
 <script>
     import axios from 'axios'
     import DeleteAcceptIcon from "../components/DeleteAcceptIcon";
+    import Payment from "./Payment";
 
     export default {
         name: "Form",
-        components: {DeleteAcceptIcon},
-        props: ['formId', 'isAnswer', 'type', 'appId', 'fillerId', 'showAnswers', "offId", "appType"],
+        components: {Payment, DeleteAcceptIcon},
+        props: [
+            'formId',
+            'isAnswer',
+            'type',
+            'appId', 'fillerId',
+            'showAnswers',
+            "offId",
+            "appType",
+            "cost"
+        ],
         data() {
             return {
                 form: null,
                 answers: {},
                 isValid: false,
+                payStatus: false,
+                allValidate: false,
+                payData: null,
             }
         },
         mounted() {
@@ -194,7 +233,7 @@
 
         },
         methods: {
-            deleteForm(){
+            deleteForm() {
                 axios.delete(this.$store.state.api + "/forms/form/" + this.formId).then(() => {
                     this.$router.back();
                 })
@@ -275,10 +314,43 @@
                         };
                         // eslint-disable-next-line no-console
                         console.log(attData);
+                        // eslint-disable-next-line no-debugger
+                        // console.log(res);
+
                         axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.offId + "/answer", attData).then((res) => {
                             // eslint-disable-next-line no-console
                             console.log(res);
-                            this.$router.back();
+                            let elements = [];
+                            let installments = this.payData.installment;
+                            if (this.payData.payType === "Installment") {
+                                for (let fuckingIt = 1; fuckingIt < installments.values.length; fuckingIt++) {
+                                    let sdate = new Date(installments.dates[fuckingIt]);
+                                    let esDate = sdate.toISOString();
+                                    let date = sdate.toISOString();
+                                    date = esDate.slice(0, esDate.length - 5);
+                                    date = date.concat("+0000");
+                                    elements.push({
+                                        dueDate: date,
+                                        amount: installments.values[fuckingIt],
+                                    })
+                                }
+                            } else {
+                                elements.push({
+                                    dueDate: null,
+                                    amount: this.cost,
+                                })
+                            }
+                            // eslint-disable-next-line no-console
+                            console.log({
+                                type: this.payData.payType,
+                                payments: elements
+                            });
+                            axios.post(this.$store.state.api + `/attendees/attendee/request/${res.data}/payments`, {
+                                type: this.payData.payType,
+                                payments: elements
+                            }).then(() => {
+                                this.$router.back();
+                            })
 
                         }).catch()
                     } else if (this.type === 'manager' && this.isAnswer) {
@@ -306,16 +378,49 @@
 
                     }
                 }
+            },
+            submitAll() {
+                this.sendForm();
+                // if (this.type === 'att' && this.isAnswer)
+                //     this.sendPayment();
+            },
+            sendPayment() {
+
+            },
+            setPayStatus(bool) {
+                this.payStatus = bool;
+            },
+            setPayData(data) {
+                this.payData = {
+                    payN: data.payN,
+                    payType: data.payType,
+                    maxN: data.maxN,
+                    installment: data.installment
+                }
+            }
+        },
+        computed: {
+            formValidate() {
+                if (!this.isValid) {
+                    return false;
+                }
+                if (!this.payStatus && this.type === 'att' && this.isAnswer)
+                    return false;
+                return true;
+            },
+            formStatus() {
+                if (!this.isValid) {
+                    return "Check Form inputs."
+                }
+                if (!this.payStatus && this.type === 'att' && this.isAnswer)
+                    return "Check Prices: Sum/Price";
+                return "All Okay";
             }
         }
     }
 </script>
 
 <style scoped>
-
-    .form {
-        /*padding: 0px 50px;*/
-    }
 
     .form-card {
         /*margin: 50px 100px;*/

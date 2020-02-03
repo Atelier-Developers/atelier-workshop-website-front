@@ -4,7 +4,7 @@
             <v-toolbar flat color="primary" dark>
                 <v-toolbar-title class="text-capitalize">{{group.groupName}}</v-toolbar-title>
                 <v-spacer/>
-                <template  v-if="isManager">
+                <template v-if="isManager">
                     <v-btn icon @click="routeToGroupEdit">
                         <v-icon>mdi-pencil</v-icon>
                     </v-btn>
@@ -79,7 +79,7 @@
                 <template v-else-if="viewType === 'attendee'">
                     <v-tab-item>
                         <DataTable
-                                :items="group.graders"
+                                :items="this.group.graders"
                                 :headers="headerGrader"
                                 :menu-options="menuGraderOptions"
                                 :is-manager="isManager"
@@ -87,7 +87,7 @@
                         </DataTable>
                     </v-tab-item>
                     <v-tab-item>
-                        <DataTable :items="group.attendees" :headers="headerAttendee"
+                        <DataTable :items="this.group.attendees" :headers="headerAttendee"
                                    :menu-options="menuAttendeeOption"
                         />
                     </v-tab-item>
@@ -101,6 +101,7 @@
 <script>
     import DataTable from "./DataTable";
     import axios from 'axios'
+
     export default {
         name: "GroupTable",
         components: {DataTable},
@@ -209,14 +210,14 @@
                     ]
                 }
                 return null
-            }
+            },
         },
         methods: {
-            deleteGroup(id){
+            deleteGroup(id) {
                 // eslint-disable-next-line no-console
                 console.log(id)
                 axios.delete(this.$store.state.api + "/workshopManagers/offeringWorkshop/group/" + id).then(() => {
-                        this.$router.go(0)
+                    this.$router.go(0)
                 })
             },
             routeToGroupEdit() {
@@ -231,8 +232,14 @@
                         groupId: this.group.groupId
                     }
                 })
+            },
+            f1(){
+                // eslint-disable-next-line no-console
+                console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                // eslint-disable-next-line no-console
+                console.log(this.viewType);
             }
-        }
+        },
     }
 </script>
 

@@ -155,6 +155,7 @@
                 <GroupTable
                         v-if="attendeeGroup != null"
                         :group="attendeeGroup"
+                        view-type="attendee"
                         :action-function-grader="null"
                         :action-function-attendee="null"
                 />
@@ -349,7 +350,7 @@
                         } else if (this.isAttendee) {
                             this.getAttendeeGroup().then((res) => {
                                 // eslint-disable-next-line no-console
-                                console.log(res.data)
+                                console.log(res.data);
                                 this.groups = res.data;
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
@@ -435,7 +436,8 @@
                         appId: appid,
                         showAnswers: showAnswers,
                         offId: this.wId,
-                        appType: appType
+                        appType: appType,
+                        cost: this.offeredWorkshop.price
                     }
                 })
             },
