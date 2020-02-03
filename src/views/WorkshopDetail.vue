@@ -13,7 +13,10 @@
             <!--            go to chatroom-->
             <!--        </v-btn>-->
             <!--        <WorkshopChat/>-->
-
+            <v-btn @click="() => this.$router.push({name: 'Messaging', params: {
+                offId: this.wId, user: this.user
+            }})">Messaging
+            </v-btn>
             <v-container v-if="isManager">
                 <GroupGraderAtendee
                         view-type="manager"
@@ -114,6 +117,7 @@
                         :action-function-attendee="(id) => routeToWorkshopForm(false, 'graderWorkshopForm', id, 'att', true)"
                         :action-function-attendee2="(id) => routeToWorkshopForm(true, 'graderWorkshopForm', id, 'att', false)"
                 />
+                <empty-state v-else title="No Groups Yet" icon="fa-users"/>
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isHolding || passed">Show
                         Forms</p>
@@ -156,6 +160,7 @@
                         :action-function-grader="null"
                         :action-function-attendee="null"
                 />
+                <empty-state v-else title="No Groups Yet" icon="fa-users"/>
                 <div v-if="passed">
                     <!--                    <v-btn @click="() => this.$router.push({name: 'certificate', params: {-->
 
@@ -211,11 +216,12 @@
     import GroupTable from "../components/GroupTable";
     import ContentProvider from "../components/ContentProvider";
     import LoadingCircular from "../components/LoadingCircular";
+    import EmptyState from "../components/EmptyState";
     // import WorkshopChat from "../components/WorkshopChat";
 
     export default {
         name: "WorkshopDetail",
-        components: {LoadingCircular, ContentProvider, GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
+        components: {EmptyState, LoadingCircular, ContentProvider, GroupTable, GroupGraderAtendee, WorkshopDetailInfo},
         props: ["wId"],
         data() {
             return {
@@ -225,7 +231,7 @@
                 attList: [],
                 gradList: [],
                 manager: {},
-                groups: [],
+                groups: null,
                 count: 0,
                 graderReqForm: null,
                 attReqForm: null,
@@ -331,7 +337,9 @@
                         } else if (this.isGrader) {
 
                             this.getGraderGroup().then((res) => {
-                                this.groups = res.data;
+                                if (res.status !== 204){
+                                    this.groups = res.data;
+                                }
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
                                     if (res[0].status !== 204) {
@@ -348,7 +356,9 @@
                             this.getAttendeeGroup().then((res) => {
                                 // eslint-disable-next-line no-console
                                 console.log(res.data)
-                                this.groups = res.data;
+                                if (res.status !== 204){
+                                    this.groups = res.data;
+                                }
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
                                     if (res[0].status !== 204) {
@@ -368,10 +378,10 @@
                                 if (res[1].status !== 204) {
                                     this.graderReqForm = res[1].data;
                                 }
-                                if(res[2].data.attReq != null && res[2].data.attReq.state === "Pending"){
+                                if (res[2].data.attReq != null && res[2].data.attReq.state === "Pending") {
                                     this.attReqStatus = true
                                 }
-                                if(res[2].data.graderReq != null && res[2].data.graderReq.state === "Pending"){
+                                if (res[2].data.graderReq != null && res[2].data.graderReq.state === "Pending") {
                                     this.gradReqStatus = true
                                 }
                             })

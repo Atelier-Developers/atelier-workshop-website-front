@@ -81,6 +81,8 @@
             }
         },
         mounted() {
+            // eslint-disable-next-line no-console
+            console.log(this.id)
             axios.all([axios.get(this.$store.state.api + "/userDetails/" + this.id),
                 axios.get(this.$store.state.api + "/userDetails/history/" + this.id)
             ]).then((res) => {

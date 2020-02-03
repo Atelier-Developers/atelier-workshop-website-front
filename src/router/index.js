@@ -17,6 +17,8 @@ import WorkshopRequests from "../views/WorkshopRequests";
 import Certificate from "../views/Certificate";
 import workshopAddPage from "../views/workshopAddPage";
 import MakeGroups from "../views/MakeGroups";
+import Messaging from "../views/Messaging";
+import WorkshopChat from "../components/WorkshopChat";
 
 Vue.use(VueRouter)
 
@@ -82,6 +84,12 @@ const routes = [
         props: true
     },
     {
+        path: '/message',
+        name: 'Messaging',
+        component: Messaging,
+        props: true
+    },
+    {
         path: '/workshopRequests',
         name: 'Workshop Requests',
         component: WorkshopRequests,
@@ -91,6 +99,12 @@ const routes = [
         path: '/workshop/forms',
         name: 'workshopForms',
         component: WorkshopForms,
+        props: true
+    },
+    {
+        path: '/chatroom',
+        name: 'Chatroom',
+        component: WorkshopChat,
         props: true
     },
     {

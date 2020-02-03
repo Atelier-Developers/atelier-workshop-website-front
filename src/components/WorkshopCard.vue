@@ -276,7 +276,7 @@
                 this.endTime = t2.getHours() + ":" + t2.getMinutes();
             },
             editWorkshop(){
-
+                axios.put(this.$store.state.api + "/workshopManagers/offeringWorkshop/", )
             },
             deleteOfferedWorkshop(id) {
                 axios.delete(this.$store.state.api + "/admin/offeringWorkshop/" + id).then(() => {
