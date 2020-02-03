@@ -76,7 +76,7 @@
                                     <v-select v-model="question.type"
                                               :items="['Text', 'Option']"
                                               :rules="[v => !!v || 'Item is required']"
-                                              label="Item"
+                                              label="Type"
                                               required
                                               outlined
                                               class="form-input"

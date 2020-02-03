@@ -27,7 +27,9 @@
                         :action-function-grader2="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id, true, 'grader')"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
                 />
-                <v-btn @click="routeToMakeGroup" color="primary">make group</v-btn>
+                <v-row justify="center">
+                    <v-btn @click="routeToMakeGroup" color="primary">make group</v-btn>
+                </v-row>
                 <div class="my-5">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Make Form</p>
                     <div v-if="passed" class="text-center">
@@ -157,6 +159,7 @@
                 <GroupTable
                         v-if="attendeeGroup != null"
                         :group="attendeeGroup"
+                        view-type="attendee"
                         :action-function-grader="null"
                         :action-function-attendee="null"
                 />
@@ -359,6 +362,7 @@
                                 if (res.status !== 204){
                                     this.groups = res.data;
                                 }
+
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
                                     if (res[0].status !== 204) {
@@ -443,7 +447,8 @@
                         appId: appid,
                         showAnswers: showAnswers,
                         offId: this.wId,
-                        appType: appType
+                        appType: appType,
+                        cost: this.offeredWorkshop.price
                     }
                 })
             },
