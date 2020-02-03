@@ -15,7 +15,7 @@
                                     />
                                 </v-col>
                             </v-row>
-                            <v-row>
+                            <v-row justify="center">
                                 <v-col cols="12" md="6" v-if="this.type === 'Manager'">
                                     <v-select
                                             label="Assistant"
@@ -36,7 +36,7 @@
                                               multiple
                                     ></v-select>
                                 </v-col>
-                                <v-col cols="12" md="6" class="d-flex justify-center">
+                                <v-col cols="12" md="6" class="">
                                     <v-select
                                             label="Managers"
                                             v-if="this.type !== 'Manager'"
@@ -128,15 +128,30 @@
         },
         methods: {
             createChatroom() {
-                let users = {
+                let users2 = {
                     name: this.chat.name,
                     userIds: [],
                 };
-                users.userIds.concat(this.selectedManagers);
-                users.userIds.concat(this.selectedAttendees);
-                users.userIds.concat(this.selectedGraders);
+                // eslint-disable-next-line no-debugger
+                debugger;
+                // users2.userIds.concat(this.selectedManagers);
+                // users2.userIds.concat(this.selectedAttendees);
+                // users2.userIds.concat(this.selectedGraders);
+                for (let fuckingId in this.selectedManagers)
+                    users2.userIds.push(this.selectedManagers[fuckingId]);
+                for (let fuckingId2 in this.selectedAttendees)
+                    users2.userIds.push(this.selectedAttendees[fuckingId2]);
+                for (let fuckingId3 in this.selectedGraders)
+                    users2.userIds.push(this.selectedGraders[fuckingId3]);
+                users2.userIds.push(this.user.id);
 
-                axios.post(`${this.$store.state.api}/chats/offeringWorkshop/${this.offId}/chatrooms`, users);
+
+                // eslint-disable-next-line no-console
+                console.log(users2);
+                axios.post(`${this.$store.state.api}/chats/offeringWorkshop/${this.offId}/chatrooms`, users2)
+                    .then(() => {
+                        this.dialog = false;
+                    });
             }
         }
     }
