@@ -18,7 +18,8 @@
                             <v-row>
                                 <v-col cols="12" md="6" v-if="this.type === 'Manager'">
                                     <v-select
-                                            v-model="selectedUsers"
+                                            label="Assistant"
+                                            v-model="selectedGraders"
                                             :items="this.users.graderUsers"
                                             item-value="userId"
                                             item-text="name"
@@ -27,17 +28,19 @@
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <v-select v-if="this.type === 'Manager'"
-                                              v-model="selectedUsers"
+                                              label="Attenders"
+                                              v-model="selectedAttendees"
                                               :items="this.users.attUsers"
                                               item-value="userId"
                                               item-text="name"
                                               multiple
                                     ></v-select>
                                 </v-col>
-                                <v-col cols="12" md="6">
+                                <v-col cols="12" md="6" class="d-flex justify-center">
                                     <v-select
+                                            label="Managers"
                                             v-if="this.type !== 'Manager'"
-                                            v-model="selectedUsers"
+                                            v-model="selectedManagers"
                                             :items="this.users.managerUsers"
                                             item-value="userId"
                                             item-text="name"
@@ -48,7 +51,7 @@
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn text color="primary" @click="uploadImage" :loading="isUploading">Submit</v-btn>
+                        <v-btn text color="primary" @click="createChatroom" :loading="isUploading">Submit</v-btn>
                     </v-card-actions>
                 </v-form>
             </v-card>
@@ -86,7 +89,9 @@
                     name: "",
                 },
                 selectedGroup: null,
-                selectedUsers: null,
+                selectedManagers: null,
+                selectedGraders: null,
+                selectedAttendees: null,
                 users: null,
             }
         },
@@ -120,6 +125,19 @@
                 .then((res) => {
                     this.users = res.data;
                 })
+        },
+        methods: {
+            createChatroom() {
+                let users = {
+                    name: this.chat.name,
+                    userIds: [],
+                };
+                users.userIds.concat(this.selectedManagers);
+                users.userIds.concat(this.selectedAttendees);
+                users.userIds.concat(this.selectedGraders);
+
+                axios.post(`${this.$store.state.api}/chats/offeringWorkshop/${this.offId}/chatrooms`, users);
+            }
         }
     }
 </script>
