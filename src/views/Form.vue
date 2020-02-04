@@ -190,8 +190,6 @@
                                 console.log(this.form.questions);
                                 this.form.questions.forEach((q) => {
                                     // eslint-disable-next-line no-console
-                                    console.log("question")
-                                    // eslint-disable-next-line no-console
                                     console.log(q)
                                     q.answers.forEach((a) => {
                                         // if (a.formApplicant === this.appId) {
@@ -352,7 +350,19 @@
                                 this.$router.back();
                             })
 
-                        }).catch()
+                        }).catch((err) => {
+
+                            if (err.response.status === 409) {
+                                // eslint-disable-next-line no-console
+                                console.log("FUUUUUUUUUUUUUUUUUUUCK")
+                                window.alert("Another requested workshop of yours is conflicting with this workshop's time.");
+                                return ;
+                            }
+                            else if (err.response.status === 418){
+                                window.alert("You haven't passed pre-requisites of this workshop")
+                                return ;
+                            }
+                        })
                     } else if (this.type === 'manager' && this.isAnswer) {
                         axios.get(this.$store.state.api + "/userDetails/offeringWorkshop/" + this.offId + "/info/" + this.appId).then((res) => {
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + "/graderEvaluationForm/answer", {
