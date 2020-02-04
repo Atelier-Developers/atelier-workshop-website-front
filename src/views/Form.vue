@@ -353,8 +353,6 @@
                         }).catch((err) => {
 
                             if (err.response.status === 409) {
-                                // eslint-disable-next-line no-console
-                                console.log("FUUUUUUUUUUUUUUUUUUUCK")
                                 window.alert("Another requested workshop of yours is conflicting with this workshop's time.");
                                 return ;
                             }
