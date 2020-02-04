@@ -50,7 +50,7 @@
                                           :items="question.answerables"
                                           :item-value="question.answerables.id"
                                           :item-text="question.answerables.text"
-                                          :rules="!isAnswer ? [v => !!v || 'option is required'] : []"
+                                          :rules="isAnswer ? [v => !!v || 'option is required'] : []"
                                           label="Options"
                                           class="form-input ma-4"
                                 />
@@ -70,7 +70,7 @@
                 :set-valid="setPayStatus"
                 :set-data="setPayData"
         ></Payment>
-        <v-container class="fill-height">
+        <v-container class="fill-height" v-if="isAnswer">
             <v-row justify="center" align="center" class="fill-height">
                 <v-card
                         class="form-card px-10 py-5 d-flex"
