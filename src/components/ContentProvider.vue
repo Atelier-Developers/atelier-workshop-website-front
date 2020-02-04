@@ -13,9 +13,8 @@
                             />
                             <v-textarea label="Description *" v-model="item.description" outlined/>
                             <v-file-input outlined
-                                    label="File *"
+                                    label="File (Max size: 100Mb) *"
                                     v-model="item.file"
-                                    prepend-inner-icon="mdi-file"
                                     :rules="[v => !!v || 'File required']"
                                     validate-on-blur
                             />
