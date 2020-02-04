@@ -31,9 +31,9 @@
                 </v-card>
             </v-dialog>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Supervisors Files</p>
-            <contents :files="graderFiles"/>
+            <contents :manager="true" :files="graderFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
-            <contents :files="attFiles"/>
+            <contents :manager="true" :files="attFiles"/>
             <v-row justify="center" class="mt-4">
                 <v-btn @click="uploadDialog" color="primary" rounded>
                     <v-icon left>fa-cloud-upload-alt</v-icon>Upload file</v-btn>

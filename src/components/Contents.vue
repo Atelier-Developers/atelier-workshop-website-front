@@ -3,7 +3,7 @@
         <v-row v-if="files.length > 0">
             <v-col cols="12" sm="4" md="3" lg="2" v-for="file in files" :key="file.id">
                 <v-card hover class="pb-1">
-                    <v-row>
+                    <v-row v-if="manager">
                             <v-icon class="ml-auto mr-4 mt-2" @click="() => {
                                 removeFile(file.id)
                             }">mdi-close</v-icon>
@@ -34,7 +34,7 @@
     export default {
         name: "Contents",
         components: {EmptyState},
-        props: ["files"],
+        props: ["files", "manager"],
         methods:{
             removeFile(id){
                 axios.delete(this.$store.state.api + "/workshop/offeringWorkshops/workshopFile/" + id).then(() => {

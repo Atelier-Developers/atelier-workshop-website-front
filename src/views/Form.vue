@@ -57,9 +57,9 @@
                             </template>
                             <v-divider class="mt-5"/>
                         </div>
-                        <div>
+                        <v-row justify="end">
                             <DeleteAcceptIcon v-if="!isAnswer" :on-accept="deleteForm"/>
-                        </div>
+                        </v-row>
                     </v-form>
                 </v-card>
             </v-row>

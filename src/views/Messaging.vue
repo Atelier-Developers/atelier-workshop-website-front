@@ -51,7 +51,7 @@
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn text color="primary" @click="createChatroom" :loading="isUploading">Submit</v-btn>
+                        <v-btn text color="primary" @click="createChatroom" :loading="isLoading">Submit</v-btn>
                     </v-card-actions>
                 </v-form>
             </v-card>
@@ -93,6 +93,7 @@
                 selectedGraders: null,
                 selectedAttendees: null,
                 users: null,
+                isLoading: false
             }
         },
         computed: {
@@ -145,12 +146,20 @@
                     users2.userIds.push(this.selectedGraders[fuckingId3]);
                 users2.userIds.push(this.user.id);
 
-
+                this.isLoading = true
                 // eslint-disable-next-line no-console
                 console.log(users2);
                 axios.post(`${this.$store.state.api}/chats/offeringWorkshop/${this.offId}/chatrooms`, users2)
                     .then(() => {
+                        this.isLoading = false
                         this.dialog = false;
+                        let location = {
+                            name: "Messaging", params: {
+                                offId: this.offId, user: this.user, type: this.type,
+                            }
+                        }
+                        this.$router.replace("/");
+                        this.$nextTick(() => this.$router.replace(location))
                     });
             }
         }
