@@ -198,7 +198,7 @@
                                 <v-col cols="12">
                                     <v-file-input
                                             outlined
-                                            label="Image"
+                                            label="Image *"
                                             v-model="file"
                                             prepend-icon="mdi-camera"
                                             accept="image/*"

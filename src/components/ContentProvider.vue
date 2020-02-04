@@ -8,20 +8,20 @@
                 <v-card class="py-3 px-3">
                     <v-form v-model="isValid">
                         <v-card-text>
-                            <v-text-field label="Title" v-model="item.title" :rules="[v => !!v || 'Title required']"
+                            <v-text-field label="Title *" v-model="item.title"  outlined :rules="[v => !!v || 'Title required']"
                                           validate-on-blur
                             />
-                            <v-textarea label="description" v-model="item.description"/>
-                            <v-file-input
-                                    label="File"
+                            <v-textarea label="Description *" v-model="item.description" outlined/>
+                            <v-file-input outlined
+                                    label="File *"
                                     v-model="item.file"
-                                    prepend-icon="mdi-file"
+                                    prepend-inner-icon="mdi-file"
                                     :rules="[v => !!v || 'File required']"
                                     validate-on-blur
                             />
-                            <v-select :items="['Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
+                            <v-select outlined :items="['Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
                                       v-model="selectedType"
-                                      label="Receivers"
+                                      label="Receivers *"
                                       :rules="[v => !!v || 'Receivers required']"/>
                         </v-card-text>
                         <v-card-actions>

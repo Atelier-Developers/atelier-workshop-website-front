@@ -4,7 +4,9 @@
             <v-col cols="12" sm="4" md="3" lg="2" v-for="file in files" :key="file.id">
                 <v-card hover class="pb-1">
                     <v-row>
-                            <v-icon class="ml-auto mr-4 mt-2" @click="removeFile">mdi-close</v-icon>
+                            <v-icon class="ml-auto mr-4 mt-2" @click="() => {
+                                removeFile(file.id)
+                            }">mdi-close</v-icon>
                     </v-row>
                     <v-card-title class="text-capitalize">
                         {{file.title}}
@@ -27,14 +29,17 @@
 
 <script>
     import EmptyState from "./EmptyState";
+    import axios from "axios";
 
     export default {
         name: "Contents",
         components: {EmptyState},
         props: ["files"],
         methods:{
-            removeFile(){
-                //TODO
+            removeFile(id){
+                axios.delete(this.$store.state.api + "/workshop/offeringWorkshops/workshopFile/" + id).then(() => {
+                    this.$router.go(0);
+                })
             }
         }
     }
