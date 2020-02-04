@@ -12,6 +12,7 @@
                 :borderStyle="borderStyle"
                 :hideCloseButton="true"
                 :submitIconSize="submitIconSize"
+                class="elevation-5 mt-5"
                 :scroll-bottom="scrollBottom">
         </Chat>
     </v-container>
@@ -70,13 +71,13 @@
             colors: function () {
                 return {
                     header: {
-                        bg: this.chatColor,
+                        bg: '#314992',
                         text: '#fff'
                     },
                     message: {
                         myself: {
-                            bg: '#fff',
-                            text: '#bdb8b8'
+                            bg: 'rgba(52, 167, 46, 1)',
+                            text: '#ffffff'
                         },
                         others: {
                             bg: this.chatColor,
