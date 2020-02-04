@@ -95,11 +95,9 @@
             paySum() {
                 if (this.payType === "Cash")
                     return this.cost;
-                // eslint-disable-next-line no-console
-                console.log("FUUUUUUUUUUUUUUUUCKKKK");
                 let sum = 0;
                 for (let i = 1; i <= this.payN; i++) {
-                    sum += parseInt(this.installment.values[i]);
+                    sum += parseFloat(this.installment.values[i]);
                 }
                 if (isNaN(sum))
                     sum = "input Values";
@@ -120,7 +118,7 @@
                 }
                 let sum = 0;
                 for (let i = 1; i <= this.payN; i++) {
-                    sum += parseInt(this.installment.values[i]);
+                    sum += parseFloat(this.installment.values[i]);
                 }
                 if (isNaN(sum))
                     sum = 0;
@@ -130,7 +128,7 @@
                     this.setValid(false);
             },
             increment() {
-                this.payN = parseInt(this.payN, 10) + 1;
+                this.payN = parseFloat(this.payN, 10) + 1;
                 if (this.payN > this.maxN)
                     this.payN = this.maxN;
                 // eslint-disable-next-line no-console
@@ -141,7 +139,7 @@
                 };
             },
             decrement() {
-                this.payN = parseInt(this.payN, 10) - 1;
+                this.payN = parseFloat(this.payN, 10) - 1;
                 if (this.payN < 2)
                     this.payN = 2;
                 this.installment = {
