@@ -106,12 +106,15 @@
                             >workshop forms
                             </v-btn>
                         </v-row>
-                        <v-row justify="center" class="mt-3">
-                            <v-btn color="primary" small
-                                   @click="routeToWorkshopRequest">See Requests
-                            </v-btn>
-                        </v-row>
                     </div>
+                </div>
+                <div class="my-5">
+                    <p class="display-3 grey--text text--darken-2 text-center my-10">Requests</p>
+                    <v-row justify="center" class="mt-3">
+                        <v-btn color="primary"
+                               @click="routeToWorkshopRequest">See Requests
+                        </v-btn>
+                    </v-row>
                 </div>
                 <div class="my-5">
                     <content-provider type="manager" :w-id="wId"/>
