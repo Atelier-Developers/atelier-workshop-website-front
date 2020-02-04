@@ -19,6 +19,7 @@ import workshopAddPage from "../views/workshopAddPage";
 import MakeGroups from "../views/MakeGroups";
 import Messaging from "../views/Messaging";
 import WorkshopChat from "../components/WorkshopChat";
+import PaymentRequests from "../views/PaymentRequests";
 
 Vue.use(VueRouter)
 
@@ -60,6 +61,11 @@ const routes = [
         name: "Make Group",
         component: MakeGroups,
         props: true
+    },
+    {
+        path: '/paymentRequests',
+        name: "Payment Requests",
+        component: PaymentRequests,
     },
     {
         path: '/signup',
@@ -133,7 +139,7 @@ const routes = [
 
 const router = new VueRouter({
     routes,
-    scrollBehavior(){
+    scrollBehavior() {
         return {x: 0, y: 0}
     },
     mode: 'history'
