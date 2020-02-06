@@ -18,16 +18,28 @@
                                           validate-on-blur
                             />
                             <v-textarea label="Description *" v-model="item.description" outlined/>
+                            <v-select outlined :items="['Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
+                                      v-model="selectedType"
+                                      label="Receivers *"
+                                      :rules="[v => !!v || 'Receivers required']"/>
+                            <v-select outlined :items="['Link', 'File']"
+                                      v-model="fileType"
+                                      label="File Type"
+                                      :rules="[v => !!v || 'Type required']"/>
                             <v-file-input outlined
+                                          v-if="fileType === 'File'"
                                           label="File (Max size: 100Mb) *"
                                           v-model="item.file"
                                           :rules="[v => !!v || 'File required']"
                                           validate-on-blur
                             />
-                            <v-select outlined :items="['Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
-                                      v-model="selectedType"
-                                      label="Receivers *"
-                                      :rules="[v => !!v || 'Receivers required']"/>
+                            <v-text-field outlined
+                                          v-else-if="fileType === 'Link'"
+                                          label="Link"
+                                          v-model="item.link"
+                                          :rules="[v => !!v || 'Link required']"
+                                          validate-on-blur
+                            />
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -69,10 +81,12 @@
                 attFiles: [],
                 dialog: false,
                 selectedType: null,
+                fileType: null,
                 item: {
                     title: "",
                     description: "",
-                    file: null
+                    file: null,
+                    link: null,
                 }
             }
         },
@@ -92,8 +106,12 @@
                     "/workshopFile/create", {
                     title: this.item.title,
                     description: this.item.description,
-                    receiverList: [this.selectedType]
+                    receiverList: [this.selectedType],
+                    type: this.fileType,
+                    link: this.item.link,
                 }).then((res) => {
+                    if (this.fileType === "Link")
+                        return;
                     let fileId = res.data;
                     let formData = new FormData();
                     // eslint-disable-next-line no-console

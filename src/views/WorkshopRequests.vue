@@ -19,6 +19,52 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="payDialog" max-width="500px">
+            <v-card class="py-3 px-3">
+                <v-card-text>
+                        <v-container>
+                            <v-row  v-for="pay in this.payStatus" :key="pay.id">
+                                <v-col class="d-flex align-center" cols="12" md="2">
+                                    ${{pay.value}}
+                                </v-col>
+                                <v-col class="d-flex align-center" cols="12" md="5">
+                                    <div class="mr-auto">
+                                        {{pay.paymentDate.getFullYear()}}/{{pay.paymentDate.getMonth()}}/{{pay.paymentDate.getDate()}}
+                                    </div>
+                                </v-col>
+                                <v-col class="d-flex align-center" cols="12" md="5">
+                                    <v-btn
+                                            v-if="!pay.paid"
+                                            color="success"
+                                            small
+                                            @click="() => submitPay(pay)"
+                                            class="ml-auto px-0 py-0 btn">
+                                        Pay
+                                    </v-btn>
+                                    <div v-else class="ml-auto mr-5 px-0 py-0 btn">
+                                        Paid
+                                    </div>
+                                </v-col>
+                            </v-row>
+                            <v-divider></v-divider>
+                        </v-container>
+                    <v-row v-for="(question, i) in this.form.questions" :key="question.question.id">
+                        <div class="question title">{{i + 1}}) {{question.question.text}}</div>
+                        <v-col cols="12">
+                            <div class="answer title font-weight-light ml-3" v-if="question.question.choicable">
+                                {{ question.question.answerables[question.answer.answerData[0].choice].text}}
+                            </div>
+
+                            <div class="answer title font-weight-light ml-3" v-else>
+                                {{question.answer.answerData[0].text}}
+                            </div>
+                        </v-col>
+
+                    </v-row>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
         <v-row justify="center" align="center" class="mt-12">
             <p style="width: 100%" class="text-center mb-8 grey--text darken-4">Tap on the row to show requester form</p>
             <v-card max-width="900">
@@ -84,6 +130,14 @@
                                 >
                                     fas fa-times
                                 </v-icon>
+                                <v-icon
+                                        small
+                                        class="mr-2"
+                                        color="error"
+                                        @click.stop="() => showPayments(item)"
+                                >
+                                    fas fa-coins
+                                </v-icon>
                             </template>
                         </v-data-table>
                     </v-tab-item>
@@ -112,7 +166,9 @@
                     questions: [],
                     groupId: null
                 },
+                payStatus: null,
                 formDialog: false,
+                payDialog: false,
                 groupDialog: false,
                 newGroup: {
                     name: "",
@@ -193,7 +249,7 @@
                             req.requestState = status;
                             req.userId = item.id;
                             // eslint-disable-next-line no-console
-                            console.log(req)
+                            console.log(req);
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()
@@ -231,8 +287,11 @@
                                     this.form.questions = res.data;
                                     this.formDialog = true;
                                 })
-                        })
+                        });
                 }
+            },
+            showPayments(att){
+                axios.get(`${att}`)
             },
             addGroup() {
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/group",
