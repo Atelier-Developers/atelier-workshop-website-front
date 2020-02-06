@@ -22,51 +22,39 @@
         <v-dialog v-model="payDialog" max-width="500px">
             <v-card class="py-3 px-3">
                 <v-card-text>
-                        <v-container>
-                            <v-row  v-for="pay in this.payStatus" :key="pay.id">
-                                <v-col class="d-flex align-center" cols="12" md="2">
-                                    ${{pay.value}}
-                                </v-col>
-                                <v-col class="d-flex align-center" cols="12" md="5">
-                                    <div class="mr-auto">
-                                        {{pay.paymentDate.getFullYear()}}/{{pay.paymentDate.getMonth()}}/{{pay.paymentDate.getDate()}}
-                                    </div>
-                                </v-col>
-                                <v-col class="d-flex align-center" cols="12" md="5">
-                                    <v-btn
-                                            v-if="!pay.paid"
-                                            color="success"
-                                            small
-                                            @click="() => submitPay(pay)"
-                                            class="ml-auto px-0 py-0 btn">
-                                        Pay
-                                    </v-btn>
-                                    <div v-else class="ml-auto mr-5 px-0 py-0 btn">
-                                        Paid
-                                    </div>
-                                </v-col>
-                            </v-row>
-                            <v-divider></v-divider>
-                        </v-container>
-                    <v-row v-for="(question, i) in this.form.questions" :key="question.question.id">
-                        <div class="question title">{{i + 1}}) {{question.question.text}}</div>
-                        <v-col cols="12">
-                            <div class="answer title font-weight-light ml-3" v-if="question.question.choicable">
-                                {{ question.question.answerables[question.answer.answerData[0].choice].text}}
-                            </div>
-
-                            <div class="answer title font-weight-light ml-3" v-else>
-                                {{question.answer.answerData[0].text}}
-                            </div>
-                        </v-col>
-
-                    </v-row>
+                    <v-container>
+                        <v-row v-for="pay in this.payStatus" :key="pay.id">
+                            <v-col class="d-flex align-center" cols="12" md="2">
+                                ${{pay.value}}
+                            </v-col>
+                            <v-col class="d-flex align-center" cols="12" md="5">
+                                <div class="mr-auto">
+                                    {{pay.paymentDate.getFullYear()}}/{{pay.paymentDate.getMonth()}}/{{pay.paymentDate.getDate()}}
+                                </div>
+                            </v-col>
+                            <v-col class="d-flex align-center" cols="12" md="5">
+                                <v-btn
+                                        v-if="!pay.paid"
+                                        color="success"
+                                        small
+                                        @click="() => submitPay(pay)"
+                                        class="ml-auto px-0 py-0 btn">
+                                    Pay
+                                </v-btn>
+                                <div v-else class="ml-auto mr-5 px-0 py-0 btn">
+                                    Paid
+                                </div>
+                            </v-col>
+                        </v-row>
+                        <v-divider></v-divider>
+                    </v-container>
                 </v-card-text>
             </v-card>
         </v-dialog>
 
         <v-row justify="center" align="center" class="mt-12">
-            <p style="width: 100%" class="text-center mb-8 grey--text darken-4">Tap on the row to show requester form</p>
+            <p style="width: 100%" class="text-center mb-8 grey--text darken-4">Tap on the row to show requester
+                form</p>
             <v-card max-width="900">
                 <v-tabs vertical>
                     <v-tab>
@@ -108,36 +96,69 @@
                     <v-tab-item>
                         <v-data-table
                                 :headers="headers"
-                                :items="this.attendees"
+                                :items="this.attendeesReq"
                                 :items-per-page="10"
                                 @click:row="(val) => showForm(val.roles[0].id, 'attendee')"
                                 class="elevation-1">
 
                             <template v-slot:item.action="{ item }" v-if="showForm != null">
-                                <v-icon
-                                        small
-                                        class="mr-2"
-                                        color="success"
-                                        @click.stop="() => showDetail(item, 'attendee', 'ACCEPTED')"
-                                >
-                                    fas fa-check
-                                </v-icon>
-                                <v-icon
-                                        small
-                                        class="mr-2"
-                                        color="error"
-                                        @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
-                                >
-                                    fas fa-times
-                                </v-icon>
-                                <v-icon
-                                        small
-                                        class="mr-2"
-                                        color="error"
-                                        @click.stop="() => showPayments(item)"
-                                >
-                                    fas fa-coins
-                                </v-icon>
+                                <div v-if="item.status ==='Pending'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="success"
+                                            v-if="item.paymentState"
+                                            @click.stop="() => showDetail(item, 'attendee', 'ACCEPTED')"
+                                    >
+                                        fas fa-check
+                                    </v-icon>
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="success"
+                                            v-else
+                                            disabled
+                                            @click.stop="() => showDetail(item, 'attendee', 'ACCEPTED')"
+                                    >
+                                        fas fa-check
+                                    </v-icon>
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="error"
+                                            @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
+                                    >
+                                        fas fa-times
+                                    </v-icon>
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="success"
+                                            @click.stop="() => showPayments(item)"
+                                    >
+                                        fas fa-coins
+                                    </v-icon>
+                                </div>
+                                <div v-else-if="item.status === 'Rejected'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="error"
+                                            @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
+                                    >
+                                        fas fa-times-circle
+                                    </v-icon>
+                                </div>
+                                <div v-else-if="item.status === 'Accepted'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="success"
+                                            @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
+                                    >
+                                        fa-check-circle
+                                    </v-icon>
+                                </div>
                             </template>
                         </v-data-table>
                     </v-tab-item>
@@ -193,6 +214,26 @@
                         sortable: false
                     },
                 ],
+                selectedAtt: null
+            }
+        },
+        computed: {
+            attendeesReq() {
+                let data = [];
+                for (let att in this.attendees)
+                    data.push({
+                        name: this.attendees[att].user.name,
+                        username: this.attendees[att].user.username,
+                        paymentState: this.attendees[att].paymentState,
+                        id: this.attendees[att].user.id,
+                        roles: this.attendees[att].user.roles,
+                        status: this.attendees[att].requestStatus,
+                    });
+                // eslint-disable-next-line no-console
+                console.log("Mother fucker");
+                // eslint-disable-next-line no-console
+                console.log(data);
+                return data;
             }
         },
         mounted() {
@@ -226,9 +267,11 @@
                 this.$nextTick(() => this.$router.replace(location))
             },
             showDetail(item, type, status) {
+                // eslint-disable-next-line no-console
+                console.log(item);
                 if (type === "grader") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[1].id)
-                        // eslint-disable-next-line no-console
+                    // eslint-disable-next-line no-console
                         .then((res) => {
                             // eslint-disable-next-line no-console
                             let req = {};
@@ -242,7 +285,7 @@
                         })
                 } else if (type === "attendee") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[0].id)
-                        // eslint-disable-next-line no-console
+                    // eslint-disable-next-line no-console
                         .then((res) => {
                             let req = {};
                             req.requestId = res.data.id;
@@ -290,8 +333,27 @@
                         });
                 }
             },
-            showPayments(att){
-                axios.get(`${att}`)
+            showPayments(att) {
+                // eslint-disable-next-line no-console
+                console.log("FUCKING ATTENDDEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                // eslint-disable-next-line no-console
+                console.log(att);
+                this.selectedAtt = att;
+                axios.get(`${this.$store.state.api}/attendees/attendee/${att.id}/offeringWorkshop/${this.id}/payment`)
+                    .then((res) => {
+                        this.payStatus = res.data.attenderPaymentTabList;
+                        this.payDialog = true;
+                        for (let j = 0; j < this.payStatus.length; j++) {
+                            this.payStatus[j].paymentDate = new Date(this.payStatus[j].paymentDate);
+                        }
+                    })
+            },
+            submitPay(pay) {
+                axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${pay.id}`)
+                    .then(() => {
+                        pay.paid = true;
+                        this.selectedAtt.paymentState = true;
+                    });
             },
             addGroup() {
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/group",

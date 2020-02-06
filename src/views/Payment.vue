@@ -15,14 +15,19 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <div>
-                                    Payment Type: {{this.cost}}
+                                <div v-if="this.payType === 'Cash'">
+                                    Cost: ${{this.cost[0]}}
                                 </div>
+                                <div v-else-if="this.payType === 'Installment'">
+                                    Cost: ${{this.cost[1]}}
+                                </div>
+                                <div v-else></div>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="12" sm="4">
                                 <v-select
+                                        label="Payment Type"
                                         v-model="payType"
                                         @input="checkSum"
                                         :items="['Cash', 'Installment']"
@@ -31,46 +36,6 @@
                         </v-row>
                     </v-container>
                 </v-card-title>
-                <v-card-text v-if="this.payType === 'Cash'">
-
-                </v-card-text>
-                <v-card-text v-if="this.payType === 'Installment'">
-                    <v-row>
-                        <v-col cols="12" sm="2">
-                            <v-text-field
-                                    class="input-price"
-                                    v-model="payN"
-                                    label="Number"
-                                    append-icon="mdi-plus"
-                                    @click:append="increment"
-                                    prepend-inner-icon="mdi-minus"
-                                    @click:prepend-inner="decrement"/>
-                        </v-col>
-                    </v-row>
-                    <v-form>
-                        <v-container>
-                            <v-row justify="center" align="center">
-                                <div
-                                        v-for="i in this.payN"
-                                        :key="i"
-                                        cols="12"
-                                        md="4"
-                                        class="d-flex flex-column mx-7"
-                                >
-                                    <v-text-field
-                                            type="number"
-                                            v-model="installment.values[i]"
-                                            :label="i + ') Value'"
-                                            @input="checkSum"
-                                    />
-                                    <v-date-picker
-                                            v-model="installment.dates[i]" scrollable
-                                    />
-                                </div>
-                            </v-row>
-                        </v-container>
-                    </v-form>
-                </v-card-text>
             </v-card>
         </v-row>
     </v-container>
@@ -107,25 +72,9 @@
         methods: {
             checkSum() {
                 this.setData({
-                    payN: this.payN,
                     payType: this.payType,
-                    maxN: this.maxN,
-                    installment: this.installment
                 });
-                if(this.payType === 'Cash'){
-                    this.setValid(true);
-                    return;
-                }
-                let sum = 0;
-                for (let i = 1; i <= this.payN; i++) {
-                    sum += parseFloat(this.installment.values[i]);
-                }
-                if (isNaN(sum))
-                    sum = 0;
-                if (sum === this.cost)
-                    this.setValid(true);
-                else
-                    this.setValid(false);
+                this.setValid(true);
             },
             increment() {
                 this.payN = parseFloat(this.payN, 10) + 1;
@@ -156,7 +105,7 @@
         max-width: 100px;
     }
 
-    .input-price >> input {
+    .input-price > > input {
         text-align: right !important;
     }
 

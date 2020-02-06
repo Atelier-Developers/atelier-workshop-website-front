@@ -481,7 +481,7 @@
                         showAnswers: showAnswers,
                         offId: this.wId,
                         appType: appType,
-                        cost: this.offeredWorkshop.price
+                        cost: [this.offeredWorkshop.cashPrice, this.offeredWorkshop.installmentPrice]
                     }
                 })
             },

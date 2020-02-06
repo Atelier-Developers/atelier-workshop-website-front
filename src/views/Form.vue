@@ -66,7 +66,7 @@
         </v-container>
         <Payment
                 v-if="type === 'att' && isAnswer"
-                :cost="this.cost"
+                :cost="cost"
                 :set-valid="setPayStatus"
                 :set-data="setPayData"
         ></Payment>
@@ -78,11 +78,6 @@
                         max-width="800"
                         width="90%"
                 >
-                    <div
-                            v-if="type === 'att' && isAnswer"
-                            class="form-status"
-                    >Status: {{formStatus}}
-                    </div>
                     <v-btn
                             color="success"
                             @click="submitAll"
@@ -317,35 +312,35 @@
 
                         axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.offId + "/answer", attData).then((res) => {
                             // eslint-disable-next-line no-console
-                            console.log(res);
-                            let elements = [];
-                            let installments = this.payData.installment;
-                            if (this.payData.payType === "Installment") {
-                                for (let fuckingIt = 1; fuckingIt < installments.values.length; fuckingIt++) {
-                                    let sdate = new Date(installments.dates[fuckingIt]);
-                                    let esDate = sdate.toISOString();
-                                    let date = sdate.toISOString();
-                                    date = esDate.slice(0, esDate.length - 5);
-                                    date = date.concat("+0000");
-                                    elements.push({
-                                        dueDate: date,
-                                        amount: installments.values[fuckingIt],
-                                    })
-                                }
-                            } else {
-                                elements.push({
-                                    dueDate: null,
-                                    amount: this.cost,
-                                })
-                            }
+                            // console.log(res);
+                            // let elements = [];
+                            // let installments = this.payData.installment;
+                            // if (this.payData.payType === "Installment") {
+                            //     for (let fuckingIt = 1; fuckingIt < installments.values.length; fuckingIt++) {
+                            //         let sdate = new Date(installments.dates[fuckingIt]);
+                            //         let esDate = sdate.toISOString();
+                            //         let date = sdate.toISOString();
+                            //         date = esDate.slice(0, esDate.length - 5);
+                            //         date = date.concat("+0000");
+                            //         elements.push({
+                            //             dueDate: date,
+                            //             amount: installments.values[fuckingIt],
+                            //         })
+                            //     }
+                            // } else {
+                            //     elements.push({
+                            //         dueDate: null,
+                            //         amount: this.cost,
+                            //     })
+                            // }
                             // eslint-disable-next-line no-console
                             console.log({
                                 type: this.payData.payType,
-                                payments: elements
+                                // payments: elements
                             });
                             axios.post(this.$store.state.api + `/attendees/attendee/request/${res.data}/payments`, {
                                 type: this.payData.payType,
-                                payments: elements
+                                // payments: elements
                             }).then(() => {
                                 this.$router.back();
                             })
@@ -400,10 +395,7 @@
             },
             setPayData(data) {
                 this.payData = {
-                    payN: data.payN,
                     payType: data.payType,
-                    maxN: data.maxN,
-                    installment: data.installment
                 }
             }
         },

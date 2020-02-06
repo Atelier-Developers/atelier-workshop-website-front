@@ -82,7 +82,7 @@
                                                                     v-if="!pay.paid"
                                                                     color="success"
                                                                     small
-                                                                    @click="() => submitPay(pay)"
+                                                                    @click="() => submitPay(pay, req)"
                                                                     class="ml-auto px-0 py-0 btn">
                                                                 Pay
                                                             </v-btn>
@@ -140,10 +140,11 @@
                         }
                     })
             },
-            submitPay(pay) {
+            submitPay(pay,req) {
                 axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${pay.id}`)
                     .then(() => {
                         pay.paid = true;
+                        req.paidN += 1;
                     });
             }
         }
