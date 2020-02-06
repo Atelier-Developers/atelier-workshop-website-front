@@ -27,7 +27,7 @@
                             {{endTime}}
                             </span>
                         </div>
-                        <PriceChip :price="offeredWorkshop.price" class="mt-2"/>
+                        <PriceChip :offeredWorkshop="offeredWorkshop" class="mt-2"/>
                     </v-col>
 
                     <v-col cols="12" sm="5" class="mt-4">

@@ -33,7 +33,8 @@
                                     <v-date-picker v-model="editContext.startDate" scrollable>
                                         <v-spacer/>
                                         <v-btn color="primary" @click="modal = false">Cancel</v-btn>
-                                        <v-btn color="primary" @click="$refs.dialog.save(editContext.startDate)">OK</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog.save(editContext.startDate)">OK
+                                        </v-btn>
                                     </v-date-picker>
                                 </v-dialog>
                             </v-col>
@@ -87,7 +88,8 @@
                                     <v-date-picker v-model="editContext.endDate" scrollable>
                                         <v-spacer/>
                                         <v-btn color="primary" @click="modal2 = false">Cancel</v-btn>
-                                        <v-btn color="primary" @click="$refs.dialog2.save(editContext.endDate)">OK</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog2.save(editContext.endDate)">OK
+                                        </v-btn>
                                     </v-date-picker>
                                 </v-dialog>
                             </v-col>
@@ -115,7 +117,8 @@
                                     >
                                         <v-spacer/>
                                         <v-btn color="primary" @click="modal4 = false">Cancel</v-btn>
-                                        <v-btn color="primary" @click="$refs.dialog4.save(editContext.endTime)">OK</v-btn>
+                                        <v-btn color="primary" @click="$refs.dialog4.save(editContext.endTime)">OK
+                                        </v-btn>
                                     </v-time-picker>
                                 </v-dialog>
                             </v-col>
@@ -147,7 +150,8 @@
                         <v-icon class="mr-3" color="error">mdi-alert</v-icon>
                         {{errorMsg}}
                     </div>
-                    <v-btn color="primary" @click="editWorkshop" :loading="isLoading">Submit</v-btn> <!--TODO click send edit -->
+                    <v-btn color="primary" @click="editWorkshop" :loading="isLoading">Submit</v-btn>
+                    <!--TODO click send edit -->
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -166,27 +170,27 @@
                     v-on:error="hasError"
             />
             <v-card-text
-                    class="pt-6"
+                    class="pt-2"
             >
-                <div class="font-weight-light grey--text body-1 mb-2 text-capitalize">{{workshop.workshop.name}}</div>
-                <h3 class="headline font-weight-regular blue--text mb-2 text-capitalize">{{workshop.name}}</h3>
-                <div class="font-weight-light title mb-2 text-capitalize">
+                <div class="font-weight-light grey--text body-1 mb-1 text-capitalize">{{workshop.workshop.name}}</div>
+                <h3 class="headline font-weight-regular blue--text mb-1 text-capitalize">{{workshop.name}}</h3>
+                <div class="font-weight-light title mb-1 text-capitalize">
                     {{manager}}
                 </div>
                 <div class="font-weight-regular body-1 mb-2">
                     {{workshop.description}}
                 </div>
-                <div class="font-weight-light subtitle-2 mb-2">
+                <div class="font-weight-light subtitle-2 mb-1">
                     <v-icon>mdi-clock-in</v-icon>
                     {{startTime}}
                 </div>
-                <div class="font-weight-light subtitle-2 mb-2">
+                <div class="font-weight-light subtitle-2 mb-1">
                     <v-icon>mdi-clock-out</v-icon>
                     {{endTime}}
                 </div>
 
-                <v-row>
-                    <v-col cols="9">
+                <v-row dense>
+                    <v-col cols="6">
                         <v-row justify="start" align="center" class="mr-1" v-if="isAdmin">
                             <v-btn icon color="warning" @click.stop="() => goForEdit()">
                                 <v-icon>mdi-pencil</v-icon>
@@ -196,9 +200,10 @@
                             </v-btn>
                         </v-row>
                     </v-col>
-                    <v-col cols="3">
+                    <v-col cols="6">
                         <v-row class="font-weight-bold title mr-2" justify="end">
-                            ${{workshop.price}}
+                            <div> ${{workshop.cashPrice}} - {{workshop.installmentPrice}}
+                            </div>
                         </v-row>
                     </v-col>
                 </v-row>
@@ -220,7 +225,7 @@
         data() {
             return {
                 errorMsg: "",
-                error : false,
+                error: false,
                 faildImage: false,
                 dialogs: false,
                 modal: false,
@@ -233,10 +238,10 @@
                 startDate: null,
                 endDate: null,
                 startTime: null,
-                isLoading:false,
+                isLoading: false,
                 endTime: null,
-                editContext : {
-                    name : "",
+                editContext: {
+                    name: "",
                     startTime: "",
                     endTime: "",
                     description: "",
@@ -281,15 +286,14 @@
                 this.editContext.endTime = t2.getHours() + ":" + t2.getMinutes();
 
             },
-            editWorkshop(){
+            editWorkshop() {
                 let sdate = new Date(this.editContext.startDate + "," + this.editContext.startTime);
                 let edate = new Date(this.editContext.endDate + "," + this.editContext.endTime);
                 if (sdate > edate) {
                     this.error = true;
                     this.errorMsg = "start date should be before end date";
                     return;
-                }
-                else if(sdate < Date.now() && !this.editMode){
+                } else if (sdate < Date.now() && !this.editMode) {
                     this.error = true;
                     this.errorMsg = "You should choose a time in future";
                     return
@@ -302,12 +306,12 @@
                 eeDate = eeDate.concat("+0000");
                 this.isLoading = true;
                 axios.put(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.workshop.id, {
-                    name : this.editContext.name,
+                    name: this.editContext.name,
                     startTime: esDate,
                     endTime: eeDate,
                     description: this.editContext.description,
-                    price : this.editContext.price
-                } ).then(() => {
+                    price: this.editContext.price
+                }).then(() => {
                     this.isLoading = false;
                     this.$router.go(0)
                 })

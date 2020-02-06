@@ -6,14 +6,14 @@
     >
         <v-avatar>
             <v-icon left small>fas fa-dollar-sign</v-icon>
-        </v-avatar>{{this.price}}
+        </v-avatar>{{offeredWorkshop.cashPrice}} - {{offeredWorkshop.installmentPrice}}
     </v-chip>
 </template>
 
 <script>
     export default {
         name: "PriceChip",
-        props: ['price']
+        props: ['offeredWorkshop']
     }
 </script>
 

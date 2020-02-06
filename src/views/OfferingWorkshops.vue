@@ -150,13 +150,59 @@
                                     <v-text-field
                                             outlined
 
-                                            label="Price *"
-                                            v-model="workshop.offeredWorkshop.price"
-                                            :rules="[checkPrice, v => !!v || 'This field is required']"
+                                            label="Cash Price *"
+                                            v-model="workshop.offeredWorkshop.cashPrice"
+                                            :rules="[v => checkPrice(v), v => !!v || 'This field is required']"
                                             required
                                             prefix="$"
                                     />
                                 </v-col>
+                                <v-col cols="12">
+                                    <v-text-field
+                                            outlined
+                                            @input="checkSum"
+                                            label="Instalment price *"
+                                            v-model="workshop.offeredWorkshop.installmentPrice"
+                                            :rules="[v => checkPrice(v), v => !!v || 'This field is required']"
+                                            required
+                                            prefix="$"
+                                    />
+                                </v-col>
+                                <v-row justify="center">
+                                    <v-col cols="4">
+                                        <v-text-field
+                                                id="ali"
+                                                outlined
+                                                v-model="payN"
+                                                label="Number"
+                                                append-icon="mdi-plus"
+                                                @click:append="increment"
+                                                prepend-inner-icon="mdi-minus"
+                                                @click:prepend-inner="decrement"/>
+                                    </v-col>
+                                </v-row>
+                                <v-row justify="center" align="center">
+                                    <div
+                                            v-for="i in this.payN"
+                                            :key="i"
+                                            class="d-flex flex-column mx-7"
+                                    >
+                                        <v-text-field
+                                                type="number"
+                                                class="mt-5"
+                                                outlined
+                                                :value="installment.values[i]"
+                                                v-model="installment.values[i]"
+                                                :label="i + ') Value'"
+                                                @input="checkSum"
+                                        />
+                                        <v-date-picker
+                                                class="mb-5"
+                                                v-model="installment.dates[i]" scrollable
+                                        />
+                                        <v-btn @click="() => getCurrentDate(i)">Go to current</v-btn>
+                                    </div>
+                                </v-row>
                             </v-row>
                             <v-row>
                                 <v-col cols="12">
@@ -200,6 +246,7 @@
                                             outlined
                                             label="Image *"
                                             v-model="file"
+                                            :rules="[v => !!v || 'This field is required']"
                                             prepend-icon="mdi-camera"
                                             accept="image/*"
                                     />
@@ -209,7 +256,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer/>
-                        <v-btn color="primary" @click="addOfferingWorkshop" :loading="loading" :disabled="!isValid">
+                        <v-btn color="primary" @click="addOfferingWorkshop" :loading="loading" :disabled="!isValid || !paymentValid">
                             Submit
                         </v-btn>
                     </v-card-actions>
@@ -249,7 +296,8 @@
                     offeredWorkshop: {
                         name: "",
                         description: "",
-                        price: null,
+                        cashPrice: null,
+                        installmentPrice: null,
                     },
                     preRequisiteId: [],
                     startTime: null,
@@ -257,6 +305,12 @@
                     workshopId: null,
                     userManagerId: null
                 },
+                installment: {
+                    dates: new Array(this.payN),
+                    values: new Array(this.payN)
+                },
+                paymentValid: false,
+                payN: 2,
                 errorMsg: "",
                 users: [],
                 file: null,
@@ -296,6 +350,40 @@
             });
         },
         methods: {
+            getCurrentDate(i){
+                let now = new Date();
+                this.installment.dates[i] = now.toISOString();
+                // eslint-disable-next-line no-console
+                console.log( this.installment.dates[i])
+            },
+            checkSum() {
+                let sum = 0;
+                for (let i = 1; i <= this.payN; i++) {
+                    sum += parseFloat(this.installment.values[i]);
+                }
+                if (isNaN(sum))
+                    sum = 0;
+                this.paymentValid = sum === parseFloat(this.workshop.offeredWorkshop.installmentPrice);
+            },
+            increment() {
+                this.payN = parseFloat(this.payN) + 1;
+                if (this.payN > this.maxN)
+                    this.payN = this.maxN;
+                // eslint-disable-next-line no-console
+                this.installment = {
+                    dates: new Array(this.payN),
+                    values: new Array(this.payN)
+                };
+            },
+            decrement() {
+                this.payN = parseFloat(this.payN) - 1;
+                if (this.payN < 2)
+                    this.payN = 2;
+                this.installment = {
+                    dates: new Array(this.payN),
+                    values: new Array(this.payN)
+                };
+            },
             getItemName(item) {
                 return item.name;
             },
@@ -327,8 +415,16 @@
                     }
                 );
                 this.workshop.userManagerId = ids;
-                this.loading = true;
+                this.loading = false;
+                let insPay = [];
+                for(let i = 1; i < this.installment.dates.length; ++i ){
+                    insPay.push({
+                        dueDate: new Date(this.installment.dates[i]).toISOString().slice(0, esDate.length - 5).concat("+0000"),
+                        amount: this.installment.values[i],
+                    })
+                }
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/", this.workshop).then((res) => {
+                    let id = res.data;
                     let formData = new FormData();
                     formData.append('file', this.file);
                     axios.post(this.$store.state.api + "/userDetails/pic/offeringWorkshop/" + res.data,
@@ -339,17 +435,27 @@
                             }
                         }
                     ).then(() => {
-                        this.dialogs = false;
-                        this.loading = false;
-                        this.$router.go(this.$router.currentRoute);
+                        axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + id + "/installments", {
+                            type: "installment",
+                            payments: insPay
+                        })
+                            .then(() => {
+                                this.dialogs = false;
+                                this.loading = false;
+                                this.$router.go(this.$router.currentRoute);
+                            })
+
                     });
 
                 })
             },
-            checkPrice() {
+            checkPrice(value) {
+                if(value == null){
+                    return false;
+                }
                 let found_dot = false;
                 let error = "It's not a number";
-                let price = this.workshop.offeredWorkshop.price;
+                let price = value;
                 for (let i = 0; i < price.length; i++) {
                     if (price[i] !== '.')
                         if (price[i] < '0' || price[i] > '9')

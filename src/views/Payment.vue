@@ -44,7 +44,7 @@
                                     append-icon="mdi-plus"
                                     @click:append="increment"
                                     prepend-inner-icon="mdi-minus"
-                                    @click:prepend-inner="decrement"></v-text-field>
+                                    @click:prepend-inner="decrement"/>
                         </v-col>
                     </v-row>
                     <v-form>
@@ -62,10 +62,10 @@
                                             v-model="installment.values[i]"
                                             :label="i + ') Value'"
                                             @input="checkSum"
-                                    ></v-text-field>
+                                    />
                                     <v-date-picker
                                             v-model="installment.dates[i]" scrollable
-                                    ></v-date-picker>
+                                    />
                                 </div>
                             </v-row>
                         </v-container>
@@ -156,9 +156,8 @@
         max-width: 100px;
     }
 
-    .input-price input {
-        -moz-appearance: textfield;
-        text-align: center !important;
+    .input-price >> input {
+        text-align: right !important;
     }
 
     /*.input-price input::-webkit-outer-spin-button,*/
