@@ -202,7 +202,7 @@
                     </v-col>
                     <v-col cols="6">
                         <v-row class="font-weight-bold title mr-2" justify="end">
-                            <div> ${{workshop.cashPrice}} - ${{workshop.installmentPrice}}
+                            <div>${{workshop.cashPrice}}
                             </div>
                         </v-row>
                     </v-col>

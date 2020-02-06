@@ -18,31 +18,29 @@
                                           validate-on-blur
                             />
                             <v-textarea label="Description *" v-model="item.description" outlined/>
-                            <v-select outlined :items="['Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
+                            <v-select outlined :items="['Supervisor', 'Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
                                       v-model="selectedType"
                                       label="Receivers *"
                                       :rules="[v => !!v || 'Receivers required']"/>
                             <v-select outlined :items="['Link', 'File']"
                                       v-model="fileType"
-                                      label="File Type"
+                                      label="File Type *"
                                       :rules="[v => !!v || 'Type required']"/>
                             <v-file-input outlined
                                           v-if="fileType === 'File'"
                                           label="File (Max size: 100Mb) *"
                                           v-model="item.file"
                                           :rules="[v => !!v || 'File required']"
-                                          validate-on-blur
                             />
                             <v-text-field outlined
                                           v-else-if="fileType === 'Link'"
-                                          label="Link"
+                                          label="Link *"
                                           v-model="item.link"
-                                          :rules="[v => !!v || 'Link required']"
-                                          validate-on-blur
+                                          :rules="[v => !!v || 'Link required', v => this.isURL(v) || 'Invalid link']"
                             />
                         </v-card-text>
                         <v-card-actions>
-                            <v-spacer></v-spacer>
+                            <v-spacer/>
                             <v-btn color="primary" @click="uploadFile" :disabled="!isValid" :loading="isUploading">
                                 upload
                             </v-btn>
@@ -50,6 +48,8 @@
                     </v-form>
                 </v-card>
             </v-dialog>
+            <p class="body-1 grey--text text--darken-1 text-center my-5">Supervisors Files</p>
+            <contents :manager="true" :files="managerFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Assistants Files</p>
             <contents :manager="true" :files="graderFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
@@ -79,6 +79,7 @@
                 isUploading: false,
                 graderFiles: [],
                 attFiles: [],
+                managerFiles: [],
                 dialog: false,
                 selectedType: null,
                 fileType: null,
@@ -91,6 +92,15 @@
             }
         },
         methods: {
+            isURL(str) {
+                let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                return !!pattern.test(str);
+            },
             uploadDialog() {
                 this.dialog = true;
             },
@@ -110,8 +120,11 @@
                     type: this.fileType,
                     link: this.item.link,
                 }).then((res) => {
-                    if (this.fileType === "Link")
-                        return;
+                    if (this.fileType === "Link"){
+                        this.isUploading = false;
+                        this.dialog = false;
+                        this.$router.go(0);
+                    }
                     let fileId = res.data;
                     let formData = new FormData();
                     // eslint-disable-next-line no-console
@@ -136,13 +149,17 @@
             },
             getAttFiles() {
                 return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/workshopFiles/attendees")
+            },
+            getManagerFiles(){
+                return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/workshopFiles/managers")
             }
         },
         mounted() {
             if (this.type === "manager") {
-                axios.all([this.getGraderFiles(), this.getAttFiles()]).then((res) => {
+                axios.all([this.getGraderFiles(), this.getAttFiles(), this.getManagerFiles()]).then((res) => {
                     this.graderFiles = res[0].data;
-                    this.attFiles = res[1].data
+                    this.attFiles = res[1].data;
+                    this.managerFiles = res[2].data;
                 })
             } else if (this.type === "attendee") {
                 this.getAttFiles().then((res) => {
