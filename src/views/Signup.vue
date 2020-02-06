@@ -33,6 +33,11 @@
                                           :rules="[this.requiredRule('Email'),  v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid']"
                                           prepend-icon="mdi-mail"/>
                         </v-col>
+                        <v-col cols="11">
+                            <v-select v-model="gender" label="Gender *" outlined
+                                      :items="['Male', 'Female', 'Other']"
+                                      prepend-icon="fa-venus-mars"/>
+                        </v-col>
 
                     </v-row>
 
@@ -78,6 +83,7 @@
                 isValid: false,
                 loading: false,
                 error: false,
+                gender: null,
                 user: {
                     username: "",
                     password: "",
@@ -101,7 +107,10 @@
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*'
                 }
-                axios.post(apiUrl + '\\users\\sign-up', this.user, {
+                axios.post(apiUrl + '\\users\\sign-up', {
+                    user: this.user,
+                    gender: this.gender
+                }, {
                     headers: header
                 }).then(() => {
                         this.loading = false;
