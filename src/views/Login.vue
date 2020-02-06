@@ -92,7 +92,7 @@
                             this.loading = false;
                             // eslint-disable-next-line no-console
                             console.log(this.$store.state.userId)
-                            this.$router.push("/");
+                            this.$router.replace("/");
                         })
 
                     }

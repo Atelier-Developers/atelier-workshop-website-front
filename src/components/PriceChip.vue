@@ -4,9 +4,7 @@
             color="green accent-4"
             text-color="white"
     >
-        <v-avatar>
-            <v-icon left small>fas fa-dollar-sign</v-icon>
-        </v-avatar>{{offeredWorkshop.cashPrice}} - {{offeredWorkshop.installmentPrice}}
+     ${{offeredWorkshop.cashPrice}} - ${{offeredWorkshop.installmentPrice}}
     </v-chip>
 </template>
 

@@ -220,11 +220,11 @@
                 <template v-if="notStarted">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                     <div v-if="this.$store.getters.isLoggedIn" class="text-center">
-                        <v-btn color="primary" :disabled="this.attReqForm === null || this.attReqStatus"
+                        <v-btn color="primary" :disabled="this.attReqForm === null || this.attReqStatus || gradReqStatus"
                                class="ma-2"
                                @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
                         </v-btn>
-                        <v-btn color="primary" :disabled="this.graderReqForm === null || this.gradReqStatus"
+                        <v-btn color="primary" :disabled="this.graderReqForm === null || this.attReqStatus || gradReqStatus"
                                class="ma-2"
                                @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a assistant
                         </v-btn>

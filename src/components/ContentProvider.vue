@@ -2,21 +2,27 @@
     <div>
         <p class="display-3 grey--text text--darken-2 text-center my-10">Contents</p>
         <contents v-if="type === 'attendee'" :files="attFiles"/>
-        <contents v-else-if="type === 'grader'" :files="graderFiles"/>
+        <template v-else-if="type === 'grader'">
+            <p class="body-1 grey--text text--darken-1 text-center my-5">Assistants Files</p>
+            <contents :files="graderFiles"/>
+            <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
+            <contents :files="attFiles"/>
+        </template>
         <div v-else-if="type === 'manager'">
             <v-dialog v-model="dialog" max-width="500px">
                 <v-card class="py-3 px-3">
                     <v-form v-model="isValid">
                         <v-card-text>
-                            <v-text-field label="Title *" v-model="item.title"  outlined :rules="[v => !!v || 'Title required']"
+                            <v-text-field label="Title *" v-model="item.title" outlined
+                                          :rules="[v => !!v || 'Title required']"
                                           validate-on-blur
                             />
                             <v-textarea label="Description *" v-model="item.description" outlined/>
                             <v-file-input outlined
-                                    label="File (Max size: 100Mb) *"
-                                    v-model="item.file"
-                                    :rules="[v => !!v || 'File required']"
-                                    validate-on-blur
+                                          label="File (Max size: 100Mb) *"
+                                          v-model="item.file"
+                                          :rules="[v => !!v || 'File required']"
+                                          validate-on-blur
                             />
                             <v-select outlined :items="['Assistants', 'Attendees']" :item-value="['Grader','Attendee']"
                                       v-model="selectedType"
@@ -25,18 +31,22 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" @click="uploadFile" :disabled="!isValid" :loading="isUploading">upload</v-btn>
+                            <v-btn color="primary" @click="uploadFile" :disabled="!isValid" :loading="isUploading">
+                                upload
+                            </v-btn>
                         </v-card-actions>
                     </v-form>
                 </v-card>
             </v-dialog>
-            <p class="body-1 grey--text text--darken-1 text-center my-5">Supervisors Files</p>
+            <p class="body-1 grey--text text--darken-1 text-center my-5">Assistants Files</p>
             <contents :manager="true" :files="graderFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
             <contents :manager="true" :files="attFiles"/>
             <v-row justify="center" class="mt-4">
                 <v-btn @click="uploadDialog" color="primary" rounded>
-                    <v-icon left>fa-cloud-upload-alt</v-icon>Upload file</v-btn>
+                    <v-icon left>fa-cloud-upload-alt</v-icon>
+                    Upload file
+                </v-btn>
             </v-row>
 
         </div>
@@ -73,10 +83,9 @@
             uploadFile() {
                 this.isUploading = true;
                 // eslint-disable-next-line no-console
-                if(this.selectedType === "Assistants"){
+                if (this.selectedType === "Assistants") {
                     this.selectedType = "grader"
-                }
-                else if(this.selectedType === "Attendees"){
+                } else if (this.selectedType === "Attendees") {
                     this.selectedType = "attendee"
                 }
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.wId +
@@ -122,8 +131,9 @@
                     this.attFiles = res.data;
                 })
             } else if (this.type === "grader") {
-                this.getGraderFiles().then((res) => {
-                    this.graderFiles = res.data
+                axios.all([this.getGraderFiles(), this.getAttFiles()]).then((res) => {
+                    this.graderFiles = res[0].data;
+                    this.attFiles = res[1].data;
                 })
             }
         }

@@ -99,7 +99,8 @@
                             </v-row>
                             <v-row justify="end">
                                 <v-btn @click="addQuestion" color="primary" class="mr-3">Add Question</v-btn>
-                                <v-btn @click="sendForm" color="success" class="mr-3" :loading="this.loading">Submit
+                                <v-btn @click="sendForm" color="success" class="mr-3" :loading="this.loading"
+                                :disabled="questions.length === 0">Submit
                                     Form
                                 </v-btn>
                             </v-row>

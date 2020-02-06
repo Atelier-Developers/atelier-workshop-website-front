@@ -1,7 +1,6 @@
 <template>
     <v-navigation-drawer v-if="this.$store.state.drawer"
                          v-model="drawer"
-                         absolute
                          class="indigo darken-3 navbar elevation-5"
                          expand-on-hover
                          dark

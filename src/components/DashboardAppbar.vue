@@ -2,11 +2,15 @@
     <v-app-bar
             flat
             dark
+            fixed
+            app
             elevation="5"
-            hide-on-scroll
             class="indigo darken-3"
             v-show="this.$store.state.drawer"
     >
+        <v-btn icon class="hidden-xs-only" @click="() => this.$router.go(-1)">
+            <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
         <v-toolbar-title class="display-1 font-weight-light text-capitalize">
             <v-app-bar-nav-icon v-if="responsive" @click.stop="$emit('toggle-drawer')"/>
             {{title}}
