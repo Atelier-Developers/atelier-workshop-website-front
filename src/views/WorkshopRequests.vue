@@ -157,12 +157,21 @@
                                         fas fa-coins
                                     </v-icon>
                                 </div>
+                            </template>
+                            <template v-slot:item.status="{ item }" v-if="showForm != null">
+                                <div v-if="item.status ==='Pending'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                    >
+                                        fas fa-question-circle
+                                    </v-icon>
+                                </div>
                                 <div v-else-if="item.status === 'Rejected'">
                                     <v-icon
                                             small
                                             class="mr-2"
                                             color="error"
-                                            @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
                                     >
                                         fas fa-times-circle
                                     </v-icon>
@@ -172,9 +181,8 @@
                                             small
                                             class="mr-2"
                                             color="success"
-                                            @click.stop="() => showDetail(item, 'attendee', 'REJECTED')"
                                     >
-                                        fa-check-circle
+                                        fas fa-check-circle
                                     </v-icon>
                                 </div>
                             </template>
@@ -230,13 +238,13 @@
                         align: 'left',
                     },
                     {
-                        text: 'Status',
-                        value: 'status',
+                        text: 'Actions',
+                        value: 'action',
                         sortable: false
                     },
                     {
-                        text: 'Actions',
-                        value: 'action',
+                        text: 'Status',
+                        value: 'status',
                         sortable: false
                     },
                 ],
