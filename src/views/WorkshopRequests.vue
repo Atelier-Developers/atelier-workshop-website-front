@@ -51,6 +51,24 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="commentDialog" max-width="500px">
+            <v-card class="py-3 px-3">
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-text-field v-model="fuckingComment"></v-text-field>
+                        </v-row>
+                        <v-row>
+                            <v-btn @click="submitPayment" color="primary">
+                                Submit
+                            </v-btn>
+                        </v-row>
+                        <v-divider></v-divider>
+                    </v-container>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
 
         <v-row justify="center" align="center" class="mt-12">
             <p style="width: 100%" class="text-center mb-8 grey--text darken-4">Tap on the row to show requester
@@ -181,6 +199,7 @@
                 attendees: [],
                 graderRequestForm: null,
                 attendeeRequestForm: null,
+                payTmp: null,
                 form: {
                     id: null,
                     type: null,
@@ -188,9 +207,11 @@
                     groupId: null
                 },
                 payStatus: null,
+                fuckingComment: "",
                 formDialog: false,
                 payDialog: false,
                 groupDialog: false,
+                commentDialog: false,
                 newGroup: {
                     name: "",
                     id: ""
@@ -349,10 +370,19 @@
                     })
             },
             submitPay(pay) {
-                axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${pay.id}`)
+                this.commentDialog = true;
+                this.payTmp = pay;
+                // eslint-disable-next-line no-console
+                console.log(pay);
+            },
+            submitPayment() {
+                axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}`, {
+                    comment: this.fuckingComment
+                })
                     .then(() => {
-                        pay.paid = true;
+                        this.payTmp.paid = true;
                         this.selectedAtt.paymentState = true;
+                        this.commentDialog = false;
                     });
             },
             addGroup() {
