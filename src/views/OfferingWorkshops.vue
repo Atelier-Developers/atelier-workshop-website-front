@@ -200,7 +200,6 @@
                                                 class="mb-5"
                                                 v-model="installment.dates[i]" scrollable
                                         />
-                                        <v-btn @click="() => getCurrentDate(i)">Go to current</v-btn>
                                     </div>
                                 </v-row>
                             </v-row>

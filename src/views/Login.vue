@@ -12,9 +12,6 @@
                             <v-text-field v-model="user.password" label="password" outlined class="text-capitalize"
                                           type="password"
                                           :rules="[this.requiredRule('password')]" prepend-icon="mdi-lock"/>
-                            <div class="forgot text-capitalize">
-                                <a>forgot password?</a> <!-- TODO LINK -->
-                            </div>
                         </v-col>
                     </v-row>
 

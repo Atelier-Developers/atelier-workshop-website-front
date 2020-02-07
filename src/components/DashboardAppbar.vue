@@ -8,7 +8,7 @@
             class="indigo darken-3"
             v-show="this.$store.state.drawer"
     >
-        <v-btn icon class="hidden-xs-only" @click="() => this.$router.go(-1)">
+        <v-btn icon class="d-none d-sm-inline-flex" @click="() => this.$router.go(-1)">
             <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-toolbar-title class="display-1 font-weight-light text-capitalize">
