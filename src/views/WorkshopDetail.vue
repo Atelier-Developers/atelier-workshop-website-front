@@ -357,8 +357,6 @@
         mounted() {
             axios.all([this.getOfferedWorkshop(), this.getCount()]).then((r) => {
                 this.offeredWorkshop = r[0].data.offeredWorkshop;
-                // eslint-disable-next-line no-console
-                console.log(this.offeredWorkshop);
                 this.manager = r[0].data.workshopManagerUser;
                 this.attList = r[0].data.attendeeUsers;
                 this.gradList = r[0].data.graderUsers;
@@ -372,8 +370,6 @@
                         if (this.isManager) {
                             this.getManagerGroups().then((res) => {
                                 this.groups = res.data;
-                                // eslint-disable-next-line no-console
-                                console.log(this.groups);
                                 this.loading = false;
                                 axios.all([this.getAttReqForm(), this.getGraderReqForm()]).then((res) => {
                                     if (res[0].status !== 204) {
@@ -404,8 +400,6 @@
 
                         } else if (this.isAttendee) {
                             this.getAttendeeGroup().then((res) => {
-                                // eslint-disable-next-line no-console
-                                console.log(res.data)
                                 if (res.status !== 204) {
                                     this.groups = res.data;
                                 }

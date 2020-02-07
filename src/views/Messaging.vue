@@ -119,8 +119,6 @@
         mounted() {
             axios.get(this.$store.state.api + "/chats/offeringWorkshop/" + this.offId + "/chatter/" + this.user.userChatterConnection.id).then((res) => {
                 this.chatrooms = res.data;
-                // eslint-disable-next-line no-console
-                console.log(this.chatrooms)
             });
             axios.get(`${this.$store.state.api}/userDetails/offeringWorkshop/${this.offId}/info/users`)
                 .then((res) => {
@@ -147,8 +145,6 @@
                 users2.userIds.push(this.user.id);
 
                 this.isLoading = true
-                // eslint-disable-next-line no-console
-                console.log(users2);
                 axios.post(`${this.$store.state.api}/chats/offeringWorkshop/${this.offId}/chatrooms`, users2)
                     .then(() => {
                         this.isLoading = false

@@ -12,10 +12,6 @@ Vue.use(VuePageTransition)
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')
-// eslint-disable-next-line no-console
-console.log("token")
-// eslint-disable-next-line no-console
-console.log(token)
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
 }

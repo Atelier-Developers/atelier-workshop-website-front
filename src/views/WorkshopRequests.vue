@@ -225,14 +225,10 @@
                         name: this.attendees[att].user.name,
                         username: this.attendees[att].user.username,
                         paymentState: this.attendees[att].paymentState,
-                        id: this.attendees[att].user.id,
+                        id: this.attendees[att].id,
                         roles: this.attendees[att].user.roles,
                         status: this.attendees[att].requestStatus,
                     });
-                // eslint-disable-next-line no-console
-                console.log("Mother fucker");
-                // eslint-disable-next-line no-console
-                console.log(data);
                 return data;
             }
         },
@@ -267,8 +263,6 @@
                 this.$nextTick(() => this.$router.replace(location))
             },
             showDetail(item, type, status) {
-                // eslint-disable-next-line no-console
-                console.log(item);
                 if (type === "grader") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[1].id)
                     // eslint-disable-next-line no-console
@@ -291,8 +285,6 @@
                             req.requestId = res.data.id;
                             req.requestState = status;
                             req.userId = item.id;
-                            // eslint-disable-next-line no-console
-                            console.log(req);
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()

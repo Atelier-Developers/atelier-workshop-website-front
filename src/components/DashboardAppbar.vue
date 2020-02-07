@@ -111,8 +111,6 @@
                 this.faildImage = true
             },
             onClickBtn() {
-                // eslint-disable-next-line no-console
-                console.log(this.$store.state.drawer);
                 this.$store.commit("toggleDrawer")
             },
             onResponsiveInverted() {

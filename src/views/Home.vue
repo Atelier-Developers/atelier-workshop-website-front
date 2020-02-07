@@ -52,12 +52,8 @@
             }
         },
         mounted() {
-            // eslint-disable-next-line no-console
-            console.log("home")
             axios.all([this.getOfferingWorkshops(), this.getPopularWorkshop()])
                 .then((res) => {
-                    // eslint-disable-next-line no-console
-                    console.log(res);
                     this.workshops = res[0].data;
                     this.popularWorkshops = res[1].data;
                     if (this.popularWorkshops.length === 0) {

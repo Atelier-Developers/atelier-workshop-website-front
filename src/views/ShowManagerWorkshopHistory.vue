@@ -49,8 +49,6 @@
                     return;
                 }
                 let workshops = res.data;
-                // eslint-disable-next-line no-console
-                console.log(res.data);
                 workshops.forEach((workshop) => {
                     if (this.isHolding(workshop.offeredWorkshop)) {
                         this.attendingList.push(workshop);

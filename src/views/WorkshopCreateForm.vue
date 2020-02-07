@@ -158,8 +158,6 @@
                         })
                     }
                 });
-                // eslint-disable-next-line no-console
-                console.log(qs);
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.offId + '/form/questions', {
                     formId: id,
                     question: qs,

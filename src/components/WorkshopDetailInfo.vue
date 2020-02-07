@@ -133,8 +133,7 @@
                     } else if (i < this.manager.length - 2) {
                         names = names.concat(", ")
                     }
-                    // eslint-disable-next-line no-console
-                    console.log(names);
+
                 }
                 return names;
             },

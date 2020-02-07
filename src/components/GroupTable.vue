@@ -214,17 +214,11 @@
         },
         methods: {
             deleteGroup(id) {
-                // eslint-disable-next-line no-console
-                console.log(id)
                 axios.delete(this.$store.state.api + "/workshopManagers/offeringWorkshop/group/" + id).then(() => {
                     this.$router.go(0)
                 })
             },
             routeToGroupEdit() {
-                // eslint-disable-next-line no-console
-                console.log("group");
-                // eslint-disable-next-line no-console
-                console.log(this.group);
                 this.$router.push({
                     name: "Make Group", params: {
                         id: this.offId,
@@ -234,10 +228,7 @@
                 })
             },
             f1(){
-                // eslint-disable-next-line no-console
-                console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                // eslint-disable-next-line no-console
-                console.log(this.viewType);
+
             }
         },
     }

@@ -339,8 +339,6 @@
                         axios.get(this.$store.state.api + '/users/allUsers')]).then((r) => {
                         this.workshops = r[0].data;
                         this.users = r[1].data;
-                        // eslint-disable-next-line no-console
-                        console.log(r[1])
                         this.initialLoading = false
                     })
                 }
@@ -353,8 +351,7 @@
             getCurrentDate(i){
                 let now = new Date();
                 this.installment.dates[i] = now.toISOString();
-                // eslint-disable-next-line no-console
-                console.log( this.installment.dates[i])
+
             },
             checkSum() {
                 let sum = 0;

@@ -124,8 +124,7 @@
             let user = {};
 
             if (this.appId === false || this.appId === undefined) {
-                // eslint-disable-next-line no-console
-                console.log("if")
+
                 axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                     this.form = res.data;
 
@@ -141,8 +140,6 @@
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
                             if (this.type != null) {
-                                // eslint-disable-next-line no-console
-                                console.log(this.form.questions);
                                 this.form.questions.forEach((q) => {
                                     q.answers.forEach((a) => {
                                         // if (a.formApplicant === this.appId) {
@@ -174,18 +171,12 @@
                         user = res.data;
 
                         let attAppId = user.roles[0].attenderWorkshopConnection;
-                        // eslint-disable-next-line no-console
-                        console.log(attAppId)
 
 
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
                             if (this.type != null) {
-                                // eslint-disable-next-line no-console
-                                console.log(this.form.questions);
                                 this.form.questions.forEach((q) => {
-                                    // eslint-disable-next-line no-console
-                                    console.log(q)
                                     q.answers.forEach((a) => {
                                         // if (a.formApplicant === this.appId) {
                                         //     if ('formFiller' in a) {
@@ -199,10 +190,6 @@
                                         //
                                         //     }
                                         // }
-                                        // eslint-disable-next-line no-console
-                                        console.log("answer")
-                                        // eslint-disable-next-line no-console
-                                        console.log(a.formApplicant.workshopAttenderInfo.workshopAttender)
                                         if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id) {
                                             this.answers[q.id] = {
                                                 answer: a,
@@ -237,9 +224,6 @@
                     return "No Answers Yet";
                 }
                 let ans = this.answers[question.id];
-
-                // eslint-disable-next-line no-console
-                console.log(ans);
 
                 if (ans === null) {
                     return;
@@ -305,14 +289,9 @@
                         let attData = {
                             "answerQuestionContexts": data
                         };
-                        // eslint-disable-next-line no-console
-                        console.log(attData);
-                        // eslint-disable-next-line no-debugger
-                        // console.log(res);
+
 
                         axios.post(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.offId + "/answer", attData).then((res) => {
-                            // eslint-disable-next-line no-console
-                            // console.log(res);
                             // let elements = [];
                             // let installments = this.payData.installment;
                             // if (this.payData.payType === "Installment") {
@@ -333,11 +312,6 @@
                             //         amount: this.cost,
                             //     })
                             // }
-                            // eslint-disable-next-line no-console
-                            console.log({
-                                type: this.payData.payType,
-                                // payments: elements
-                            });
                             axios.post(this.$store.state.api + `/attendees/attendee/request/${res.data}/payments`, {
                                 type: this.payData.payType,
                                 // payments: elements

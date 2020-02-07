@@ -118,11 +118,6 @@
                 this.edit_mode = true;
             },
             editWorkshop() {
-                // eslint-disable-next-line no-console
-                console.log({
-                    name: this.new_WorkshopName,
-                    id: this.workshop_id,
-                })
                 this.isLoading = true;
                 axios.put(this.$store.state.api + "/admin/workshops", {
                     name: this.new_WorkshopName,

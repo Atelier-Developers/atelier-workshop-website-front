@@ -80,8 +80,7 @@
                 this.payN = parseFloat(this.payN, 10) + 1;
                 if (this.payN > this.maxN)
                     this.payN = this.maxN;
-                // eslint-disable-next-line no-console
-                console.log(this.installment);
+
                 this.installment = {
                     dates: new Array(this.payN),
                     values: new Array(this.payN)

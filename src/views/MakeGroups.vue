@@ -85,10 +85,6 @@
                 + "/workshopManagers/offeringWorkshop/"
                 + this.id
                 + "/groupless/graderInfos").then((res) => {
-                // eslint-disable-next-line no-console
-                console.log("graderss")
-                // eslint-disable-next-line no-console
-                console.log(res.data);
                 this.roles.graders = res.data; // TODO these are just ids..., we need names. its bad to request for everybody's name
             });
             axios.get(this.$store.state.api

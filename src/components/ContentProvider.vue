@@ -135,10 +135,6 @@
                     }
                     let fileId = res.data;
                     let formData = new FormData();
-                    // eslint-disable-next-line no-console
-                    console.log("fileId");
-                    // eslint-disable-next-line no-console
-                    console.log(fileId);
                     formData.append('file', this.item.file);
                     axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/workshopFile/"
                         + fileId + "/upload", formData, {
