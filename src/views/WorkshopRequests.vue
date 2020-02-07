@@ -209,6 +209,11 @@
                         align: 'left',
                     },
                     {
+                        text: 'Status',
+                        value: 'status',
+                        sortable: false
+                    },
+                    {
                         text: 'Actions',
                         value: 'action',
                         sortable: false
