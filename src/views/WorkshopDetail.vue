@@ -9,10 +9,6 @@
                                 :w-manager="isManager"
                                 :prerequsite="prereq"/>
 
-            <!--        <v-btn color="primary">-->
-            <!--            go to chatroom-->
-            <!--        </v-btn>-->
-            <!--        <WorkshopChat/>-->
 
             <v-container v-if="isManager">
                 <v-btn fab
@@ -220,12 +216,28 @@
                 <template v-if="notStarted">
                     <p class="display-3 grey--text text--darken-2 text-center my-10">Not joined yet?!</p>
                     <div v-if="this.$store.getters.isLoggedIn" class="text-center">
+                        <v-btn color="error"
+                               class="ma-2"
+                               v-if="reqType === 'att'"
+                               :loading="deleteReqLoading"
+                               @click="cancelRegisterationAttendee"
+                        >Cancel registration
+                        </v-btn>
                         <v-btn color="primary" :disabled="this.attReqForm === null || this.attReqStatus || gradReqStatus"
                                class="ma-2"
+                               v-else
                                @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
+                        </v-btn>
+                        <v-btn color="error"
+                               class="ma-2"
+                               v-if="reqType === 'grader'"
+                               :loading="deleteReqLoading"
+                               @click="cancelRegisterationGrader"
+                        >Cancel Request
                         </v-btn>
                         <v-btn color="primary" :disabled="this.graderReqForm === null || this.attReqStatus || gradReqStatus"
                                class="ma-2"
+                               v-else
                                @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a assistant
                         </v-btn>
                     </div>
@@ -275,6 +287,8 @@
                 prereq: [],
                 gradReqStatus: false,
                 attReqStatus: false,
+                reqType: "",
+                deleteReqLoading: false,
                 loading: true,
                 offImg: "",
             }
@@ -416,9 +430,11 @@
                                     this.graderReqForm = res[1].data;
                                 }
                                 if (res[2].data.attReq != null && res[2].data.attReq.state === "Pending") {
+                                    this.reqType = "att";
                                     this.attReqStatus = true
                                 }
                                 if (res[2].data.graderReq != null && res[2].data.graderReq.state === "Pending") {
+                                    this.reqType = "grader";
                                     this.gradReqStatus = true
                                 }
                             })
@@ -430,6 +446,22 @@
             });
         },
         methods: {
+            cancelRegisterationAttendee(){
+                this.deleteReqLoading = true;
+                axios.delete(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.wId + "/request")
+                .then(() => {
+                    this.deleteReqLoading = false;
+                    this.$router.go(0)
+                });
+            },
+            cancelRegisterationGrader(){
+                this.deleteReqLoading = true;
+                axios.delete(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.wId + "/request")
+                    .then(() => {
+                        this.deleteReqLoading = false;
+                        this.$router.go(0)
+                    });
+            },
             routeToMakeGroup() {
                 this.$router.push({
                     name: "Make Group",

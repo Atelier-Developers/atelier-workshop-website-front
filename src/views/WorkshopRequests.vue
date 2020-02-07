@@ -46,7 +46,7 @@
                                 </div>
                             </v-col>
                         </v-row>
-                        <v-divider></v-divider>
+                        <v-divider/>
                     </v-container>
                 </v-card-text>
             </v-card>
@@ -334,10 +334,6 @@
                 }
             },
             showPayments(att) {
-                // eslint-disable-next-line no-console
-                console.log("FUCKING ATTENDDEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                // eslint-disable-next-line no-console
-                console.log(att);
                 this.selectedAtt = att;
                 axios.get(`${this.$store.state.api}/attendees/attendee/${att.id}/offeringWorkshop/${this.id}/payment`)
                     .then((res) => {

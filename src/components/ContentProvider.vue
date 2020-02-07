@@ -1,12 +1,18 @@
 <template>
     <div>
         <p class="display-3 grey--text text--darken-2 text-center my-10">Contents</p>
-        <contents v-if="type === 'attendee'" :files="attFiles"/>
+        <template v-if="type === 'attendee'">
+            <contents :files="attFiles"/>
+            <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
+            <contents :files="attPersonalFiles"/>
+        </template>
         <template v-else-if="type === 'grader'">
             <p class="body-1 grey--text text--darken-1 text-center my-5">Assistants Files</p>
             <contents :files="graderFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
             <contents :files="attFiles"/>
+            <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
+            <contents :files="graderPersonalFiles"/>
         </template>
         <div v-else-if="type === 'manager'">
             <v-dialog v-model="dialog" max-width="500px">
@@ -80,6 +86,8 @@
                 graderFiles: [],
                 attFiles: [],
                 managerFiles: [],
+                attPersonalFiles: [],
+                graderPersonalFiles: [],
                 dialog: false,
                 selectedType: null,
                 fileType: null,
