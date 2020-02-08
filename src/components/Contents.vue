@@ -34,7 +34,7 @@
     export default {
         name: "Contents",
         components: {EmptyState},
-        props: ["files", "manager"],
+        props: ["files", "manager", "isPersonal"],
         methods:{
             removeFile(id){
                 axios.delete(this.$store.state.api + "/workshop/offeringWorkshops/workshopFile/" + id).then(() => {

@@ -88,7 +88,7 @@
                                 :headers="headers"
                                 :items="this.graders"
                                 :items-per-page="10"
-                                @click:row="(val) => showForm(val.roles[1].id, 'grader')"
+                                @click:row="(val) => showForm(val.roles[1].id, 'grader', val)"
                                 class="elevation-1">
 
                             <template v-slot:item.action="{ item }" v-if="showForm != null">
@@ -116,7 +116,7 @@
                                 :headers="headers"
                                 :items="this.attendeesReq"
                                 :items-per-page="10"
-                                @click:row="(val) => showForm(val.roles[0].id, 'attendee')"
+                                @click:row="(val) => showForm(val.roles[0].id, 'attendee', val)"
                                 class="elevation-1">
 
                             <template v-slot:item.action="{ item }" v-if="showForm != null">
@@ -260,6 +260,7 @@
                         username: this.attendees[att].user.username,
                         paymentState: this.attendees[att].paymentState,
                         id: this.attendees[att].id,
+                        userId: this.attendees[att].user.id,
                         roles: this.attendees[att].user.roles,
                         status: this.attendees[att].requestStatus,
                     });
@@ -305,7 +306,7 @@
                             let req = {};
                             req.requestId = res.data.id;
                             req.requestState = status;
-                            req.userId = item.id;
+                            req.userId = item.userId;
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()
@@ -318,7 +319,7 @@
                             let req = {};
                             req.requestId = res.data.id;
                             req.requestState = status;
-                            req.userId = item.id;
+                            req.userId = item.userId;
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()
@@ -327,7 +328,7 @@
                 }
 
             },
-            showForm(id, type) {
+            showForm(id, type, item) {
                 this.form.id = id;
                 this.form.type = type;
                 if (type === "grader") {
@@ -337,7 +338,7 @@
                             axios.post(this.$store.state.api
                                 + "/workshopManagers/offeringWorkshop/form/"
                                 + this.graderRequestForm.id
-                                + "/result", {id: this.form.id})
+                                + "/result/" + item.id, {id: this.form.id})
                                 .then((res) => {
                                     this.form.questions = res.data;
                                     this.formDialog = true;
@@ -351,7 +352,7 @@
                             axios.post(this.$store.state.api
                                 + "/workshopManagers/offeringWorkshop/form/"
                                 + this.attendeeRequestForm.id
-                                + "/result", {id: this.form.id})
+                                + "/result/" + item.id, {id: this.form.id})
                                 .then((res) => {
                                     this.form.questions = res.data;
                                     this.formDialog = true;
@@ -359,9 +360,9 @@
                         });
                 }
             },
-            showPayments(att) {
+            showPayments: function (att) {
                 this.selectedAtt = att;
-                axios.get(`${this.$store.state.api}/attendees/attendee/${att.id}/offeringWorkshop/${this.id}/payment`)
+                axios.get(`${this.$store.state.api}/attendees/attendee/${att.userId}/offeringWorkshop/${this.id}/payment`)
                     .then((res) => {
                         this.payStatus = res.data.attenderPaymentTabList;
                         this.payDialog = true;
