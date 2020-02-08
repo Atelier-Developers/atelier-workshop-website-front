@@ -11,8 +11,8 @@
             <contents :files="graderFiles"/>
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
             <contents :files="attFiles"/>
-            <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
-            <contents :files="personalFiles" :is-personal="true"/>
+            <p class="display-3 grey--text text--darken-2 text-center my-10" v-if="isStarred">Personal Files</p>
+            <contents :files="personalFiles" v-if="isStarred"/>
         </template>
         <div v-else-if="type === 'manager'">
             <v-dialog v-model="dialog" max-width="500px">
@@ -71,7 +71,8 @@
             <contents :files="personalFiles" :is-personal="true"/>
         </div>
         <v-row justify="center" class="mt-4">
-            <v-btn @click="uploadPersonalDialog" color="primary" rounded>
+            <div v-if="isStarred===false"></div>
+            <v-btn v-else @click="uploadPersonalDialog" color="primary" rounded>
                 <v-icon left>fa-cloud-upload-alt</v-icon>
                 Upload Personal File
             </v-btn>
@@ -135,7 +136,7 @@
     export default {
         name: "ContentProvider",
         components: {Contents},
-        props: ["type", "wId", "userId"],
+        props: ["type", "wId", "userId", "isStarred"],
         computed: {
             recieverType() {
                 if (this.type === "manager") {
@@ -341,7 +342,11 @@
                     this.graderFiles = res[0].data;
                     this.attFiles = res[1].data;
                     this.personalFiles = res[2].data;
-                    this.attendees = res[3].data
+                    this.attendees = res[3].data;
+                    // eslint-disable-next-line no-console
+                    console.log("FUCK U");
+                    // eslint-disable-next-line no-console
+                    console.log(res[3].data);
 
                 })
             }

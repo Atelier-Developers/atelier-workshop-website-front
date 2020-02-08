@@ -76,7 +76,7 @@
                                         decline
                                     </v-btn>
                                 </div>
-                                <v-icon @click="() => showPayDetail(pay)">
+                                <v-icon @click="() => showPayDetail(pay)" v-if="pay.paid" class="ml-5">
                                     fa-info-circle
                                 </v-icon>
                             </v-col>

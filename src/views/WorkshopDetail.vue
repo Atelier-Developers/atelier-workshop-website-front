@@ -169,7 +169,7 @@
                     </div>
                 </div>
                 <div class="my-5">
-                    <ContentProvider type="grader" :w-id="wId" :user-id="user.id"/>
+                    <ContentProvider type="grader" :w-id="wId" :user-id="user.id" :is-starred="this.IsStarred"/>
                 </div>
 
             </v-container>
@@ -294,6 +294,7 @@
                 deleteReqLoading: false,
                 loading: true,
                 offImg: "",
+                IsStarred: false,
             }
         },
         computed: {
@@ -384,6 +385,10 @@
                                 })
                             });
                         } else if (this.isGrader) {
+                            axios.get(`${this.$store.state.api}/workshopManagers/offeringWorkshop/${this.wId}/starredGraders/${this.user.id}`)
+                                .then((res) => {
+                                    this.IsStarred = res.data.state;
+                                })
 
                             this.getGraderGroup().then((res) => {
                                 if (res.status !== 204) {
