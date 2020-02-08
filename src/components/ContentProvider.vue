@@ -85,10 +85,16 @@
                                       validate-on-blur
                         />
                         <v-textarea label="Description *" v-model="item.description" outlined/>
-                        <v-select outlined :items="['Supervisor', 'Assistants', 'Attendees']"
-                                  :item-value="['Supervisor', 'Grader','Attendee']"
+                        <v-select outlined
+                                  :items="recieverType"
+                                  :item-value="recieverValue"
                                   v-model="selectedType"
                                   label="Receivers *"
+                                  :rules="[v => !!v || 'Receivers required']"/>
+                        <v-select outlined :items="attendees"
+                                  v-if="this.type !== 'attendee' && this.selectedType === 'Attendee'"
+                                  v-model="selectedAtt"
+                                  label="Attendees *"
                                   :rules="[v => !!v || 'Receivers required']"/>
                         <v-select outlined :items="['Link', 'File']"
                                   v-model="fileType"
@@ -127,11 +133,35 @@
         name: "ContentProvider",
         components: {Contents},
         props: ["type", "wId", "userId"],
+        computed: {
+            recieverType() {
+                if (this.type === "manager") {
+                    return ['Attendee']
+                } else if (this.type === "grader") {
+                    return ['Attendee']
+                } else if (this.type === "attendee") {
+                    return ['Supervisor', 'Starred Grader']
+                }
+                return null;
+            },
+            recieverValue() {
+                if (this.type === "manager") {
+                    return ['Attender']
+                } else if (this.type === "grader") {
+                    return ['Attender']
+                } else if (this.type === "attendee") {
+                    return ['Supervisor', 'StarredGrader']
+                }
+                return null;
+            }
+        },
         data() {
             return {
+                selectedAtt: null,
                 isValid: false,
                 isUploading: false,
                 graderFiles: [],
+                attendees: [],
                 attFiles: [],
                 managerFiles: [],
                 personalFiles: [],
@@ -165,19 +195,26 @@
             },
             uploadPersonalFile() {
                 this.isUploading = true;
+                let userId = null;
                 let senderType = "";
                 if (this.type === 'attendee') {
                     senderType = 'Attender'
+                    userId = this.user.id;
                 } else if (this.type === 'manager') {
                     senderType = 'Supervisor'
                 } else if (this.type === 'grader') {
                     senderType = 'StarredGrader'
                 }
+                if (this.selectedType === 'attendee') {
+                    this.selectedType = 'Attender';
+                } else if (this.selectedType === 'Starred Grader') {
+                    this.selectedType = 'StarredGrader'
+                }
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.wId +
-                    "/workshopFile/create", {
+                    "/personalFiles/" + userId, {
                     title: this.item.title,
                     description: this.item.description,
-                    receiverList: [this.selectedType],
+                    receiverTypes: [this.selectedType],
                     type: this.fileType,
                     link: this.item.link,
                     senderType: senderType,
@@ -236,6 +273,15 @@
                 if (this.type === 'attendee') {
                     return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/attendee/" + this.userId)
 
+                }
+                if (this.type === 'grader') {
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/starredGrader")
+                }
+                return null;
+            },
+            getAttendees() {
+                if (this.type === 'manager') {
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/manager")
                 }
                 if (this.type === 'grader') {
                     return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/starredGrader")
