@@ -33,6 +33,7 @@
                     :action-function-attendee2="actionFunctionAttendee2"
                     :action-function-grader="actionFunctionGrader"
                     :action-function-grader2="actionFunctionGrader2"
+                    :action-function-grader3="actionFunctionGrader3"
                     :off-id="offId"
                     view-type="manager"
             />
@@ -48,7 +49,7 @@
     export default {
         name: "GroupGraderAtendee",
         components: {EmptyState, GroupTable},
-        props: ["groups", "isManager", "actionFunctionAttendee", "actionFunctionAttendee2", "actionFunctionGrader", "actionFunctionGrader2", "offId", "viewType"],
+        props: ["groups", "isManager", "actionFunctionAttendee", "actionFunctionAttendee2", "actionFunctionGrader", "actionFunctionGrader2", "offId", "viewType", "actionFunctionGrader3"],
         data() {
             return {
                 activeGroup: 0,

@@ -4,7 +4,7 @@
         <template v-if="type === 'attendee'">
             <contents :files="attFiles"/>
             <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
-            <contents :files="personalFiles"/>
+            <contents :files="personalFiles" :is-personal="true"/>
         </template>
         <template v-else-if="type === 'grader'">
             <p class="body-1 grey--text text--darken-1 text-center my-5">Assistants Files</p>
@@ -12,7 +12,7 @@
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
             <contents :files="attFiles"/>
             <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
-            <contents :files="personalFiles"/>
+            <contents :files="personalFiles" :is-personal="true"/>
         </template>
         <div v-else-if="type === 'manager'">
             <v-dialog v-model="dialog" max-width="500px">
@@ -67,9 +67,9 @@
                     Upload file
                 </v-btn>
             </v-row>
+            <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
+            <contents :files="personalFiles" :is-personal="true"/>
         </div>
-        <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
-        <contents :files="personalFiles" :is-personal="true"/>
         <v-row justify="center" class="mt-4">
             <v-btn @click="uploadPersonalDialog" color="primary" rounded>
                 <v-icon left>fa-cloud-upload-alt</v-icon>
@@ -93,6 +93,8 @@
                                   label="Receivers *"
                                   :rules="[v => !!v || 'Receivers required']"/>
                         <v-select outlined :items="attendees"
+                                  item-text="name"
+                                  item-value="id"
                                   v-if="this.type !== 'attendee' && this.selectedType === 'Attendee'"
                                   v-model="selectedAtt"
                                   label="Attendees *"
@@ -200,18 +202,29 @@
                 let senderType = "";
                 if (this.type === 'attendee') {
                     senderType = 'Attender'
-                    userId = this.user.id;
+                    userId = this.userId;
                 } else if (this.type === 'manager') {
                     senderType = 'Supervisor'
+                    userId = this.selectedAtt;
                 } else if (this.type === 'grader') {
                     senderType = 'StarredGrader'
+                    userId = this.selectedAtt;
                 }
                 if (this.selectedType === 'attendee') {
                     this.selectedType = 'Attender';
                 } else if (this.selectedType === 'Starred Grader') {
                     this.selectedType = 'StarredGrader'
                 }
-                axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.wId +
+                // let test = {
+                //     title: this.item.title,
+                //     description: this.item.description,
+                //     receiverTypes: [this.selectedType],
+                //     type: this.fileType,
+                //     link: this.item.link,
+                //     senderType: senderType,
+                // };
+
+                axios.post(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId +
                     "/personalFiles/" + userId, {
                     title: this.item.title,
                     description: this.item.description,
@@ -219,6 +232,22 @@
                     type: this.fileType,
                     link: this.item.link,
                     senderType: senderType,
+                }).then((res) => {
+                    if (this.item.file !== null) {
+                        let formData = new FormData();
+                        formData.append('file', this.item.file);
+                        axios.post(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId +
+                            "/personalFiles/" + res.data + "/upload", formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(() => {
+                            this.$router.go(0);
+                        })
+                    } else {
+                        this.$router.go(0);
+                    }
+
                 })
             },
             uploadFile() {
@@ -268,24 +297,24 @@
             },
             getPersonalFiles() {
                 if (this.type === 'manager') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/manager")
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId + "/personalFiles/manager")
 
                 }
                 if (this.type === 'attendee') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/attendee/" + this.userId)
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId + "/personalFiles/attendee/" + this.userId)
 
                 }
                 if (this.type === 'grader') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/starredGrader")
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId + "/personalFiles/starredGrader")
                 }
                 return null;
             },
             getAttendees() {
                 if (this.type === 'manager') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/manager/allAttendees")
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId + "/manager/allAttendees")
                 }
                 if (this.type === 'grader') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/starredGrader/allAttendees")
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshop/" + this.wId + "/starredGrader/allAttendees")
                 }
                 return null;
             }
@@ -297,6 +326,8 @@
                     this.attFiles = res[1].data;
                     this.managerFiles = res[2].data;
                     this.personalFiles = res[3].data;
+                    // eslint-disable-next-line no-console
+                    console.log(res[4].data);
                     this.attendees = res[4].data
                 })
             } else if (this.type === "attendee") {

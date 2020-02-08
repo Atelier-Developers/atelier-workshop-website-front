@@ -27,6 +27,7 @@
                         :groups="groups"
                         :isManager="true"
                         :off-id="this.wId"
+                        :action-function-grader3="makeStarred"
                         :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, true, 'manager', id, false)"
                         :action-function-grader2="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id, true, 'grader')"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
@@ -92,7 +93,7 @@
                             <v-btn color="primary" :disabled="this.graderReqForm === null"
                                    class="ma-2" small
                                    @click="() => routeToForm(this.graderReqForm.id,false, 'manager', false)">assistant
-                                register
+                                request
                                 form
                             </v-btn>
                             <v-btn color="primary"
@@ -168,7 +169,7 @@
                     </div>
                 </div>
                 <div class="my-5">
-                    <ContentProvider type="grader" :w-id="wId"/>
+                    <ContentProvider type="grader" :w-id="wId" :user-id="user.id"/>
                 </div>
 
             </v-container>
@@ -208,7 +209,7 @@
                     <!--request status-->
                 </div>
                 <div class="my-5">
-                    <content-provider type="attendee" :w-id="wId"/>
+                    <content-provider type="attendee" :w-id="wId" :user-id="user.id"/>
                 </div>
             </v-container>
 
@@ -512,6 +513,11 @@
                         appType: appType,
                         cost: [this.offeredWorkshop.cashPrice, this.offeredWorkshop.installmentPrice]
                     }
+                })
+            },
+            makeStarred(id){
+                axios.put(`${this.$store.state.api}/workshopManagers/offeringWorkshop/${this.wId}/starredGraders/star`,{
+                    userids: [id]
                 })
             },
             getOfferedWorkshop() {

@@ -50,6 +50,7 @@
                                 :is-manager="isManager"
                                 :action-function="actionFunctionGrader"
                                 :action-function2="actionFunctionGrader2"
+                                :action-function3="actionFunctionGrader3"
                         >
                         </DataTable>
                     </v-tab-item>
@@ -105,7 +106,7 @@
     export default {
         name: "GroupTable",
         components: {DataTable},
-        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2", "offId", "viewType"],
+        props: ["group", "isManager", "actionFunctionGrader", "actionFunctionGrader2", "actionFunctionAttendee", "actionFunctionAttendee2", "offId", "viewType", "actionFunctionGrader3"],
 
         data() {
             return {}
@@ -174,6 +175,9 @@
                                 ,
                                 {
                                     title: "Answer Form",
+                                },
+                                {
+                                    title: "Star"
                                 }
                             ]
                         }

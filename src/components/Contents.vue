@@ -14,6 +14,10 @@
                     <v-card-text class="text-capitalize">
                         {{file.description}}
                     </v-card-text>
+                    <v-card-text class="text-capitalize" v-if="isPersonal">
+                        Uploaded By {{file.sender}}
+                    </v-card-text>
+
                     <v-row justify="center" align="center" class="my-3">
                         <v-btn color="primary" :href="file.downloadURI" outlined rounded target="_blank">
                             <v-icon left>fa-cloud-download-alt</v-icon>

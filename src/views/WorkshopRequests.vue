@@ -324,7 +324,7 @@
                             let req = {};
                             req.requestId = res.data.id;
                             req.requestState = status;
-                            req.userId = item.userId;
+                            req.userId = item.id;
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()

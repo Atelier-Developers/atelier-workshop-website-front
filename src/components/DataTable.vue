@@ -10,7 +10,7 @@
 
         <template v-slot:item.action="{ item }">
             <FormOptionIcon :items="menuOptions"
-                            :actions="[[() => actionFunction(item.id), () => actionFunction2(item.id)]]"/>
+                            :actions="[[() => actionFunction(item.id), () => actionFunction2(item.id), () => actionFunction3(item.id)]]"/>
         </template>
     </v-data-table>
 </template>
@@ -28,7 +28,8 @@
             'actionFunction',
             "isManager",
             "actionFunction2",
-            "menuOptions"
+            "menuOptions",
+            "actionFunction3"
         ],
         methods: {
             sendAppId(id) {
