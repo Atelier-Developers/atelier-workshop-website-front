@@ -10,7 +10,15 @@
 
         <template v-slot:item.action="{ item }">
             <FormOptionIcon :items="menuOptions"
-                            :actions="[[() => actionFunction(item.id), () => actionFunction2(item.id), () => actionFunction3(item.id)]]"/>
+                            :actions="[[() => actionFunction(item.id), () => actionFunction2(item.id)]]"/>
+        </template>
+
+        <template v-slot:item.status="{ item }">
+            <v-btn @click.stop="() =>  actionFunction3(item)" icon>
+                <v-icon :color="item.starred ? 'orange' : ''">
+                    mdi-star
+                </v-icon>
+            </v-btn>
         </template>
     </v-data-table>
 </template>
@@ -29,7 +37,7 @@
             "isManager",
             "actionFunction2",
             "menuOptions",
-            "actionFunction3"
+            "actionFunction3",
         ],
         methods: {
             sendAppId(id) {

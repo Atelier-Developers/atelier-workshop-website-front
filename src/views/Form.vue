@@ -21,7 +21,7 @@
                             {{this.form.name}}
                         </div>
                         <div class="question my-5" v-for="(question, i) in this.form.questions" :key="question.id">
-                            {{i + 1}}) {{question.text}}
+                            {{i + 1}}) {{question.text}}?
                             <template v-if="isAnswer">
                                 <v-text-field
                                         v-if="!question.choicable"
@@ -42,9 +42,9 @@
                                           class="form-input ma-4"
                                 />
                             </template>
-                            <template v-else-if="showAnswers">
+                            <div class="body-1" v-else-if="showAnswers">
                                 {{getAnswerFromId(question)}}
-                            </template>
+                            </div>
                             <template v-else>
                                 <v-select v-if="question.answerables.length > 0"
                                           :items="question.answerables"
@@ -131,17 +131,36 @@
                 });
             } else {
                 if (this.appType === "grader") {
+                    // eslint-disable-next-line no-console
+                    console.log("FUCK");
+                    // eslint-disable-next-line no-console
+                    console.log(this.type);
                     axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
                         user = res.data;
 
                         graderAppId = user.roles[1].graderWorkshopConnection;
 
-
+                        // eslint-disable-next-line no-console
+                        console.log("FUCK2");
+                        // eslint-disable-next-line no-console
+                        console.log(this.type);
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
+                            // eslint-disable-next-line no-console
+                            console.log("FUCK3");
+                            // eslint-disable-next-line no-console
+                            console.log(this.type);
                             if (this.type != null) {
                                 this.form.questions.forEach((q) => {
+                                    // eslint-disable-next-line no-console
+                                    console.log("FUCKQ");
+                                    // eslint-disable-next-line no-console
+                                    console.log(q);
                                     q.answers.forEach((a) => {
+                                        // eslint-disable-next-line no-console
+                                        console.log("FUCKA");
+                                        // eslint-disable-next-line no-console
+                                        console.log(a);
                                         // if (a.formApplicant === this.appId) {
                                         //     if ('formFiller' in a) {
                                         //         if (a.formFiller === this.fillerId) {
@@ -154,13 +173,23 @@
                                         //
                                         //     }
                                         // }
+                                        if (a.formApplicant.workshopGraderInfo.workshopGrader.id === undefined) {
+                                            if (a.formApplicant.workshopGraderInfo.workshopGrader === graderAppId.id) {
+                                                this.answers[q.id] = {
+                                                    answer: a,
+                                                    type: 'choice' in a.answerData[0] ? 'choice' : 'text'
+                                                };
+                                            }
+                                        } else {
+                                            if (a.formApplicant.workshopGraderInfo.workshopGrader.id === graderAppId.id) {
+                                                this.answers[q.id] = {
+                                                    answer: a,
+                                                    type: 'choice' in a.answerData[0] ? 'choice' : 'text'
+                                                };
+                                            }
 
-                                        if (a.formApplicant.workshopGraderInfo.workshopGrader.id === graderAppId.id) {
-                                            this.answers[q.id] = {
-                                                answer: a,
-                                                type: 'choice' in a ? 'choice' : 'text'
-                                            };
                                         }
+
                                     })
                                 })
                             }
@@ -175,6 +204,8 @@
 
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
+                            // eslint-disable-next-line no-debugger
+                            debugger;
                             if (this.type != null) {
                                 this.form.questions.forEach((q) => {
                                     q.answers.forEach((a) => {
@@ -190,7 +221,13 @@
                                         //
                                         //     }
                                         // }
+                                        // eslint-disable-next-line no-console
+                                        console.log("FUCKICICICICICIICI");
+                                        // eslint-disable-next-line no-console
+                                        console.log(a);
                                         if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id) {
+                                            // eslint-disable-next-line no-console
+
                                             this.answers[q.id] = {
                                                 answer: a,
                                                 type: 'choice' in a ? 'choice' : 'text'
@@ -223,17 +260,28 @@
                 if (Object.keys(this.answers).length === 0) {
                     return "No Answers Yet";
                 }
+
+
                 let ans = this.answers[question.id];
 
                 if (ans === null) {
                     return;
                 }
 
+                // eslint-disable-next-line no-console
+                console.log("MotherFUcker");
+                // eslint-disable-next-line no-console
+                console.log(ans);
+                // eslint-disable-next-line no-console
+                console.log(question);
+
+                // // eslint-disable-next-line no-console
+                // console.log(ans);
                 if (ans.type === 'text') {
                     return ans.answer.answerData[0].text;
                 } else if (ans.type === 'choice') {
                     let able = question.answerables;
-                    return able[ans.answer.answerData[0].choice];
+                    return able[ans.answer.answerData[0].choice].text;
                 }
 
             },
@@ -323,11 +371,10 @@
 
                             if (err.response.status === 409) {
                                 window.alert("Another requested workshop of yours is conflicting with this workshop's time.");
-                                return ;
-                            }
-                            else if (err.response.status === 418){
+                                return;
+                            } else if (err.response.status === 418) {
                                 window.alert("You haven't passed pre-requisites of this workshop")
-                                return ;
+                                return;
                             }
                         })
                     } else if (this.type === 'manager' && this.isAnswer) {

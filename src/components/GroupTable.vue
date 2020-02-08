@@ -32,6 +32,7 @@
                                 :is-manager="isManager"
                                 :action-function="actionFunctionGrader"
                                 :action-function2="actionFunctionGrader2"
+                                :action-function3="actionFunctionGrader3"
                         >
                         </DataTable>
                     </v-tab-item>
@@ -133,7 +134,7 @@
                         align: 'center',
                     },];
                 if (this.viewType === "manager") {
-                    header.push(...[{text: 'Action', value: 'action', sortable: false, align: 'center'}])
+                    header.push(...[{text: 'Status', value: 'status', sortable: false, align: 'center'},{text: 'Action', value: 'action', sortable: false, align: 'center'}])
                 }
                 return header;
             },
@@ -157,7 +158,7 @@
                         align: 'center',
                     },];
                 if (this.viewType === "manager") {
-                    header.push(...[{text: 'Action', value: 'action', sortable: false, align: 'center'}])
+                    header.push(...[ {text: 'Action', value: 'action', sortable: false, align: 'center'}])
                 } else if (this.viewType === "grader") {
                     header.push(...[{text: 'Action', value: 'action', sortable: false, align: 'center'}])
                 }
@@ -176,9 +177,6 @@
                                 {
                                     title: "Answer Form",
                                 },
-                                {
-                                    title: "Star"
-                                }
                             ]
                         }
                     ]

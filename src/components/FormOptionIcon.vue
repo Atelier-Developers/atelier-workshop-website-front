@@ -41,7 +41,7 @@
 <script>
     export default {
         name: "FormOptionIcon",
-        props: ['items', 'actions'],
+        props: ['items', 'actions', 'hasAnswered'],
         data() {
             return {}
         }

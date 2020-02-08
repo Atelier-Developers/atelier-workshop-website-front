@@ -27,7 +27,7 @@
                         :groups="groups"
                         :isManager="true"
                         :off-id="this.wId"
-                        :action-function-grader3="makeStarred"
+                        :action-function-grader3="(item) => makeStarred(item)"
                         :action-function-grader="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, true, 'manager', id, false)"
                         :action-function-grader2="(id) => routeToForm(this.offeredWorkshop.graderEvaluationForm.id, false, 'manager', id, true, 'grader')"
                         :action-function-attendee="(id) => routeToWorkshopForm(false, null, id)"
@@ -224,7 +224,8 @@
                                @click="cancelRegisterationAttendee"
                         >Cancel registration
                         </v-btn>
-                        <v-btn color="primary" :disabled="this.attReqForm === null || this.attReqStatus || gradReqStatus"
+                        <v-btn color="primary"
+                               :disabled="this.attReqForm === null || this.attReqStatus || gradReqStatus"
                                class="ma-2"
                                v-else
                                @click="() => routeToForm(this.attReqForm.id,true, 'att')">register now!
@@ -236,7 +237,8 @@
                                @click="cancelRegisterationGrader"
                         >Cancel Request
                         </v-btn>
-                        <v-btn color="primary" :disabled="this.graderReqForm === null || this.attReqStatus || gradReqStatus"
+                        <v-btn color="primary"
+                               :disabled="this.graderReqForm === null || this.attReqStatus || gradReqStatus"
                                class="ma-2"
                                v-else
                                @click="() => routeToForm(this.graderReqForm.id,true, 'grader')">Request as a assistant
@@ -444,15 +446,15 @@
             });
         },
         methods: {
-            cancelRegisterationAttendee(){
+            cancelRegisterationAttendee() {
                 this.deleteReqLoading = true;
                 axios.delete(this.$store.state.api + "/attendees/attendee/request/offeringWorkshop/" + this.wId + "/request")
-                .then(() => {
-                    this.deleteReqLoading = false;
-                    this.$router.go(0)
-                });
+                    .then(() => {
+                        this.deleteReqLoading = false;
+                        this.$router.go(0)
+                    });
             },
-            cancelRegisterationGrader(){
+            cancelRegisterationGrader() {
                 this.deleteReqLoading = true;
                 axios.delete(this.$store.state.api + "/graders/grader/request/offeringWorkshop/" + this.wId + "/request")
                     .then(() => {
@@ -515,10 +517,21 @@
                     }
                 })
             },
-            makeStarred(id){
-                axios.put(`${this.$store.state.api}/workshopManagers/offeringWorkshop/${this.wId}/starredGraders/star`,{
-                    userids: [id]
-                })
+            makeStarred(item) {
+                if (item.starred) {
+                    axios.put(`${this.$store.state.api}/workshopManagers/offeringWorkshop/${this.wId}/starredGraders/unstar`, {
+                        userIds: [item.id]
+                    }).then(
+                        item.starred = false
+                    )
+                } else {
+                    axios.put(`${this.$store.state.api}/workshopManagers/offeringWorkshop/${this.wId}/starredGraders/star`, {
+                        userIds: [item.id]
+                    }).then(
+                        item.starred = true
+                    )
+                }
+
             },
             getOfferedWorkshop() {
                 // eslint-disable-next-line no-console
