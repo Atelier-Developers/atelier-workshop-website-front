@@ -38,11 +38,18 @@
                                         color="success"
                                         small
                                         @click="() => submitPay(pay)"
-                                        class="ml-auto px-0 py-0 btn">
-                                    Pay
+                                        class="ml-auto btn">
+                                    Received
                                 </v-btn>
                                 <div v-else class="ml-auto mr-5 px-0 py-0 btn">
-                                    Paid
+                                    <v-btn
+                                            color="error"
+                                            small
+                                            @click="() => unPay(pay)"
+                                            :loading="isLoading"
+                                            class="ml-auto btn">
+                                        decline
+                                    </v-btn>
                                 </div>
                             </v-col>
                         </v-row>
@@ -52,21 +59,29 @@
             </v-card>
         </v-dialog>
         <v-dialog v-model="commentDialog" max-width="500px">
-            <v-card class="py-3 px-3">
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-text-field v-model="fuckingComment"></v-text-field>
-                        </v-row>
-                        <v-row>
-                            <v-btn @click="submitPayment" color="primary">
-                                Submit
-                            </v-btn>
-                        </v-row>
-                        <v-divider></v-divider>
-                    </v-container>
-                </v-card-text>
-            </v-card>
+            <v-form v-model="isValid">
+                <v-card class="py-3 px-3">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-text-field v-model="comment" :rules="[v => !!v || 'This field is required']"
+                                              label="Comment *"
+                                              outlined/>
+                            </v-row>
+                            <v-row>
+                                <v-file-input v-model="paymentFile" outlined label="File"/>
+                            </v-row>
+                            <v-row>
+                                <v-btn @click="submitPayment" color="primary" :disabled="!isValid">
+                                    Submit
+                                </v-btn>
+                            </v-row>
+                            <v-divider/>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+
+            </v-form>
         </v-dialog>
 
 
@@ -214,8 +229,11 @@
                     questions: [],
                     groupId: null
                 },
+                isLoading: false,
                 payStatus: null,
-                fuckingComment: "",
+                paymentFile: null,
+                comment: "",
+                isValid: false,
                 formDialog: false,
                 payDialog: false,
                 groupDialog: false,
@@ -300,7 +318,7 @@
             showDetail(item, type, status) {
                 if (type === "grader") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[1].id)
-                    // eslint-disable-next-line no-console
+                        // eslint-disable-next-line no-console
                         .then((res) => {
                             // eslint-disable-next-line no-console
                             let req = {};
@@ -314,7 +332,7 @@
                         })
                 } else if (type === "attendee") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[0].id)
-                    // eslint-disable-next-line no-console
+                        // eslint-disable-next-line no-console
                         .then((res) => {
                             let req = {};
                             req.requestId = res.data.id;
@@ -371,6 +389,15 @@
                         }
                     })
             },
+            unPay(pay) {
+                this.isLoading = true;
+                // eslint-disable-next-line no-console
+                console.log(pay)
+                axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${pay.id}/unpay`).then(() => {
+                    this.isLoading = false;
+                    pay.paid = false;
+                })
+            },
             submitPay(pay) {
                 this.commentDialog = true;
                 this.payTmp = pay;
@@ -379,12 +406,29 @@
             },
             submitPayment() {
                 axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}`, {
-                    comment: this.fuckingComment
+                    comment: this.comment
                 })
                     .then(() => {
-                        this.payTmp.paid = true;
-                        this.selectedAtt.paymentState = true;
-                        this.commentDialog = false;
+                        this.comment = null;
+                        if (this.paymentFile != null) {
+                            let formData = new FormData();
+                            formData.append('file', this.paymentFile);
+                            axios.post(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}/file`,
+                                formData, {
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                }).then(() => {
+                                this.payTmp.paid = true;
+                                this.selectedAtt.paymentState = true;
+                                this.commentDialog = false;
+                                this.paymentFile = null;
+                            })
+                        } else {
+                            this.payTmp.paid = true;
+                            this.selectedAtt.paymentState = true;
+                            this.commentDialog = false;
+                        }
                     });
             },
             addGroup() {
