@@ -4,7 +4,7 @@
         <template v-if="type === 'attendee'">
             <contents :files="attFiles"/>
             <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
-            <contents :files="attPersonalFiles"/>
+            <contents :files="personalFiles"/>
         </template>
         <template v-else-if="type === 'grader'">
             <p class="body-1 grey--text text--darken-1 text-center my-5">Assistants Files</p>
@@ -12,7 +12,7 @@
             <p class="body-1 grey--text text--darken-1 text-center my-5">Attendee Files</p>
             <contents :files="attFiles"/>
             <p class="display-3 grey--text text--darken-2 text-center my-10">Personal Files</p>
-            <contents :files="graderPersonalFiles"/>
+            <contents :files="personalFiles"/>
         </template>
         <div v-else-if="type === 'manager'">
             <v-dialog v-model="dialog" max-width="500px">
@@ -84,7 +84,8 @@
                                       :rules="[v => !!v || 'Title required']"
                                       validate-on-blur
                         />
-                        <v-textarea label="Description *" v-model="item.description" outlined/>
+                        <v-textarea label="Description *" v-model="item.description"
+                                    :rules="[v => !!v || 'This Field is required']" outlined/>
                         <v-select outlined
                                   :items="recieverType"
                                   :item-value="recieverValue"
@@ -281,21 +282,22 @@
             },
             getAttendees() {
                 if (this.type === 'manager') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/manager")
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/manager/allAttendees")
                 }
                 if (this.type === 'grader') {
-                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/personalFiles/starredGrader")
+                    return axios.get(this.$store.state.api + "/workshop/offeringWorkshops/" + this.wId + "/starredGrader/allAttendees")
                 }
                 return null;
             }
         },
         mounted() {
             if (this.type === "manager") {
-                axios.all([this.getGraderFiles(), this.getAttFiles(), this.getManagerFiles(), this.getPersonalFiles()]).then((res) => {
+                axios.all([this.getGraderFiles(), this.getAttFiles(), this.getManagerFiles(), this.getPersonalFiles(), this.getAttendees()]).then((res) => {
                     this.graderFiles = res[0].data;
                     this.attFiles = res[1].data;
                     this.managerFiles = res[2].data;
                     this.personalFiles = res[3].data;
+                    this.attendees = res[4].data
                 })
             } else if (this.type === "attendee") {
                 axios.all([this.getAttFiles(), this.getPersonalFiles()]).then((res) => {
@@ -304,10 +306,12 @@
                 })
 
             } else if (this.type === "grader") {
-                axios.all([this.getGraderFiles(), this.getAttFiles(), this.getPersonalFiles()]).then((res) => {
+                axios.all([this.getGraderFiles(), this.getAttFiles(), this.getPersonalFiles(), this.getAttendees()]).then((res) => {
                     this.graderFiles = res[0].data;
                     this.attFiles = res[1].data;
                     this.personalFiles = res[2].data;
+                    this.attendees = res[3].data
+
                 })
             }
         }
