@@ -14,7 +14,33 @@
                                 {{question.answer.answerData[0].text}}
                             </div>
                         </v-col>
-
+                    </v-row>
+                </v-card-text>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" md="6">
+                            <v-select
+                                    v-model="historyType"
+                                    :items="['Attendee', 'Assistant']"
+                                    label="History Of"
+                            ></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col
+                                cols="12" sm="6" md="4"
+                                v-for="workshop in historyWorkshop.attender" :key="workshop.id">
+                            <div @click="() => showHistoryForm('grader',workshop)">
+                                {{workshop.name}}
+                            </div>
+                        </v-col>
+                        <v-col
+                                cols="12" sm="6" md="4"
+                                v-for="workshop in historyWorkshop.assistance" :key="workshop.id">
+                            <div @click="() => showHistoryForm('attender',workshop)">
+                                {{workshop.name}}
+                            </div>
+                        </v-col>
                     </v-row>
                 </v-card-text>
             </v-card>
@@ -111,7 +137,24 @@
 
             </v-form>
         </v-dialog>
-
+        <v-dialog v-model="historyFormDialog" max-width="500px">
+            <v-card class="py-3 px-3">
+                <v-card-text>
+                    <v-container>
+                        <v-row
+                                v-for="(qa,index) in selectedHistoryWorkshop" :key="index"
+                        >
+                            <div>
+                                {{qa.question}}
+                            </div>
+                            <div>
+                                {{qa.answer}}
+                            </div>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
 
         <v-row justify="center" align="center" class="mt-12">
             <p style="width: 100%" class="text-center mb-8 grey--text darken-4">Tap on the row to show requester
@@ -298,6 +341,9 @@
                 payDetailDialog: false,
                 payDetail: null,
                 payFile: null,
+                historyFormDialog: false,
+                selectedHistoryWorkshop: null,
+                historyType: null,
             }
         },
         computed: {
@@ -349,7 +395,7 @@
             showDetail(item, type, status) {
                 if (type === "grader") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[1].id)
-                        // eslint-disable-next-line no-console
+                    // eslint-disable-next-line no-console
                         .then((res) => {
                             // eslint-disable-next-line no-console
                             let req = {};
@@ -363,7 +409,7 @@
                         })
                 } else if (type === "attendee") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[0].id)
-                        // eslint-disable-next-line no-console
+                    // eslint-disable-next-line no-console
                         .then((res) => {
                             let req = {};
                             req.requestId = res.data.id;
@@ -385,6 +431,11 @@
                 //         this.payFile = res.data;
                 //     })
             },
+            showHistoryForm(type, workshop) {
+                this.historyFormDialog = true;
+                this.selectedHistoryWorkshop = workshop;
+                this.historyType = type;
+            },
             showForm(id, type, item) {
                 this.form.id = id;
                 this.form.type = type;
@@ -399,6 +450,7 @@
                                 .then((res) => {
                                     this.form.questions = res.data;
                                     this.formDialog = true;
+                                    // axios.get() TODO DO THIS
                                 })
                         });
                 } else {
