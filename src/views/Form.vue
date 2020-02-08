@@ -385,6 +385,10 @@
                                 answerQuestion: data
                             }).then(() => {
                                 this.$router.back();
+                            }).catch((error) => {
+                                if (error.response.status === 418) {
+                                    window.alert("You have already answered this form for this grader");
+                                }
                             });
                         })
                     } else if (this.type === "graderWorkshopForm" && this.isAnswer) {
@@ -397,6 +401,10 @@
                             }).then(() => {
                                 this.$router.back();
 
+                            }).catch((error) => {
+                                if (error.response.status === 418) {
+                                    window.alert("You have already answered this form for this attendee");
+                                }
                             })
                         })
 

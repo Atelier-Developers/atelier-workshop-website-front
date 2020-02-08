@@ -19,6 +19,31 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="payDetailDialog" max-width="500px">
+            <v-card v-if="payDetail !== null" class="py-3 px-3">
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12">
+                            <div>
+                                {{this.payDetail.comment}}
+                            </div>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12">
+                            <div>
+                                <v-btn color="primary"
+                                       :href="`${this.$store.state.api}/admin/attendeePaymentTab/${this.payDetail.id}/file`"
+                                       outlined rounded target="_blank">
+                                    <v-icon left>fa-cloud-download-alt</v-icon>
+                                    Download
+                                </v-btn>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="payDialog" max-width="500px">
             <v-card class="py-3 px-3">
                 <v-card-text>
@@ -51,6 +76,9 @@
                                         decline
                                     </v-btn>
                                 </div>
+                                <v-icon @click="() => showPayDetail(pay)">
+                                    fa-info-circle
+                                </v-icon>
                             </v-col>
                         </v-row>
                         <v-divider/>
@@ -266,7 +294,10 @@
                         sortable: false
                     },
                 ],
-                selectedAtt: null
+                selectedAtt: null,
+                payDetailDialog: false,
+                payDetail: null,
+                payFile: null,
             }
         },
         computed: {
@@ -346,6 +377,14 @@
                 }
 
             },
+            showPayDetail(pay) {
+                this.payDetailDialog = true;
+                this.payDetail = pay;
+                // axios.get(`${this.$store.state.api}/admin/attendeePaymentTab/${pay.id}/file`)
+                //     .then((res) => {
+                //         this.payFile = res.data;
+                //     })
+            },
             showForm(id, type, item) {
                 this.form.id = id;
                 this.form.type = type;
@@ -407,29 +446,34 @@
             submitPayment() {
                 axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}`, {
                     comment: this.comment
-                })
-                    .then(() => {
-                        this.comment = null;
-                        if (this.paymentFile != null) {
-                            let formData = new FormData();
-                            formData.append('file', this.paymentFile);
-                            axios.post(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}/file`,
-                                formData, {
-                                    headers: {
-                                        'Content-Type': 'multipart/form-data'
-                                    }
-                                }).then(() => {
-                                this.payTmp.paid = true;
-                                this.selectedAtt.paymentState = true;
-                                this.commentDialog = false;
-                                this.paymentFile = null;
-                            })
-                        } else {
+                }).then((res) => {
+                    this.payTmp.comment = this.comment;
+                    this.comment = null;
+                    if (this.paymentFile != null) {
+                        let formData = new FormData();
+                        formData.append('file', this.paymentFile);
+                        axios.post(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}/file`,
+                            formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            }).then(() => {
                             this.payTmp.paid = true;
                             this.selectedAtt.paymentState = true;
                             this.commentDialog = false;
-                        }
-                    });
+                            this.paymentFile = null;
+                        })
+                    } else {
+                        this.payTmp.paid = true;
+                        this.selectedAtt.paymentState = true;
+                        this.commentDialog = false;
+                    }
+                    // eslint-disable-next-line no-console
+                    console.log("FUCK");
+                    // eslint-disable-next-line no-console
+                    console.log(res.data);
+                    this.payTmp.id = res.data;
+                });
             },
             addGroup() {
                 axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/group",
