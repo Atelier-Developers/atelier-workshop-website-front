@@ -120,9 +120,6 @@
                     });
                     menus.push({title: 'Workshops', icon: 'fa-chalkboard-teacher', to: '/workshops'})
                 }
-                if(this.$store.state.isAdmin){
-                    menus.push({title: 'Payments', icon: 'fa-coins', to: '/paymentRequests'})
-                }
                 return menus;
             }
         },

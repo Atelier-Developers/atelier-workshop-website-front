@@ -16,7 +16,7 @@
                         </v-col>
                     </v-row>
                 </v-card-text>
-                <v-card-text>
+                <v-card-text v-if="this.form.type === 'grader'">
                     <v-row>
                         <v-col cols="12" md="6">
                             <v-select
