@@ -23,24 +23,30 @@
                                     v-model="historyType"
                                     :items="['Attendee', 'Assistant']"
                                     label="History Of"
-                            ></v-select>
+                            />
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col
-                                cols="12" sm="6" md="4"
-                                v-for="workshop in historyWorkshop.attender" :key="workshop.id">
-                            <div @click="() => showHistoryForm('grader',workshop)">
-                                {{workshop.name}}
-                            </div>
-                        </v-col>
-                        <v-col
-                                cols="12" sm="6" md="4"
-                                v-for="workshop in historyWorkshop.assistance" :key="workshop.id">
-                            <div @click="() => showHistoryForm('attender',workshop)">
-                                {{workshop.name}}
-                            </div>
-                        </v-col>
+                        <div v-if='historyType==="Attendee"'>
+                            <v-col
+                                    cols="12" sm="6" md="4"
+                                    v-for="workshop in historyWorkshops.attendedWorkshops"
+                                    :key="workshop.workshop.offeredWorkshop.id">
+                                <div @click="() => showHistoryForm('attended',workshop)">
+                                    {{workshop.workshop.offeredWorkshop.name}}
+                                </div>
+                            </v-col>
+                        </div>
+                        <div v-if='historyType==="Assistant"'>
+                            <v-col
+                                    cols="12" md="6"
+                                    v-for="workshop in historyWorkshops.assistedWorkshops"
+                                    :key="workshop.workshop.offeredWorkshop.id">
+                                <v-btn @click="() => showHistoryForm('Assisted',workshop)" color="primary">
+                                    {{workshop.workshop.offeredWorkshop.name}}
+                                </v-btn>
+                            </v-col>
+                        </div>
                     </v-row>
                 </v-card-text>
             </v-card>
@@ -140,16 +146,17 @@
         <v-dialog v-model="historyFormDialog" max-width="500px">
             <v-card class="py-3 px-3">
                 <v-card-text>
-                    <v-container>
+                    <v-container v-for="(form,index) in this.selectedHistoryWorkshop.form" :key="index">
+                        <div class="display-1 font-weight-bold my-5">Form Name: {{form.name}}</div>
                         <v-row
-                                v-for="(qa,index) in selectedHistoryWorkshop" :key="index"
+                                v-for="(qa,jndex) in form.questionsAndAnswers" :key="jndex"
                         >
-                            <div>
-                                {{qa.question}}
-                            </div>
-                            <div>
-                                {{qa.answer}}
-                            </div>
+                            <v-col cols="12" class="qa">
+                                Question {{index+1}}: {{qa.question}}
+                            </v-col>
+                            <v-col cols="12" class="qa">
+                                Answer: {{qa.answer}}
+                            </v-col>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -342,6 +349,7 @@
                 payDetail: null,
                 payFile: null,
                 historyFormDialog: false,
+                historyWorkshops: null,
                 selectedHistoryWorkshop: null,
                 historyType: null,
             }
@@ -395,7 +403,7 @@
             showDetail(item, type, status) {
                 if (type === "grader") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[1].id)
-                    // eslint-disable-next-line no-console
+                        // eslint-disable-next-line no-console
                         .then((res) => {
                             // eslint-disable-next-line no-console
                             let req = {};
@@ -409,7 +417,7 @@
                         })
                 } else if (type === "attendee") {
                     axios.get(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/requester/" + item.roles[0].id)
-                    // eslint-disable-next-line no-console
+                        // eslint-disable-next-line no-console
                         .then((res) => {
                             let req = {};
                             req.requestId = res.data.id;
@@ -434,7 +442,6 @@
             showHistoryForm(type, workshop) {
                 this.historyFormDialog = true;
                 this.selectedHistoryWorkshop = workshop;
-                this.historyType = type;
             },
             showForm(id, type, item) {
                 this.form.id = id;
@@ -446,11 +453,14 @@
                             axios.post(this.$store.state.api
                                 + "/workshopManagers/offeringWorkshop/form/"
                                 + this.graderRequestForm.id
-                                + "/result/" + item.id, {id: this.form.id})
+                                + "/result/" + item.requestId, {id: this.form.id})
                                 .then((res) => {
                                     this.form.questions = res.data;
                                     this.formDialog = true;
-                                    // axios.get() TODO DO THIS
+                                    axios.get(`${this.$store.state.api}/workshopManagers/userHistory/${item.id}`)
+                                        .then((res) => {
+                                            this.historyWorkshops = res.data;
+                                        })
                                 })
                         });
                 } else {
@@ -682,5 +692,7 @@
 </script>
 
 <style scoped>
-
+    .qa{
+        font-size: 18px;
+    }
 </style>
