@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-dialog v-model="formDialog" max-width="500px">
-            <v-card class="py-3 px-3">
+            <v-card class="py-3 px-3" v-if="this.form!==null">
                 <v-card-text>
                     <v-row v-for="(question, i) in this.form.questions" :key="question.question.id">
                         <div class="question title">{{i + 1}}) {{question.question.text}}</div>
@@ -145,7 +145,7 @@
         </v-dialog>
         <v-dialog v-model="historyFormDialog" max-width="500px">
             <v-card class="py-3 px-3">
-                <v-card-text>
+                <v-card-text v-if="selectedHistoryWorkshop !== null">
                     <v-container v-for="(form,index) in this.selectedHistoryWorkshop.form" :key="index">
                         <div class="display-1 font-weight-bold my-5">Form Name: {{form.name}}</div>
                         <v-row
@@ -179,28 +179,58 @@
                     <v-tab-item>
                         <v-data-table
                                 :headers="headers"
-                                :items="this.graders"
+                                :items="this.assistantsReq"
                                 :items-per-page="10"
                                 @click:row="(val) => showForm(val.roles[1].id, 'grader', val)"
                                 class="elevation-1">
 
                             <template v-slot:item.action="{ item }" v-if="showForm != null">
-                                <v-icon
-                                        small
-                                        class="mr-2"
-                                        color="success"
-                                        @click.stop="() => showDetail(item, 'grader', 'ACCEPTED')"
-                                >
-                                    fas fa-check
-                                </v-icon>
-                                <v-icon
-                                        small
-                                        class="mr-2"
-                                        color="error"
-                                        @click.stop="() => showDetail(item, 'grader', 'REJECTED')"
-                                >
-                                    fas fa-times
-                                </v-icon>
+                                <div v-if="item.status ==='Pending'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="success"
+                                            @click.stop="() => showDetail(item, 'grader', 'ACCEPTED')"
+                                    >
+                                        fas fa-check
+                                    </v-icon>
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="error"
+                                            @click.stop="() => showDetail(item, 'grader', 'REJECTED')"
+                                    >
+                                        fas fa-times
+                                    </v-icon>
+                                </div>
+                            </template>
+                            <template v-slot:item.status="{ item }" v-if="showForm != null">
+                                <div v-if="item.status ==='Pending'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                    >
+                                        fas fa-question-circle
+                                    </v-icon>
+                                </div>
+                                <div v-else-if="item.status === 'Rejected'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="error"
+                                    >
+                                        fas fa-times-circle
+                                    </v-icon>
+                                </div>
+                                <div v-else-if="item.status === 'Accepted'">
+                                    <v-icon
+                                            small
+                                            class="mr-2"
+                                            color="success"
+                                    >
+                                        fas fa-check-circle
+                                    </v-icon>
+                                </div>
                             </template>
                         </v-data-table>
                     </v-tab-item>
@@ -355,6 +385,19 @@
             }
         },
         computed: {
+            assistantsReq() {
+                let data = [];
+                for (let grd in this.graders)
+                    data.push({
+                        name: this.graders[grd].name,
+                        username: this.graders[grd].username,
+                        id: this.graders[grd].requestId,
+                        userId: this.graders[grd].id,
+                        roles: this.graders[grd].roles,
+                        status: this.graders[grd].requestStatus,
+                    });
+                return data;
+            },
             attendeesReq() {
                 let data = [];
                 for (let att in this.attendees)
@@ -409,7 +452,7 @@
                             let req = {};
                             req.requestId = res.data.id;
                             req.requestState = status;
-                            req.userId = item.id;
+                            req.userId = item.userId;
                             axios.post(this.$store.state.api + "/workshopManagers/offeringWorkshop/" + this.id + "/request", req)
                                 .then(() => {
                                     this.reloadPage()
@@ -453,11 +496,11 @@
                             axios.post(this.$store.state.api
                                 + "/workshopManagers/offeringWorkshop/form/"
                                 + this.graderRequestForm.id
-                                + "/result/" + item.requestId, {id: this.form.id})
+                                + "/result/" + item.id, {id: this.form.id})
                                 .then((res) => {
                                     this.form.questions = res.data;
                                     this.formDialog = true;
-                                    axios.get(`${this.$store.state.api}/workshopManagers/userHistory/${item.id}`)
+                                    axios.get(`${this.$store.state.api}/workshopManagers/userHistory/${item.userId}`)
                                         .then((res) => {
                                             this.historyWorkshops = res.data;
                                         })
@@ -692,7 +735,7 @@
 </script>
 
 <style scoped>
-    .qa{
+    .qa {
         font-size: 18px;
     }
 </style>
