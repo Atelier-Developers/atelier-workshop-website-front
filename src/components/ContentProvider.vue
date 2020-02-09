@@ -327,8 +327,7 @@
                     this.attFiles = res[1].data;
                     this.managerFiles = res[2].data;
                     this.personalFiles = res[3].data;
-                    // eslint-disable-next-line no-console
-                    console.log(res[4].data);
+
                     this.attendees = res[4].data
                 })
             } else if (this.type === "attendee") {
@@ -343,10 +342,7 @@
                     this.attFiles = res[1].data;
                     this.personalFiles = res[2].data;
                     this.attendees = res[3].data;
-                    // eslint-disable-next-line no-console
-                    console.log("FUCK U");
-                    // eslint-disable-next-line no-console
-                    console.log(res[3].data);
+
 
                 })
             }

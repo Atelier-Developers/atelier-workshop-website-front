@@ -131,36 +131,21 @@
                 });
             } else {
                 if (this.appType === "grader") {
-                    // eslint-disable-next-line no-console
-                    console.log("FUCK");
-                    // eslint-disable-next-line no-console
-                    console.log(this.type);
+
                     axios.get(this.$store.state.api + "/userDetails/" + this.appId).then((res) => {
                         user = res.data;
 
                         graderAppId = user.roles[1].graderWorkshopConnection;
 
-                        // eslint-disable-next-line no-console
-                        console.log("FUCK2");
-                        // eslint-disable-next-line no-console
-                        console.log(this.type);
+
                         axios.get(this.$store.state.api + "/forms/form/" + this.formId).then((res) => {
                             this.form = res.data;
-                            // eslint-disable-next-line no-console
-                            console.log("FUCK3");
-                            // eslint-disable-next-line no-console
-                            console.log(this.type);
+
                             if (this.type != null) {
                                 this.form.questions.forEach((q) => {
-                                    // eslint-disable-next-line no-console
-                                    console.log("FUCKQ");
-                                    // eslint-disable-next-line no-console
-                                    console.log(q);
+
                                     q.answers.forEach((a) => {
-                                        // eslint-disable-next-line no-console
-                                        console.log("FUCKA");
-                                        // eslint-disable-next-line no-console
-                                        console.log(a);
+
                                         // if (a.formApplicant === this.appId) {
                                         //     if ('formFiller' in a) {
                                         //         if (a.formFiller === this.fillerId) {
@@ -221,10 +206,7 @@
                                         //
                                         //     }
                                         // }
-                                        // eslint-disable-next-line no-console
-                                        console.log("FUCKICICICICICIICI");
-                                        // eslint-disable-next-line no-console
-                                        console.log(a);
+
                                         if (a.formApplicant.workshopAttenderInfo.workshopAttender.id === attAppId.id) {
                                             // eslint-disable-next-line no-console
 
@@ -268,15 +250,6 @@
                     return;
                 }
 
-                // eslint-disable-next-line no-console
-                console.log("MotherFUcker");
-                // eslint-disable-next-line no-console
-                console.log(ans);
-                // eslint-disable-next-line no-console
-                console.log(question);
-
-                // // eslint-disable-next-line no-console
-                // console.log(ans);
                 if (ans.type === 'text') {
                     return ans.answer.answerData[0].text;
                 } else if (ans.type === 'choice') {

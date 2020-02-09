@@ -535,8 +535,7 @@
             },
             unPay(pay) {
                 this.isLoading = true;
-                // eslint-disable-next-line no-console
-                console.log(pay)
+
                 axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${pay.id}/unpay`).then(() => {
                     this.isLoading = false;
                     pay.paid = false;
@@ -545,8 +544,7 @@
             submitPay(pay) {
                 this.commentDialog = true;
                 this.payTmp = pay;
-                // eslint-disable-next-line no-console
-                console.log(pay);
+
             },
             submitPayment() {
                 axios.put(`${this.$store.state.api}/admin/attendeePaymentTab/${this.payTmp.id}`, {
@@ -573,10 +571,7 @@
                         this.selectedAtt.paymentState = true;
                         this.commentDialog = false;
                     }
-                    // eslint-disable-next-line no-console
-                    console.log("FUCK");
-                    // eslint-disable-next-line no-console
-                    console.log(res.data);
+
                     this.payTmp.id = res.data;
                 });
             },

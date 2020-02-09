@@ -426,8 +426,7 @@
                             this.loading = false;
                             axios.all([this.getAttReqForm(), this.getGraderReqForm(), this.getRequestStatus()]).then((res) => {
 
-                                // eslint-disable-next-line no-console
-                                console.log(res[2])
+
                                 if (res[0].status !== 204) {
                                     this.attReqForm = res[0].data;
                                 }
