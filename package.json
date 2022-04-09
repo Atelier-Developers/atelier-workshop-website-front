@@ -11,7 +11,7 @@
     "axios": "^0.19.1",
     "core-js": "^3.4.4",
     "material-design-icons-iconfont": "^5.0.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "vue": "^2.6.10",
     "vue-page-transition": "^0.2.2",
     "vue-quick-chat": "^1.0.9",
